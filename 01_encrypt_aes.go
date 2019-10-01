@@ -7,10 +7,11 @@ import "fmt"
 import "os"
 
 func main() {
-  if m, e := Encrypt(os.Args[1], os.Getenv("AES_KEY")); e == nil {
+  k := os.Getenv("AES_KEY")
+  if m, e := Encrypt(os.Args[1], k); e == nil {
     fmt.Println(m)
   } else {
-  	fmt.Printf("error: %v\n", e)
+    fmt.Printf("error: %v\n", e)
   }
 }
 
@@ -26,11 +27,9 @@ func Encrypt(m, k string) (o []byte, e error) {
 }
 
 func PaddedBuffer(m []byte) (b []byte, e error) {
-  b = append(b, m...)
-  if p := len(b) % aes.BlockSize; p != 0 {
-    p = aes.BlockSize - p
-    b = append(b, make([]byte, p)...)  // padding with NUL!!!!
-  }
+  p := len(m) % aes.BlockSize
+  b = make([]byte, len(m) + aes.BlockSize - p)
+  copy(b, m)
   return
 }
 
