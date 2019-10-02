@@ -19,6 +19,7 @@ $ PEM_KEY="0123456789012345" go run 03_generate_rsa_keypair.go 1024
 $ PEM_KEY="0123456789012345" go run 04_generate_rsa_keypair.go test.pem 1024
 
 $ cat test.pem 
+```
 -----BEGIN RSA PRIVATE KEY-----
 Proc-Type: 4,ENCRYPTED
 DEK-Info: AES-256-CBC,6a5f5b4d6607c56e3463821e53b977c8
@@ -37,10 +38,12 @@ bqhh7Cx7gPUBSIshYx9eFuf8ev2iuHZ6buXwGJNEkTbSwI18WaAwqQMT0fSH9oEH
 bnR85B0iDbXw1vIMrmfNCx9BTrkrVIWcDU7T/cfC2Bk5TRxu0SFPwjiKcQgycTBb
 JkK77NmZ7rtv1r5AMLBZxwyKBWCSytMYOH/iBa2jeWIJJisP2elI8TsHtj250MoX
 -----END RSA PRIVATE KEY-----
+```
 
-Allegra:GoParanoia eleanor$ go run 04_generate_rsa_keypair.go test2.pem 1024
+$ go run 04_generate_rsa_keypair.go test2.pem 1024
 
 $ cat test2.pem 
+```
 -----BEGIN RSA PRIVATE KEY-----
 MIICXQIBAAKBgQDJaCPleRozqN9dvYfkHlVNbqm7DAMaitpRXuItJeGL2r33VG8N
 F6xPIgiS2jDFVRVeKXKZyry2uu0kw8pG5dg84O/tK23outls13+mmMozARA9gW4r
@@ -56,3 +59,4 @@ U57b3iUnWPFoB0v/pcjY10slf6ruez++3zhWJdYBDjmeW5VmA1d4arzisRzd7Cya
 5fCJt3F7yVYnt+f0bbSJAkBrJYpE9P9ikj/FWxp8IXuBjEQCjNwvyXnRO/CNBqjJ
 32MGH2+wOQFbMVG5N9cdjISydkwu/IpWXfqFLFi1uo2y
 -----END RSA PRIVATE KEY-----
+```
