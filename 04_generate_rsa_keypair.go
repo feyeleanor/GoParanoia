@@ -8,12 +8,13 @@ import "io/ioutil"
 import "os"
 import "strconv"
 
-const MISSING_FILENAME = 1
-const INVALID_KEYSIZE = iota
-const CREATE_KEY_FAILED = iota
-const PEM_ENCRYPTION_FAILED = iota
-const FILE_WRITE_FAILED = iota
-
+const (
+  MISSING_FILENAME = 1
+  INVALID_KEYSIZE = iota
+  CREATE_KEY_FAILED = iota
+  PEM_ENCRYPTION_FAILED = iota
+  FILE_WRITE_FAILED = iota
+)
 const DEFAULT_KEYSIZE = 1024
 
 func main() {

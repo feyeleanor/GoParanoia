@@ -8,9 +8,11 @@ import "fmt"
 import "os"
 import "strconv"
 
-const MISSING_KEYSIZE = 1
-const CREATE_KEY_FAILED = iota
-const PEM_ENCRYPTION_FAILED = iota
+const (
+  MISSING_KEYSIZE = 1
+  CREATE_KEY_FAILED = iota
+  PEM_ENCRYPTION_FAILED = iota
+)
 
 func main() {
   var n int
