@@ -60,3 +60,25 @@ U57b3iUnWPFoB0v/pcjY10slf6ruez++3zhWJdYBDjmeW5VmA1d4arzisRzd7Cya
 32MGH2+wOQFbMVG5N9cdjISydkwu/IpWXfqFLFi1uo2y
 -----END RSA PRIVATE KEY-----
 ```
+
+$ PEM_KEY="0123456789012345" go run 05_extract_rsa_pubkey.go test.pem
+
+$ cat test.pem.pub
+```
+-----BEGIN RSA PUBLIC KEY-----
+MIGJAoGBAOJeXdQw2dRkYxPwAgGfLh8cDKlMW7I1yksd4sqYOGb9TF4UYg3IOm9Q
++gLhn8WWt72ua7pcEy2MPDUTXUB6WohhwiP+b384W2M63KlBBWh23S5z4mwOfRU4
+IHO/qjMQT6j2o1zbGd7Fie0wiujQREegta5jnb67zt2OdDxAQpeNAgMBAAE=
+-----END RSA PUBLIC KEY-----
+```
+
+$ go run 05_extract_rsa_pubkey.go test2.pem
+
+$ cat test2.pem.pub 
+```
+-----BEGIN RSA PUBLIC KEY-----
+MIGJAoGBAMloI+V5GjOo3129h+QeVU1uqbsMAxqK2lFe4i0l4YvavfdUbw0XrE8i
+CJLaMMVVFV4pcpnKvLa67STDykbl2Dzg7+0rbei62WzXf6aYyjMBED2BbitZW8/O
+XKhvWaZ89ahzdgiW9Eo/9M5gnav6zj2eKsl7RP/bROcOwl0HVZDZAgMBAAE=
+-----END RSA PUBLIC KEY-----
+```
