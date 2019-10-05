@@ -9,9 +9,10 @@ import "os"
 import "strconv"
 
 const (
-  MISSING_KEYSIZE = 1
-  CREATE_KEY_FAILED = iota
-  PEM_ENCRYPTION_FAILED = iota
+  _ = iota
+  MISSING_KEYSIZE
+  CREATE_KEY_FAILED
+  PEM_ENCRYPTION_FAILED
 )
 
 func main() {
