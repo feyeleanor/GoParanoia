@@ -42,9 +42,13 @@ func main() {
       os.Exit(PEM_ENCRYPTION_FAILED)
     }
   }
-  if e = ioutil.WriteFile(f, pem.EncodeToMemory(p), 0644); e != nil {
+  if e = SaveKey(f, p, 0644); e != nil {
     os.Exit(FILE_WRITE_FAILED)
   }
+}
+
+func SaveKey(f string, p *pem.Block, perm os.FileMode) error {
+  return ioutil.WriteFile(f, pem.EncodeToMemory(p), perm)
 }
 
 func CreatePrivateKey(n int) (*rsa.PrivateKey, error) {

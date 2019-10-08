@@ -1,10 +1,9 @@
-
 package main
 
 import "crypto/rand"
 import "crypto/rsa"
-import "crypto/sha512"
 import "crypto/x509"
+import "encoding/base64"
 import "encoding/pem"
 import "fmt"
 import "io/ioutil"
@@ -15,33 +14,45 @@ const (
   MISSING_FILENAME
   FILE_UNREADABLE
   NOT_A_PEM_FILE
-  NOT_A_PUBLIC_KEY
+  NOT_A_PRIVATE_KEY
   PEM_PASSWORD_REQUIRED
   PEM_DECRYPTION_FAILED
-  INVALID_PUBLIC_KEY
-  ENCRYPTION_FAILED
+  INVALID_PRIVATE_KEY
+  DECRYPTION_FAILED
 )
 
 func main() {
   var e error
-  var k *rsa.PublicKey
+  var k *rsa.PrivateKey
+  var s string
 
   f := os.Args[1]
-  l := []byte(os.Args[2])
-  m := []byte(os.Args[3])
+  m := read_base64(os.Args[2])
   b := LoadFile(f)
   p := DecodePEM(b)
   b = DecryptPEM(p)
 
-  if k, e = x509.ParsePKCS1PublicKey(b); e != nil {
-    os.Exit(INVALID_PUBLIC_KEY)
+  if k, e = x509.ParsePKCS1PrivateKey(b); e != nil {
+    os.Exit(INVALID_PRIVATE_KEY)
   }
 
-  if b, e = rsa.EncryptOAEP(sha512.New(), rand.Reader, k, m, l); e != nil {
+  if s, e = Decrypt(k, m); e != nil {
     fmt.Println(e)
-    os.Exit(ENCRYPTION_FAILED)
+    os.Exit(DECRYPTION_FAILED)
   }
-  fmt.Println(b)
+  fmt.Println(s)
+}
+
+func read_base64(s string) string {
+  b, _ := base64.StdEncoding.DecodeString(s)
+  return string(b)
+}
+
+func Decrypt(k *rsa.PrivateKey, m string) (r string, e error) {
+  var b []byte
+  b, e = rsa.DecryptPKCS1v15(rand.Reader, k, []byte(m))
+  r = string(b)
+  return
 }
 
 func LoadFile(s string) (b []byte) {
@@ -60,8 +71,8 @@ func DecodePEM(b []byte) (p *pem.Block) {
   switch p, _ = pem.Decode(b); {
   case p == nil:
     os.Exit(NOT_A_PEM_FILE)
-  case p.Type != "RSA PUBLIC KEY":
-    os.Exit(NOT_A_PUBLIC_KEY)
+  case p.Type != "RSA PRIVATE KEY":
+    os.Exit(NOT_A_PRIVATE_KEY)
   }
   return
 }

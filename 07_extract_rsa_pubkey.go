@@ -1,11 +1,8 @@
-
 package main
 
-import "crypto/rand"
 import "crypto/rsa"
 import "crypto/x509"
 import "encoding/pem"
-import "fmt"
 import "io/ioutil"
 import "os"
 
@@ -14,32 +11,31 @@ const (
   MISSING_FILENAME
   FILE_UNREADABLE
   NOT_A_PEM_FILE
-  NOT_A_PUBLIC_KEY
+  NOT_A_PRIVATE_KEY
   PEM_PASSWORD_REQUIRED
   PEM_DECRYPTION_FAILED
-  INVALID_PUBLIC_KEY
-  ENCRYPTION_FAILED
+  INVALID_PRIVATE_KEY
+  FILE_WRITE_FAILED
 )
 
 func main() {
   var e error
-  var k *rsa.PublicKey
+  var k *rsa.PrivateKey
 
   f := os.Args[1]
-  m := []byte(os.Args[2])
   b := LoadFile(f)
   p := DecodePEM(b)
   b = DecryptPEM(p)
 
-  if k, e = x509.ParsePKCS1PublicKey(b); e != nil {
-    os.Exit(INVALID_PUBLIC_KEY)
+  if k, e = x509.ParsePKCS1PrivateKey(b); e != nil {
+    os.Exit(INVALID_PRIVATE_KEY)
   }
 
-  if b, e = rsa.EncryptPKCS1v15(rand.Reader, k, m); e != nil {
-    fmt.Println(e)
-    os.Exit(ENCRYPTION_FAILED)
+  p = CreatePEM(k.PublicKey)
+  f = f + ".pub"
+  if e = SaveKey(f, p, 0644); e != nil {
+    os.Exit(FILE_WRITE_FAILED)
   }
-  fmt.Println(b)
 }
 
 func LoadFile(s string) (b []byte) {
@@ -54,12 +50,23 @@ func LoadFile(s string) (b []byte) {
   return
 }
 
+func SaveKey(f string, p *pem.Block, perm os.FileMode) error {
+  return ioutil.WriteFile(f, pem.EncodeToMemory(p), perm)
+}
+
+func CreatePEM(k rsa.PublicKey) *pem.Block {
+  return &pem.Block{
+    Type:  "RSA PUBLIC KEY",
+    Bytes: x509.MarshalPKCS1PublicKey(&k),
+  }
+}
+
 func DecodePEM(b []byte) (p *pem.Block) {
   switch p, _ = pem.Decode(b); {
   case p == nil:
     os.Exit(NOT_A_PEM_FILE)
-  case p.Type != "RSA PUBLIC KEY":
-    os.Exit(NOT_A_PUBLIC_KEY)
+  case p.Type != "RSA PRIVATE KEY":
+    os.Exit(NOT_A_PRIVATE_KEY)
   }
   return
 }

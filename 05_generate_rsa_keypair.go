@@ -3,6 +3,7 @@ package main
 import "crypto/rand"
 import "crypto/rsa"
 import "crypto/x509"
+import "encoding/base64"
 import "encoding/pem"
 import "fmt"
 import "os"
@@ -11,6 +12,7 @@ import "strconv"
 const (
   _ = iota
   MISSING_KEYSIZE
+  INVALID_KEYSIZE
   CREATE_KEY_FAILED
   PEM_ENCRYPTION_FAILED
 )
@@ -20,8 +22,11 @@ func main() {
   var e error
   var k *rsa.PrivateKey
 
-  if n, e = strconv.Atoi(os.Args[1]); e != nil {
+  if len(os.Args) < 2 {
     os.Exit(MISSING_KEYSIZE)
+  }
+  if n, e = strconv.Atoi(os.Args[1]); n == 0 {
+    os.Exit(INVALID_KEYSIZE)
   }
   if k, e = CreatePrivateKey(n); e != nil {
     os.Exit(CREATE_KEY_FAILED)
@@ -32,7 +37,12 @@ func main() {
       os.Exit(PEM_ENCRYPTION_FAILED)
     }
   }
-  fmt.Println(pem.EncodeToMemory(p))
+  fmt.Println(PrintableKey(p))
+}
+
+func PrintableKey(p *pem.Block) string {
+  b := pem.EncodeToMemory(p)
+  return base64.StdEncoding.EncodeToString(b)
 }
 
 func CreatePrivateKey(n int) (*rsa.PrivateKey, error) {

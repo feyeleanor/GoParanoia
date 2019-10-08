@@ -1,14 +1,15 @@
-
 package main
 
 import "crypto/rand"
 import "crypto/rsa"
+import "crypto/sha512"
 import "crypto/x509"
+import "encoding/base64"
 import "encoding/pem"
 import "fmt"
+import "hash"
 import "io/ioutil"
 import "os"
-import "strconv"
 
 const (
   _ = iota
@@ -25,9 +26,11 @@ const (
 func main() {
   var e error
   var k *rsa.PrivateKey
+  var s string
 
   f := os.Args[1]
-  m := read_bytes(os.Args[2:])
+  l := os.Args[2]
+  m := read_base64(os.Args[3])
   b := LoadFile(f)
   p := DecodePEM(b)
   b = DecryptPEM(p)
@@ -36,18 +39,22 @@ func main() {
     os.Exit(INVALID_PRIVATE_KEY)
   }
 
-  if b, e = rsa.DecryptPKCS1v15(rand.Reader, k, m); e != nil {
+  if s, e = Decrypt(sha512.New(), k, m, l); e != nil {
     fmt.Println(e)
     os.Exit(DECRYPTION_FAILED)
   }
-  fmt.Println(string(b))
+  fmt.Println(s)
 }
 
-func read_bytes(s []string) (r []byte) {
-  for _, v := range s {
-    i, _ := strconv.Atoi(v)
-    r = append(r, byte(i))
-  }
+func read_base64(s string) string {
+  b, _ := base64.StdEncoding.DecodeString(s)
+  return string(b)
+}
+
+func Decrypt(h hash.Hash, k *rsa.PrivateKey, m, l string) (r string, e error) {
+  var b []byte
+  b, e = rsa.DecryptOAEP(h, rand.Reader, k, []byte(m), []byte(l))
+  r = string(b)
   return
 }
 

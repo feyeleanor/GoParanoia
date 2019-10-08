@@ -2,9 +2,9 @@
 package main
 
 import "crypto"
-import "crypto/rand"
 import "crypto/rsa"
 import "crypto/sha512"
+import "encoding/base64"
 import "crypto/x509"
 import "encoding/pem"
 import "fmt"
@@ -16,34 +16,43 @@ const (
   MISSING_FILENAME
   FILE_UNREADABLE
   NOT_A_PEM_FILE
-  NOT_A_PRIVATE_KEY
+  NOT_A_PUBLIC_KEY
   PEM_PASSWORD_REQUIRED
   PEM_DECRYPTION_FAILED
-  INVALID_PRIVATE_KEY
-  ENCRYPTION_FAILED
+  INVALID_PUBLIC_KEY
+  VERIFICATION_FAILED
 )
 
 func main() {
   var e error
-  var k *rsa.PrivateKey
+  var k *rsa.PublicKey
   var h crypto.Hash
 
   f := os.Args[1]
   m := []byte(os.Args[2])
+
   hs := sha512.New().Sum(m)
+  s := read_base64(os.Args[3])
   b := LoadFile(f)
   p := DecodePEM(b)
   b = DecryptPEM(p)
 
-  if k, e = x509.ParsePKCS1PrivateKey(b); e != nil {
-    os.Exit(INVALID_PRIVATE_KEY)
+  if k, e = x509.ParsePKCS1PublicKey(b); e != nil {
+    os.Exit(INVALID_PUBLIC_KEY)
   }
 
-  if b, e = rsa.SignPKCS1v15(rand.Reader, k, h, hs); e != nil {
-    fmt.Println(e)
-    os.Exit(ENCRYPTION_FAILED)
+  e = rsa.VerifyPKCS1v15(k, h, hs, s)
+  if e != nil {
+    fmt.Println("Signature Verification Failed")
+    os.Exit(1)
+  } else {
+    fmt.Println("Signature Verification Succeeded")
   }
-  fmt.Println(b)
+}
+
+func read_base64(s string) []byte {
+  b, _ := base64.StdEncoding.DecodeString(s)
+  return b
 }
 
 func LoadFile(s string) (b []byte) {
@@ -62,8 +71,8 @@ func DecodePEM(b []byte) (p *pem.Block) {
   switch p, _ = pem.Decode(b); {
   case p == nil:
     os.Exit(NOT_A_PEM_FILE)
-  case p.Type != "RSA PRIVATE KEY":
-    os.Exit(NOT_A_PRIVATE_KEY)
+  case p.Type != "RSA PUBLIC KEY":
+    os.Exit(NOT_A_PUBLIC_KEY)
   }
   return
 }

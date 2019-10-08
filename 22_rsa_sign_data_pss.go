@@ -1,9 +1,12 @@
 
 package main
 
+import "crypto"
+import "crypto/rand"
 import "crypto/rsa"
 import "crypto/x509"
 import "encoding/pem"
+import "fmt"
 import "io/ioutil"
 import "os"
 
@@ -16,27 +19,40 @@ const (
   PEM_PASSWORD_REQUIRED
   PEM_DECRYPTION_FAILED
   INVALID_PRIVATE_KEY
-  FILE_WRITE_FAILED
+  ENCRYPTION_FAILED
 )
 
 func main() {
   var e error
   var k *rsa.PrivateKey
+  var o rsa.PSSOptions
+
+  o.SaltLength = 8
 
   f := os.Args[1]
+  m := []byte(os.Args[2])
+  h := crypto.SHA512
+  hs := h.New().Sum(m)
   b := LoadFile(f)
   p := DecodePEM(b)
   b = DecryptPEM(p)
+
+fmt.Println("file: ", f)
+fmt.Println("message: ", m)
+fmt.Println("hash: ", h)
+fmt.Println("hashed string: ", hs)
+fmt.Println("pem:", p)
+fmt.Println("decrypted pem: ", b)
 
   if k, e = x509.ParsePKCS1PrivateKey(b); e != nil {
     os.Exit(INVALID_PRIVATE_KEY)
   }
 
-  p = CreatePEM(k.PublicKey)
-  f = f + ".pub"
-  if e = ioutil.WriteFile(f, pem.EncodeToMemory(p), 0644); e != nil {
-    os.Exit(FILE_WRITE_FAILED)
+  if b, e = rsa.SignPSS(rand.Reader, k, h, hs[:], &o); e != nil {
+    fmt.Println(e)
+    os.Exit(ENCRYPTION_FAILED)
   }
+  fmt.Println(b)
 }
 
 func LoadFile(s string) (b []byte) {
@@ -49,13 +65,6 @@ func LoadFile(s string) (b []byte) {
     os.Exit(FILE_UNREADABLE)
   }
   return
-}
-
-func CreatePEM(k rsa.PublicKey) *pem.Block {
-  return &pem.Block{
-    Type:  "RSA PUBLIC KEY",
-    Bytes: x509.MarshalPKCS1PublicKey(&k),
-  }
 }
 
 func DecodePEM(b []byte) (p *pem.Block) {
