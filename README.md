@@ -142,3 +142,20 @@ $ go run 15_rsa_verify_data_pss_from_base64.go test3.pem.pub "Hello World" D18jN
 
 Signature Verification Succeeded
 
+$ go run 16_sha512_hash_to_base64.go "Hello World"
+
+LHT9F+2v2A6ER7DUZ0HuJDt+t03SFJoKsbkkb7MDgvJ+hT2FhXGeDmfL2g2qj1FnEGRhXWRa4nrLFb+xRH9Fmw==
+
+$ HMAC_KEY="0123456789012345" go run 17_hmac_to_base64.go "Hello World"
+
+rxeUOuUKx3uVVO6qKQt+jawwRMvglw62D02h3ZTFfb3fz2gL0k29nmmYpe6n09X+LtZFdG4tTp8EOlM1jY75+A==
+
+$ HMAC_KEY="0123456789012345" go run 18_verify_hmac_from_base64.go "Hello World" rxeUOuUKx3uVVO6qKQt+jawwRMvglw62D02h3ZTFfb3fz2gL0k29nmmYpe6n09X+LtZFdG4tTp8EOlM1jY75+A==
+
+Signature Verification Succeeded
+
+$ HMAC_KEY="0123456789012345" go run 18_verify_hmac_from_base64.go "Hello World" rxeUOuUKx3uVVO6qKQt+jawwRMvglw62D02h3ZTFfb3fz2gL0k29nmmYpe6n09X+LtZFdG4tTp8EOlM1jY75+Z==
+
+Signature Verification Failed
+
+exit status 1
