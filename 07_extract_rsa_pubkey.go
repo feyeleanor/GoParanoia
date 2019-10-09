@@ -23,19 +23,21 @@ func main() {
   var k *rsa.PrivateKey
 
   f := os.Args[1]
-  b := LoadFile(f)
-  p := DecodePEM(b)
-  b = DecryptPEM(p)
-
+  b := LoadPEM(f)
   if k, e = x509.ParsePKCS1PrivateKey(b); e != nil {
     os.Exit(INVALID_PRIVATE_KEY)
   }
 
-  p = CreatePEM(k.PublicKey)
   f = f + ".pub"
-  if e = SaveKey(f, p, 0644); e != nil {
+  if e = SaveKey(f, CreatePEM(k.PublicKey), 0644); e != nil {
     os.Exit(FILE_WRITE_FAILED)
   }
+}
+
+func LoadPEM(s string) []byte {
+  return DecryptPEM(
+    DecodePEM(
+      LoadFile(s)))
 }
 
 func LoadFile(s string) (b []byte) {
