@@ -243,3 +243,62 @@ $ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 23_aes_decrypt_hmac_
 Signature Verification Failed
 
 exit status 2
+
+### HMAC signed value chains
+
+$ HMAC_KEY=0123456789012345 go run 24_chain_list_hmac_sign_to_base64.go Hello World Goodbye World
+
+nDo7/2Jel9aP4RtT/v2vzkqvAuZC5mGjvsNKGGXofqZEMumfFZoIZDqFHLdMqsCQr2n1ujeKyXlvURO/iDAa5w== Hello
+
+RX7rJOTD89VN7Kn/mWo6RTRaQPMkRexAjYH8w27NTG3Vfn9ST2oeguGuraOmHM8KXQLCu08tgaUYnCcy0wH/fQ== World
+
+vt1b+boo+Qnpnx2E/knshgPAHmvXph3dHRacUXtn+bIOS61v2UyPpBFuK/ck5Uz40e7q+mC3kWcT3zWtMzKOXg== Goodbye
+
+wl0TqHTzm5s3+FZYh5R7+rfkFfy4ffjY1LVPUEHO3DlHXOnRbRusEcfiTpPz41QEjvQ6Ywqb3RI3ugHL89DLyg== World
+
+$ HMAC_KEY=0123456789012345 go run 24_chain_list_hmac_sign_to_base64.go Goodbye World Hello World
+
+36Mee0SiQQr4yeJkgBJZfP4eMlRVG9O+FFcwNG6GlfkQOgvBXabzW0P+3ZqJ9qvppJzww2pMXZg4XsfOpaitpA== Goodbye
+
+vuAFbTAZgmuFdo3xpZqY6n7TAq/HNA3PqXrCmgA+SsCMDzlc4GgfPsURx5IFiDY3RIdFoXnivRih/KIHQr+vwQ== World
+
+p18Nb4M1msr7eIv27eIrMDaOUTX4qopGm5nL9T6QS6/PrXMI3at3Wq0vqbrkb9kRNFuWSzgFERyRax7GvBsajw== Hello
+
+wl0TqHTzm5s3+FZYh5R7+rfkFfy4ffjY1LVPUEHO3DlHXOnRbRusEcfiTpPz41QEjvQ6Ywqb3RI3ugHL89DLyg== World
+
+$ HMAC_KEY=0123456789012345 go run 25_chain_list_hmac_verify_from_base64.go Hello nDo7/2Jel9aP4RtT/v2vzkqvAuZC5mGjvsNKGGXofqZEMumfFZoIZDqFHLdMqsCQr2n1ujeKyXlvURO/iDAa5w== World RX7rJOTD89VN7Kn/mWo6RTRaQPMkRexAjYH8w27NTG3Vfn9ST2oeguGuraOmHM8KXQLCu08tgaUYnCcy0wH/fQ== Goodbye vt1b+boo+Qnpnx2E/knshgPAHmvXph3dHRacUXtn+bIOS61v2UyPpBFuK/ck5Uz40e7q+mC3kWcT3zWtMzKOXg== World wl0TqHTzm5s3+FZYh5R7+rfkFfy4ffjY1LVPUEHO3DlHXOnRbRusEcfiTpPz41QEjvQ6Ywqb3RI3ugHL89DLyg==
+
+Signature Verification Succeeded
+
+$ HMAC_KEY=0123456789012345 go run 25_chain_list_hmac_verify_from_base64.go Hello nDo7/2Jel9aP4RtT/v2vzkqvAuZC5mGjvsNKGGXofqZEMumfFZoIZDqFHLdMqsCQr2n1ujeKyXlvURO/iDAa5w== World RX7rJOTD89VN7Kn/mWo6RTRaQPMkRexAjYH8w27NTG3Vfn9ST2oeguGuraOmHM8KXQLCu08tgaUYnCcy0wH/fQ== Goodbye vt1b+boo+Qnpnx2E/knshgPAHmvXph3dHRacUXtn+bIOS61v2UyPpBFuK/ck5Uz40e7q+mC3kWcT3zWtMzKOXg== World wl0TqHTzm5s3+FZYh5R7+rfkFfy4ffjY1LVPUEHO3DlHXOnRbRusEcfiTpPz41QEjvQ6Ywqb3RI3ugHL89DLyG==
+
+Signature Verification Failed
+
+wl0TqHTzm5s3+FZYh5R7+rfkFfy4ffjY1LVPUEHO3DlHXOnRbRusEcfiTpPz41QEjvQ6Ywqb3RI3ugHL89DLyg== != wl0TqHTzm5s3+FZYh5R7+rfkFfy4ffjY1LVPUEHO3DlHXOnRbRusEcfiTpPz41QEjvQ6Ywqb3RI3ugHL89DLyG==
+
+exit status 1
+
+$ HMAC_KEY=0123456789012345 go run 25_chain_list_hmac_verify_from_base64.go Hello nDo7/2Jel9aP4RtT/v2vzkqvAuZC5mGjvsNKGGXofqZEMumfFZoIZDqFHLdMqsCQr2n1ujeKyXlvURO/iDAa5w== World RX7rJOTD89VN7Kn/mWo6RTRaQPMkRexAjYH8w27NTG3Vfn9ST2oeguGuraOmHM8KXQLCu08tgaUYnCcy0wH/fQ== Goodbye vt1b+boo+Qnpnx2E/knshgPAHmvXph3dHRacUXtn+bIOS61v2UyPpBFuK/ck5Uz40e7q+mC3kWcT3zWtMzKOXG== World wl0TqHTzm5s3+FZYh5R7+rfkFfy4ffjY1LVPUEHO3DlHXOnRbRusEcfiTpPz41QEjvQ6Ywqb3RI3ugHL89DLyg==
+
+Signature Verification Failed
+
+vt1b+boo+Qnpnx2E/knshgPAHmvXph3dHRacUXtn+bIOS61v2UyPpBFuK/ck5Uz40e7q+mC3kWcT3zWtMzKOXg== != vt1b+boo+Qnpnx2E/knshgPAHmvXph3dHRacUXtn+bIOS61v2UyPpBFuK/ck5Uz40e7q+mC3kWcT3zWtMzKOXG==
+
+exit status 1
+
+$ HMAC_KEY=0123456789012345 go run 25_chain_list_hmac_verify_from_base64.go Hello nDo7/2Jel9aP4RtT/v2vzkqvAuZC5mGjvsNKGGXofqZEMumfFZoIZDqFHLdMqsCQr2n1ujeKyXlvURO/iDAa5w== World RX7rJOTD89VN7Kn/mWo6RTRaQPMkRexAjYH8w27NTG3Vfn9ST2oeguGuraOmHM8KXQLCu08tgaUYnCcy0wH/fq== Goodbye vt1b+boo+Qnpnx2E/knshgPAHmvXph3dHRacUXtn+bIOS61v2UyPpBFuK/ck5Uz40e7q+mC3kWcT3zWtMzKOXg== World wl0TqHTzm5s3+FZYh5R7+rfkFfy4ffjY1LVPUEHO3DlHXOnRbRusEcfiTpPz41QEjvQ6Ywqb3RI3ugHL89DLyg==
+
+Signature Verification Failed
+
+RX7rJOTD89VN7Kn/mWo6RTRaQPMkRexAjYH8w27NTG3Vfn9ST2oeguGuraOmHM8KXQLCu08tgaUYnCcy0wH/fQ== != RX7rJOTD89VN7Kn/mWo6RTRaQPMkRexAjYH8w27NTG3Vfn9ST2oeguGuraOmHM8KXQLCu08tgaUYnCcy0wH/fq==
+
+exit status 1
+
+$ HMAC_KEY=0123456789012345 go run 25_chain_list_hmac_verify_from_base64.go Hello nDo7/2Jel9aP4RtT/v2vzkqvAuZC5mGjvsNKGGXofqZEMumfFZoIZDqFHLdMqsCQr2n1ujeKyXlvURO/iDAa5W== World RX7rJOTD89VN7Kn/mWo6RTRaQPMkRexAjYH8w27NTG3Vfn9ST2oeguGuraOmHM8KXQLCu08tgaUYnCcy0wH/fQ== Goodbye vt1b+boo+Qnpnx2E/knshgPAHmvXph3dHRacUXtn+bIOS61v2UyPpBFuK/ck5Uz40e7q+mC3kWcT3zWtMzKOXg== World wl0TqHTzm5s3+FZYh5R7+rfkFfy4ffjY1LVPUEHO3DlHXOnRbRusEcfiTpPz41QEjvQ6Ywqb3RI3ugHL89DLyg==
+
+Signature Verification Failed
+
+nDo7/2Jel9aP4RtT/v2vzkqvAuZC5mGjvsNKGGXofqZEMumfFZoIZDqFHLdMqsCQr2n1ujeKyXlvURO/iDAa5w== != nDo7/2Jel9aP4RtT/v2vzkqvAuZC5mGjvsNKGGXofqZEMumfFZoIZDqFHLdMqsCQr2n1ujeKyXlvURO/iDAa5W==
+
+exit status 1
+
