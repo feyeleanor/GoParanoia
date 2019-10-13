@@ -41,7 +41,11 @@ func main() {
     fmt.Println(e)
     os.Exit(ENCRYPTION_FAILED)
   }
-  fmt.Println(base64.StdEncoding.EncodeToString(b))
+  fmt.Println(EncodeToString(b))
+}
+
+func EncodeToString(b []byte) string {
+  return base64.StdEncoding.EncodeToString(b)
 }
 
 func Sign(k *rsa.PrivateKey, m string, o *rsa.PSSOptions) (r []byte, e error) {

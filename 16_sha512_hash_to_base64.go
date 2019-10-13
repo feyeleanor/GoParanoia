@@ -9,5 +9,9 @@ func main() {
   m := os.Args[1]
   h := sha512.New()
   h.Write([]byte(m))
-  fmt.Println(base64.StdEncoding.EncodeToString(h.Sum(nil)))
+  fmt.Println(EncodeToString(h.Sum(nil)))
+}
+
+func EncodeToString(b []byte) string {
+  return base64.StdEncoding.EncodeToString(b)
 }

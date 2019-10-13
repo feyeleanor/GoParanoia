@@ -39,7 +39,11 @@ func main() {
     fmt.Println(e)
     os.Exit(ENCRYPTION_FAILED)
   }
-  fmt.Println(base64.StdEncoding.EncodeToString(b))
+  fmt.Println(EncodeToString(b))
+}
+
+func EncodeToString(b []byte) string {
+  return base64.StdEncoding.EncodeToString(b)
 }
 
 func Encrypt(k *rsa.PublicKey, m string) (b []byte, e error) {

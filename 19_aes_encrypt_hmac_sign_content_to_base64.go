@@ -25,9 +25,14 @@ func main() {
   h := hmac.New(sha512.New, []byte(hk))
   h.Write([]byte(s))
 
-  s = base64.StdEncoding.EncodeToString(h.Sum(nil))
-  s += base64.StdEncoding.EncodeToString(m)
-  fmt.Println(s)
+  fmt.Println(EncodeToString(h.Sum(nil), m))
+}
+
+func EncodeToString(b ...[]byte) (r string) {
+  for _, v := range b {
+    r += base64.StdEncoding.EncodeToString(v)
+  }
+  return
 }
 
 func Encrypt(m, k string) (o []byte, e error) {

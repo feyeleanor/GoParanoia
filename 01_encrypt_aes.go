@@ -34,7 +34,7 @@ func PaddedBuffer(m []byte) (b []byte, e error) {
 }
 
 func CryptBlocks(b []byte, c cipher.Block) (o []byte, e error) {
-  o = make([]byte, aes.BlockSize + len(b)) 
+  o = make([]byte, aes.BlockSize + len(b))
   var iv []byte
   if iv, e = IV(); e == nil {
     copy(o, iv)
