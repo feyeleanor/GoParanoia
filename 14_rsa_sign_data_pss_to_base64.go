@@ -20,7 +20,7 @@ const (
   PEM_PASSWORD_REQUIRED
   PEM_DECRYPTION_FAILED
   INVALID_PRIVATE_KEY
-  ENCRYPTION_FAILED
+  SIGNING_FAILED
 )
 
 func main() {
@@ -39,7 +39,7 @@ func main() {
 
   if b, e = Sign(k, m, nil); e != nil {
     fmt.Println(e)
-    os.Exit(ENCRYPTION_FAILED)
+    os.Exit(SIGNING_FAILED)
   }
   fmt.Println(EncodeToString(b))
 }
