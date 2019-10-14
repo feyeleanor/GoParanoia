@@ -20,7 +20,7 @@ const (
   PEM_PASSWORD_REQUIRED
   PEM_DECRYPTION_FAILED
   INVALID_PUBLIC_KEY
-  ENCRYPTION_FAILED
+  SIGNING_FAILED
 )
 
 func main() {
@@ -40,7 +40,7 @@ func main() {
 
   if b, e = Encrypt(sha512.New(), k, m, l); e != nil {
     fmt.Println(e)
-    os.Exit(ENCRYPTION_FAILED)
+    os.Exit(SIGNING_FAILED)
   }
   fmt.Println(EncodeToString(b))
 }

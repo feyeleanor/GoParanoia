@@ -41,7 +41,7 @@ func main() {
 
   if b, e = rsa.SignPKCS1v15(rand.Reader, k, h, hs); e != nil {
     fmt.Println(e)
-    os.Exit(ENCRYPTION_FAILED)
+    os.Exit(SIGNING_FAILED)
   }
   fmt.Println(EncodeToString(b))
 }
