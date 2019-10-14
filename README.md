@@ -302,3 +302,28 @@ nDo7/2Jel9aP4RtT/v2vzkqvAuZC5mGjvsNKGGXofqZEMumfFZoIZDqFHLdMqsCQr2n1ujeKyXlvURO/
 
 exit status 1
 
+### Merkle Trees
+
+$ HMAC_KEY=0123456789012345 go run 26_merkle_tree_hmac_sign_to_base64.go
+
+XD3NWQD4H35xBS0E1cfrsFpECV8tTGN2JsCxbiEeO8LI1Sudg+5DrM2vBJSupUE++cBDTcNovQoLiX2u21OkSw== +
+
+LFYhJE5EgA5MgEVIhbu3V3YGCknUmw1bcaOtqmcUwIT6In/wnM4kir2ONj+cXixGPLYoTwHBfkfoB0K1aOskUQ== *
+
+KKpcA3TbQEjqg8Xj5wxOyVmjqA25hyhxl9mpR/dIFA+LFaO+788Y+7S3n4ddz+F/RKL2YsvNcTchNHDyWAOnUA== 3
+
+IqEsHAfsvx4w/06gqbvQoU0iD+sIUXTtcunF4nyEWBPLUEsBeg7aUyID3Kmy1uutz5To/Mrjb3pu5BqhdLX/rA== 2
+
+lCo6zpPpmoEaF9xW7a+ch0dKC+HzlOUGxpVvIorjXIen0H2iphehmZSEhK9LxMbWxE+D64N8/Xvi2cl91DDr2Q== 1
+
+$ HMAC_KEY=0123456789012345 go run 27_merkle_tree_hmac_verify_from_base64.go XD3NWQD4H35xBS0E1cfrsFpECV8tTGN2JsCxbiEeO8LI1Sudg+5DrM2vBJSupUE++cBDTcNovQoLiX2u21OkSw== LFYhJE5EgA5MgEVIhbu3V3YGCknUmw1bcaOtqmcUwIT6In/wnM4kir2ONj+cXixGPLYoTwHBfkfoB0K1aOskUQ== KKpcA3TbQEjqg8Xj5wxOyVmjqA25hyhxl9mpR/dIFA+LFaO+788Y+7S3n4ddz+F/RKL2YsvNcTchNHDyWAOnUA== IqEsHAfsvx4w/06gqbvQoU0iD+sIUXTtcunF4nyEWBPLUEsBeg7aUyID3Kmy1uutz5To/Mrjb3pu5BqhdLX/rA== lCo6zpPpmoEaF9xW7a+ch0dKC+HzlOUGxpVvIorjXIen0H2iphehmZSEhK9LxMbWxE+D64N8/Xvi2cl91DDr2Q==
+
+Signature Verification Succeeded
+
+$ HMAC_KEY=0123456789012345 go run 27_merkle_tree_hmac_verify_from_base64.go XD3NWQD4H35xBS0E1cfrsFpECV8tTGN2JsCxbiEeO8LI1Sudg+5DrM2vBJSupUE++cBDTcNovQoLiX2u21OkSw== lCo6zpPpmoEaF9xW7a+ch0dKC+HzlOUGxpVvIorjXIen0H2iphehmZSEhK9LxMbWxE+D64N8/Xvi2cl91DDr2Q== LFYhJE5EgA5MgEVIhbu3V3YGCknUmw1bcaOtqmcUwIT6In/wnM4kir2ONj+cXixGPLYoTwHBfkfoB0K1aOskUQ== KKpcA3TbQEjqg8Xj5wxOyVmjqA25hyhxl9mpR/dIFA+LFaO+788Y+7S3n4ddz+F/RKL2YsvNcTchNHDyWAOnUA== IqEsHAfsvx4w/06gqbvQoU0iD+sIUXTtcunF4nyEWBPLUEsBeg7aUyID3Kmy1uutz5To/Mrjb3pu5BqhdLX/rA==
+
+Signature Verification Failed
+
+LFYhJE5EgA5MgEVIhbu3V3YGCknUmw1bcaOtqmcUwIT6In/wnM4kir2ONj+cXixGPLYoTwHBfkfoB0K1aOskUQ== != lCo6zpPpmoEaF9xW7a+ch0dKC+HzlOUGxpVvIorjXIen0H2iphehmZSEhK9LxMbWxE+D64N8/Xvi2cl91DDr2Q==
+
+exit status 1
