@@ -327,3 +327,63 @@ Signature Verification Failed
 LFYhJE5EgA5MgEVIhbu3V3YGCknUmw1bcaOtqmcUwIT6In/wnM4kir2ONj+cXixGPLYoTwHBfkfoB0K1aOskUQ== != lCo6zpPpmoEaF9xW7a+ch0dKC+HzlOUGxpVvIorjXIen0H2iphehmZSEhK9LxMbWxE+D64N8/Xvi2cl91DDr2Q==
 
 exit status 1
+
+### Hybrid Cryptography
+
+$ go run 28_hybrid_crypto_transmit_key.go test3.pem session_label 0123456789012345 A B C D E F G H I J K L M
+
+Bob heard: session_label
+
+Bob heard: MDEyMzQ1Njc4OTAxMjM0NQ==
+
+Bob wants to say: A
+
+Bob wants to say: B
+
+Alice heard: A
+
+Alice heard: B
+
+Bob wants to say: C
+
+Bob wants to say: D
+
+Alice heard: C
+
+Alice heard: D
+
+Bob wants to say: E
+
+Bob wants to say: F
+
+Alice heard: E
+
+Alice heard: F
+
+Bob wants to say: G
+
+Bob wants to say: H
+
+Alice heard: G
+
+Alice heard: H
+
+Bob wants to say: I
+
+Bob wants to say: J
+
+Alice heard: I
+
+Bob wants to say: K
+
+Alice heard: J
+
+Alice heard: K
+
+Bob wants to say: L
+
+Bob wants to say: M
+
+Alice heard: L
+
+Alice heard: M
