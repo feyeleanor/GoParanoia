@@ -330,7 +330,7 @@ exit status 1
 
 ### Hybrid Cryptography
 
-$ go run 28_hybrid_crypto_transmit_key.go test3.pem session_label 0123456789012345 A B C D E F G H I J K L M
+$ go run 28_hybrid_crypto_between_goroutines.go test3.pem session_label 0123456789012345 A B C D E F G H I J K L M
 
 Bob heard: session_label
 
