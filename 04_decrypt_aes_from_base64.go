@@ -9,7 +9,7 @@ import "os"
 func main() {
   k := os.Getenv("AES_KEY")
   s := read_base64(os.Args[1])
-  if m, e := Decrypt(s, k); e == nil {
+  if m, e := Decrypt(k, s); e == nil {
     fmt.Println(m)
   } else {
     fmt.Printf("error: %v\n", m)
@@ -26,7 +26,7 @@ func Unpack(s string) (iv, r []byte) {
   return m[:aes.BlockSize], m[aes.BlockSize:]
 }
 
-func Decrypt(s string, k string) (r string, e error) {
+func Decrypt(k, s string) (r string, e error) {
   var b cipher.Block
   if b, e = aes.NewCipher([]byte(k)); e == nil {
     iv, m := Unpack(s)

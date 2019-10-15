@@ -9,7 +9,7 @@ import "strconv"
 func main() {
   k := os.Getenv("AES_KEY")
   b := read_bytes(os.Args[1:])
-  if m, e := Decrypt(b, k); e == nil {
+  if m, e := Decrypt(k, b); e == nil {
     fmt.Println(string(m))
   } else {
     fmt.Printf("error: %v\n", m)
@@ -28,7 +28,7 @@ func Unpack(m []byte) (iv, r []byte) {
   return m[:aes.BlockSize], m[aes.BlockSize:]
 }
 
-func Decrypt(m []byte, k string) (r []byte, e error) {
+func Decrypt(k string, m []byte) (r []byte, e error) {
   var b cipher.Block
   if b, e = aes.NewCipher([]byte(k)); e == nil {
     var iv []byte

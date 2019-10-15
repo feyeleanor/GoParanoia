@@ -9,7 +9,7 @@ import "os"
 
 func main() {
   k := os.Getenv("AES_KEY")
-  if m, e := Encrypt(os.Args[1], k); e == nil {
+  if m, e := Encrypt(k, os.Args[1]); e == nil {
     PrintEncrypted(m)
   } else {
     fmt.Printf("error: %v\n", e)
@@ -20,7 +20,7 @@ func PrintEncrypted(m []byte) {
   fmt.Println(base64.StdEncoding.EncodeToString(m))
 }
 
-func Encrypt(m, k string) (o []byte, e error) {
+func Encrypt(k, m string) (o []byte, e error) {
   if o, e = PaddedBuffer([]byte(m)); e == nil {
     var b cipher.Block
 
