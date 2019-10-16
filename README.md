@@ -359,3 +359,17 @@ Alice heard: C
 Alice wants to say: C received
 
 Bob heard: C received
+
+## SQLite3 Databases
+
+### Create Database
+
+$ ls -al test.db
+
+ls: test.db: No such file or directory
+
+$ go run 40_sqlite3_create_database.go test.db
+
+$ ls -al test.db
+
+-rw-r--r--  1 eleanor  admin  0 16 Oct 02:11 test.db
