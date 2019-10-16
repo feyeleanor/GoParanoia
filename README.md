@@ -328,9 +328,9 @@ LFYhJE5EgA5MgEVIhbu3V3YGCknUmw1bcaOtqmcUwIT6In/wnM4kir2ONj+cXixGPLYoTwHBfkfoB0K1
 
 exit status 1
 
-### Hybrid Cryptography
+## Hybrid Cryptography
 
-$ go run 28_hybrid_crypto_between_goroutines.go test3.pem session_label 0123456789012345 A B C D E F G H I J K L M
+$ go run 28_hybrid_crypto_between_goroutines.go test3.pem session_label 0123456789012345 A B C
 
 Bob heard: session_label
 
@@ -338,52 +338,24 @@ Bob heard: MDEyMzQ1Njc4OTAxMjM0NQ==
 
 Bob wants to say: A
 
-Bob wants to say: B
-
 Alice heard: A
+
+Alice wants to say: A received
+
+Bob heard: A received
+
+Bob wants to say: B
 
 Alice heard: B
 
-Bob wants to say: C
+Alice wants to say: B received
 
-Bob wants to say: D
+Bob heard: B received
+
+Bob wants to say: C
 
 Alice heard: C
 
-Alice heard: D
+Alice wants to say: C received
 
-Bob wants to say: E
-
-Bob wants to say: F
-
-Alice heard: E
-
-Alice heard: F
-
-Bob wants to say: G
-
-Bob wants to say: H
-
-Alice heard: G
-
-Alice heard: H
-
-Bob wants to say: I
-
-Bob wants to say: J
-
-Alice heard: I
-
-Bob wants to say: K
-
-Alice heard: J
-
-Alice heard: K
-
-Bob wants to say: L
-
-Bob wants to say: M
-
-Alice heard: L
-
-Alice heard: M
+Bob heard: C received

@@ -57,12 +57,12 @@ func main() {
     k = read_base64(k)
 
     for _, v := range os.Args[4:] {
-      fmt.Println("Bob wants to say:", v)
-      if b, e = AESEncrypt(k, v); e != nil {
-        fmt.Println(e)
+      SendMessageFrom("Bob", BtoA, k, v)
+      v = read_base64(<- AtoB)
+      if v, e = AESDecrypt(k, v); e != nil {
         os.Exit(DECRYPTION_FAILED)
       }
-      BtoA <- EncodeToString(b)
+      fmt.Println("Bob heard:", v)
     }
     close(BtoA)
   }()
@@ -79,6 +79,8 @@ func main() {
       os.Exit(DECRYPTION_FAILED)
     }
     fmt.Println("Alice heard:", v)
+    v = fmt.Sprintf("%v received", v)
+    SendMessageFrom("Alice", AtoB, k, v)
   }
 }
 
@@ -101,6 +103,16 @@ func SendSymmetricKey(out chan string, pk *rsa.PublicKey, k, l string) {
   } else {
     fmt.Println(e)
     os.Exit(ENCRYPTION_FAILED)
+  }
+}
+
+func SendMessageFrom(n string, c chan string, k, v string) {
+  fmt.Println(n, "wants to say:", v)
+  if b, e := AESEncrypt(k, v); e == nil {
+    c <- EncodeToString(b)
+  } else {
+    fmt.Println(e)
+    os.Exit(DECRYPTION_FAILED)
   }
 }
 
