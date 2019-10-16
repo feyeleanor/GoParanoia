@@ -28,14 +28,13 @@ func main() {
   if n, e = strconv.Atoi(os.Args[1]); n == 0 {
     os.Exit(INVALID_KEYSIZE)
   }
-  if k, e = CreatePrivateKey(n); e != nil {
-    os.Exit(CREATE_KEY_FAILED)
-  }
+  k, e = CreatePrivateKey(n)
+  ExitOnError(e, CREATE_KEY_FAILED)
+
   p := CreatePEM(k)
   if pwd := os.Getenv("PEM_KEY"); pwd != "" {
-    if p, e = EncryptPEM(p, pwd); e != nil {
-      os.Exit(PEM_ENCRYPTION_FAILED)
-    }
+    p, e = EncryptPEM(p, pwd)
+    ExitOnError(e, PEM_ENCRYPTION_FAILED)
   }
   fmt.Println(PrintableKey(p))
 }
@@ -64,4 +63,11 @@ func EncryptPEM(p *pem.Block, s string) (*pem.Block, error) {
     []byte(s),
     x509.PEMCipherAES256,
   )
+}
+
+func ExitOnError(e error, n int) {
+  if e != nil {
+    fmt.Println(e)
+    os.Exit(n)
+  }
 }

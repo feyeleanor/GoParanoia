@@ -64,7 +64,7 @@ func (s *SignedList) Push(k, v string) *SignedList {
   h.Write([]byte(v))
   return &SignedList{
     v,
-    base64.StdEncoding.EncodeToString(h.Sum(nil)),
+    EncodeToString(h.Sum(nil)),
     s,
   }
 }
@@ -81,4 +81,8 @@ func (s SignedList) IfNodeInvalid(h string, f func()) {
   if h != s.H {
     f()
   }
+}
+
+func EncodeToString(b []byte) string {
+  return base64.StdEncoding.EncodeToString(b)
 }

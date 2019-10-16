@@ -3,6 +3,7 @@ package main
 import "crypto/rsa"
 import "crypto/x509"
 import "encoding/pem"
+import "fmt"
 import "io/ioutil"
 import "os"
 
@@ -24,14 +25,12 @@ func main() {
 
   f := os.Args[1]
   b := LoadPEM(f)
-  if k, e = x509.ParsePKCS1PrivateKey(b); e != nil {
-    os.Exit(INVALID_PRIVATE_KEY)
-  }
+  k, e = x509.ParsePKCS1PrivateKey(b)
+  ExitOnError(e, INVALID_PRIVATE_KEY)
 
   f = f + ".pub"
-  if e = SaveKey(f, CreatePEM(k.PublicKey), 0644); e != nil {
-    os.Exit(FILE_WRITE_FAILED)
-  }
+  e = SaveKey(f, CreatePEM(k.PublicKey), 0644)
+  ExitOnError(e, FILE_WRITE_FAILED)
 }
 
 func LoadPEM(s string) []byte {
@@ -46,9 +45,8 @@ func LoadFile(s string) (b []byte) {
     os.Exit(MISSING_FILENAME)
   }
 
-  if b, e = ioutil.ReadFile(s); e != nil {
-    os.Exit(FILE_UNREADABLE)
-  }
+  b, e = ioutil.ReadFile(s)
+  ExitOnError(e, FILE_UNREADABLE)
   return
 }
 
@@ -77,9 +75,8 @@ func DecryptPEM(p *pem.Block) (b []byte) {
   if x509.IsEncryptedPEMBlock(p) {
 	if pwd := os.Getenv("PEM_KEY"); pwd != "" {
       var e error
-      if b, e = x509.DecryptPEMBlock(p, []byte(pwd)); e != nil {
-        os.Exit(PEM_DECRYPTION_FAILED)
-      }
+      b, e = x509.DecryptPEMBlock(p, []byte(pwd))
+      ExitOnError(e, PEM_DECRYPTION_FAILED)
     } else {
       os.Exit(PEM_PASSWORD_REQUIRED)
     }
@@ -87,4 +84,11 @@ func DecryptPEM(p *pem.Block) (b []byte) {
     b = p.Bytes
   }
   return
+}
+
+func ExitOnError(e error, n int) {
+  if e != nil {
+    fmt.Println(e)
+    os.Exit(n)
+  }
 }

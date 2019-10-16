@@ -26,10 +26,8 @@ func main() {
   h.Write(ms)
 
   k := os.Getenv("AES_KEY")
-  if ms, e = Decrypt(ms, k); e != nil {
-    fmt.Printf("error: %v\n", e)
-    os.Exit(DECRYPTION_FAILED)
-  }
+  ms, e = Decrypt(ms, k)
+  ExitOnError(e, DECRYPTION_FAILED)
 
   if hmac.Equal(h.Sum(nil), hs) {
     fmt.Println("Signature Verification Succeeded")
@@ -70,4 +68,11 @@ func TrimBuffer(m []byte) (r []byte) {
     }
   }
   return
+}
+
+func ExitOnError(e error, n int) {
+  if e != nil {
+    fmt.Println(e)
+    os.Exit(n)
+  }
 }

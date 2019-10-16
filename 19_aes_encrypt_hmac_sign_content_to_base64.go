@@ -9,6 +9,10 @@ import "encoding/base64"
 import "fmt"
 import "os"
 
+const (
+  _ = iota
+  ENCRYPTION_FAILED
+)
 
 func main() {
   var e error
@@ -17,9 +21,8 @@ func main() {
   k := os.Getenv("AES_KEY")
   s := os.Args[1]
 
-  if m, e = Encrypt(s, k); e != nil {
-    fmt.Printf("error: %v\n", e)
-  }
+  m, e = Encrypt(s, k)
+  ExitOnError(e, ENCRYPTION_FAILED)
 
   hk := os.Getenv("HMAC_KEY")
   h := hmac.New(sha512.New, []byte(hk))
@@ -69,4 +72,11 @@ func IV() (b []byte, e error) {
   b = make([]byte, aes.BlockSize)
   _, e = rand.Read(b)
   return
+}
+
+func ExitOnError(e error, n int) {
+  if e != nil {
+    fmt.Println(e)
+    os.Exit(n)
+  }
 }

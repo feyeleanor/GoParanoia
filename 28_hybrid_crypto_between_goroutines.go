@@ -37,11 +37,10 @@ func main() {
     fBob := LoadFile(os.Args[1])
     b := DecodePEM(fBob).Bytes
 
-    if kBob, e = x509.ParsePKCS1PrivateKey(b); e != nil {
-      os.Exit(INVALID_PRIVATE_KEY)
-    }
-    p := CreatePEM(kBob.PublicKey)
+    kBob, e = x509.ParsePKCS1PrivateKey(b)
+    ExitOnError(e, INVALID_PRIVATE_KEY)
 
+    p := CreatePEM(kBob.PublicKey)
     l := <- AtoB
     fmt.Println("Bob heard:", l)
 
@@ -49,19 +48,17 @@ func main() {
     m := <- AtoB
 
     var k string
-    if k, e = RSADecrypt(kBob, m, l); e != nil {
-      fmt.Println(e)
-      os.Exit(DECRYPTION_FAILED)
-    }
+    k, e = RSADecrypt(kBob, m, l)
+    ExitOnError(e, DECRYPTION_FAILED)
+
     fmt.Println("Bob heard:", k)
     k = read_base64(k)
 
     for _, v := range os.Args[4:] {
       SendMessageFrom("Bob", BtoA, k, v)
       v = read_base64(<- AtoB)
-      if v, e = AESDecrypt(k, v); e != nil {
-        os.Exit(DECRYPTION_FAILED)
-      }
+      v, e = AESDecrypt(k, v)
+      ExitOnError(e, DECRYPTION_FAILED)
       fmt.Println("Bob heard:", v)
     }
     close(BtoA)
@@ -75,9 +72,8 @@ func main() {
   var e error
   for v := range BtoA {
     v = read_base64(v)
-    if v, e = AESDecrypt(k, v); e != nil {
-      os.Exit(DECRYPTION_FAILED)
-    }
+    v, e = AESDecrypt(k, v)
+    ExitOnError(e, DECRYPTION_FAILED)
     fmt.Println("Alice heard:", v)
     v = fmt.Sprintf("%v received", v)
     SendMessageFrom("Alice", AtoB, k, v)
@@ -90,30 +86,23 @@ func RequestPublicKey(out, in chan string, m string) (k *rsa.PublicKey) {
   out <- m
   m = read_base64(<- in)
   b := DecodePEM([]byte(m)).Bytes
-  if k, e = x509.ParsePKCS1PublicKey(b); e != nil {
-    os.Exit(INVALID_PUBLIC_KEY)
-  }
+  k, e = x509.ParsePKCS1PublicKey(b)
+  ExitOnError(e, INVALID_PUBLIC_KEY)
   return
 }
 
 func SendSymmetricKey(out chan string, pk *rsa.PublicKey, k, l string) {
   k = EncodeToString([]byte(k))
-  if b, e := RSAEncrypt(pk, k, l); e == nil {
-    out <- string(b)
-  } else {
-    fmt.Println(e)
-    os.Exit(ENCRYPTION_FAILED)
-  }
+  b, e := RSAEncrypt(pk, k, l)
+  ExitOnError(e, ENCRYPTION_FAILED)
+  out <- string(b)
 }
 
 func SendMessageFrom(n string, c chan string, k, v string) {
   fmt.Println(n, "wants to say:", v)
-  if b, e := AESEncrypt(k, v); e == nil {
-    c <- EncodeToString(b)
-  } else {
-    fmt.Println(e)
-    os.Exit(DECRYPTION_FAILED)
-  }
+  b, e := AESEncrypt(k, v)
+  ExitOnError(e, DECRYPTION_FAILED)
+  c <- EncodeToString(b)
 }
 
 func read_base64(s string) string {
@@ -142,9 +131,8 @@ func LoadFile(s string) (b []byte) {
     os.Exit(MISSING_FILENAME)
   }
 
-  if b, e = ioutil.ReadFile(s); e != nil {
-    os.Exit(FILE_UNREADABLE)
-  }
+  b, e = ioutil.ReadFile(s)
+  ExitOnError(e, FILE_UNREADABLE)
   return
 }
 
@@ -217,4 +205,11 @@ func IV() (b []byte, e error) {
   b = make([]byte, aes.BlockSize)
   _, e = rand.Read(b)
   return
+}
+
+func ExitOnError(e error, n int) {
+  if e != nil {
+    fmt.Println(e)
+    os.Exit(n)
+  }
 }

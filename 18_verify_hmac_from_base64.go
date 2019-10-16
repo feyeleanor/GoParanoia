@@ -6,6 +6,11 @@ import "encoding/base64"
 import "fmt"
 import "os"
 
+const (
+  _ = iota
+  SIGNING_FAILED
+)
+
 func main() {
   k := []byte(os.Getenv("HMAC_KEY"))
   m := hmac.New(sha512.New, k)
@@ -16,6 +21,6 @@ func main() {
     fmt.Println("Signature Verification Succeeded")
   } else {
     fmt.Println("Signature Verification Failed")
-    os.Exit(1)
+    os.Exit(SIGNING_FAILED)
   }
 }

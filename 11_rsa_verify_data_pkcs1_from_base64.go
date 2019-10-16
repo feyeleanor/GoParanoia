@@ -37,17 +37,15 @@ func main() {
   p := DecodePEM(b)
   b = DecryptPEM(p)
 
-  if k, e = x509.ParsePKCS1PublicKey(b); e != nil {
-    os.Exit(INVALID_PUBLIC_KEY)
-  }
+  k, e = x509.ParsePKCS1PublicKey(b)
+  ExitOnError(e, INVALID_PUBLIC_KEY)
 
   e = rsa.VerifyPKCS1v15(k, h, hs, s)
   if e != nil {
     fmt.Println("Signature Verification Failed")
-    os.Exit(1)
-  } else {
-    fmt.Println("Signature Verification Succeeded")
+    os.Exit(VERIFICATION_FAILED)
   }
+  fmt.Println("Signature Verification Succeeded")
 }
 
 func read_base64(s string) []byte {
@@ -61,9 +59,8 @@ func LoadFile(s string) (b []byte) {
     os.Exit(MISSING_FILENAME)
   }
 
-  if b, e = ioutil.ReadFile(s); e != nil {
-    os.Exit(FILE_UNREADABLE)
-  }
+  b, e = ioutil.ReadFile(s)
+  ExitOnError(e, FILE_UNREADABLE)
   return
 }
 
@@ -81,9 +78,8 @@ func DecryptPEM(p *pem.Block) (b []byte) {
   if x509.IsEncryptedPEMBlock(p) {
 	if pwd := os.Getenv("PEM_KEY"); pwd != "" {
       var e error
-      if b, e = x509.DecryptPEMBlock(p, []byte(pwd)); e != nil {
-        os.Exit(PEM_DECRYPTION_FAILED)
-      }
+      b, e = x509.DecryptPEMBlock(p, []byte(pwd))
+      ExitOnError(e, PEM_DECRYPTION_FAILED)
     } else {
       os.Exit(PEM_PASSWORD_REQUIRED)
     }
@@ -91,4 +87,11 @@ func DecryptPEM(p *pem.Block) (b []byte) {
     b = p.Bytes
   }
   return
+}
+
+func ExitOnError(e error, n int) {
+  if e != nil {
+    fmt.Println(e)
+    os.Exit(n)
+  }
 }

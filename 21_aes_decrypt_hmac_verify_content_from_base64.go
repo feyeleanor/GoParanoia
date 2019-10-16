@@ -25,10 +25,8 @@ func main() {
   ms := []byte(read_base64(s[88:]))
 
   k := os.Getenv("AES_KEY")
-  if ms, e = Decrypt(ms, k); e != nil {
-    fmt.Printf("error: %v\n", e)
-    os.Exit(DECRYPTION_FAILED)
-  }
+  ms, e = Decrypt(ms, k)
+  ExitOnError(e, DECRYPTION_FAILED)
 
   h.Write(ms)
   if hmac.Equal(h.Sum(nil), hs) {
@@ -70,4 +68,11 @@ func TrimBuffer(m []byte) (r []byte) {
     }
   }
   return
+}
+
+func ExitOnError(e error, n int) {
+  if e != nil {
+    fmt.Println(e)
+    os.Exit(n)
+  }
 }

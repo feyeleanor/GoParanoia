@@ -6,38 +6,38 @@ Code from the workshop "Adventures in Paranoia with Go and SQLite"
 
 ### Encryption
 
-$ AES_KEY="0123456789012345" go run 01_encrypt_aes.go "Hello World"
+$ AES_KEY=0123456789012345 go run 01_encrypt_aes.go 'Hello World''
 
 [189 66 213 32 192 240 163 198 89 18 112 190 150 234 133 248 10 214 159 253 11 245 129 197 68 225 13 23 141 226 137 82]
 
 ### Decryption
 
-$ AES_KEY="0123456789012345" go run 02_decrypt_aes.go 189 66 213 32 192 240 163 198 89 18 112 190 150 234 133 248 10 214 159 253 11 245 129 197 68 225 13 23 141 226 137 82
+$ AES_KEY=0123456789012345 go run 02_decrypt_aes.go 189 66 213 32 192 240 163 198 89 18 112 190 150 234 133 248 10 214 159 253 11 245 129 197 68 225 13 23 141 226 137 82
 
 Hello World
 
-$ AES_KEY="0123456789012345" go run 03_encrypt_aes_to_base64.go "Hello World!"
+$ AES_KEY=0123456789012345 go run 03_encrypt_aes_to_base64.go 'Hello World!'
 
 3Q9B81dbetzrdptKdv0TBgbanOZX9wgSViRGoF6YxUs=
 
-$ AES_KEY="0123456789012345" go run 03_encrypt_aes_to_base64.go "Hello World"
+$ AES_KEY=0123456789012345 go run 03_encrypt_aes_to_base64.go 'Hello World'
 4dlr5z3SkGP4jykKekFYs6J3IabHjecnz3leLbeM0DI=
 
-$ AES_KEY="0123456789012345" go run 04_decrypt_aes_from_base64.go 3Q9B81dbetzrdptKdv0TBgbanOZX9wgSViRGoF6YxUs=
+$ AES_KEY=0123456789012345 go run 04_decrypt_aes_from_base64.go 3Q9B81dbetzrdptKdv0TBgbanOZX9wgSViRGoF6YxUs=
 Hello World
 
-$ AES_KEY="0123456789012345" go run 04_decrypt_aes_from_base64.go 4dlr5z3SkGP4jykKekFYs6J3IabHjecnz3leLbeM0DI=
+$ AES_KEY=0123456789012345 go run 04_decrypt_aes_from_base64.go 4dlr5z3SkGP4jykKekFYs6J3IabHjecnz3leLbeM0DI=
 Hello World
 
 ## RSA Public Key Cryptography
 
 ### Key Generation
 
-$ PEM_KEY="0123456789012345" go run 05_generate_rsa_keypair.go 1024
+$ PEM_KEY=0123456789012345 go run 05_generate_rsa_keypair.go 1024
 
 LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpQcm9jLVR5cGU6IDQsRU5DUllQVEVECkRFSy1JbmZvOiBBRVMtMjU2LUNCQywyZGYwNmEyMTUwY2VmODM2MDc0YTk2ZjNhMDA4N2NlYgoKeG9JSDJZVFhIVjQ4ckJCSWxZdmdtQ21Bc1M4bno2OHEwbFNLZHFJeHhralZNbjZJb3pQVndZN1A5SCtmOVIzRApYUmkwTVI5NnpHdkZYaXpjNEpLRk1odHFablhlRmJONnk3RXBnMWZObllhdzJ0MEtidlFjbXhiOEsyOEhRMXNJCjBlWjM4bEZzblFtWURWaHNpSlB0ZGpXeGxodjdrMFJlNEF0ZGk1NVhlZFhMaHVVSTkyeWhlZ2ttemV1NzhhbGIKWklLZUd0aUxCNWU4T2M5T3dEZnYyc0IwSEltaGFnbzRLeTJ3Yit2UG1SbElRR0lRb3FzcExIbWFxVUFHblpEZgpqcXY4SzJxRW9ITGluQVVLb3pVQm1CZnFFaUptRVdiOG45YUpvVWJDYlV1REM0dDZRRWRhS0lQbi9QeWZ3N1pOCnZuMERUZi9xditsd2JORElENUVhK2tENDhKcHdNODFpcmZwQlBncjlJd0E2cWtIZTExU2tCNDhhZmZYd1kvZzQKblBrRGhUc0Q4bExGeEJnVVJIaVJXQmhrMXNvdU5VRmVGQ2dhTTJwZkttMU1kNXdFVDBCdHVsNUZGbzV1QW1mVAp1RGp5TjlPTzJBaW5YRVpFeGZYOEV0MHJLODlEdWlaSmRrTzBKSks1MnhtL01NVkdIYkc3aXcreXYvYzlHTEtiCmF1REU4MDVHald6aTdUQXNxdlcxTzQ2ZkhWMEt6UUFuS1JoblJqOTdkRE83MkdGWUJKSWh0R3VPdkxwbEVKMUUKSWtkOWxpa0MrTmI5Q0YzMWMyTXNZQnRJTnh4L0UyZmtJRXhlRm50TkZxaFdNWW44Q1JWSVZGTTJXMlV2OFV5cQpQOFE3ZlNBeEhYYkhLUDlUTFNpcTZaeDdtM3JGeVBqV1hyNXJ6Zk16TXlXUWpBNk1hVmhNZ3ZPdHVFcFd0TWUrClV0c3FCL0ZBTStJbkI1MkhCUkdNT1dXeVM3bEF3SGVkL0pldWRxbGkzZ3llL29xTTFPQ0dzd296M05UUGsvaFcKVGJ1b2JSclJJS21namFnM3YzallSOC9aRnI5QS82YU84bTAxN0dGWVJadzJaMjR1L3lZR2FkK0Q0WUFPWEJBMwotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
 
-$ PEM_KEY="0123456789012345" go run 06_generate_rsa_keypair_to_pem.go test.pem 1024
+$ PEM_KEY=0123456789012345 go run 06_generate_rsa_keypair_to_pem.go test.pem 1024
 
 $ cat test.pem
 ```
@@ -82,7 +82,7 @@ U57b3iUnWPFoB0v/pcjY10slf6ruez++3zhWJdYBDjmeW5VmA1d4arzisRzd7Cya
 -----END RSA PRIVATE KEY-----
 ```
 
-$ PEM_KEY="0123456789012345" go run 07_extract_rsa_pubkey.go test.pem
+$ PEM_KEY=0123456789012345 go run 07_extract_rsa_pubkey.go test.pem
 
 $ cat test.pem.pub
 ```
@@ -106,11 +106,11 @@ XKhvWaZ89ahzdgiW9Eo/9M5gnav6zj2eKsl7RP/bROcOwl0HVZDZAgMBAAE=
 
 ### PKCS#1 Encryption
 
-$ go run 08_rsa_encrypt_data_pkcs1_to_base64.go test2.pem.pub "Hello World"
+$ go run 08_rsa_encrypt_data_pkcs1_to_base64.go test2.pem.pub 'Hello World'
 
 F4nG2/g0k87S4CiEjUCPKCl4uYTM3WwyhcYs/RhKDx0y54bqMV0EtLW/CWomAE7VqYxI2w1Hl7XPbEB77HT/Cgmv/Z6XR8VBcm3v5n8RuvZyFr98/sSJrZynEnM0hIXRGoqYRWgo+i7kcufKAccHtAGvF1qCiPCi+Zf+mkdxEVY=
 
-$ go run 08_rsa_encrypt_data_pkcs1_to_base64.go test.pem.pub "Hello World"
+$ go run 08_rsa_encrypt_data_pkcs1_to_base64.go test.pem.pub 'Hello World'
 
 Jmkib6RpL0AxLfEQh1zkGjVvvSEPaRxGyhx+xeLCmiprXS9PL1XX5U9H9bbE8uqfqjAKCzRGD4cDq8rrJaUx51MNK/1Jg4ZgbUg0NwJurL7R0cAG9AeNlwYwtMk2+zCcD8TsHdnTpqsFzrDcs9Qax2lsxfe4kXUPwhcZcj+zVJ0=
 
@@ -120,29 +120,29 @@ $ go run 09_rsa_decrypt_data_pkcs1_from_base64.go test2.pem F4nG2/g0k87S4CiEjUCP
 
 Hello World
 
-$ PEM_KEY="0123456789012345" go run 09_rsa_decrypt_data_pkcs1_from_base64.go test.pem Jmkib6RpL0AxLfEQh1zkGjVvvSEPaRxGyhx+xeLCmiprXS9PL1XX5U9H9bbE8uqfqjAKCzRGD4cDq8rrJaUx51MNK/1Jg4ZgbUg0NwJurL7R0cAG9AeNlwYwtMk2+zCcD8TsHdnTpqsFzrDcs9Qax2lsxfe4kXUPwhcZcj+zVJ0=
+$ PEM_KEY=0123456789012345 go run 09_rsa_decrypt_data_pkcs1_from_base64.go test.pem Jmkib6RpL0AxLfEQh1zkGjVvvSEPaRxGyhx+xeLCmiprXS9PL1XX5U9H9bbE8uqfqjAKCzRGD4cDq8rrJaUx51MNK/1Jg4ZgbUg0NwJurL7R0cAG9AeNlwYwtMk2+zCcD8TsHdnTpqsFzrDcs9Qax2lsxfe4kXUPwhcZcj+zVJ0=
 
 Hello World
 
 ### PKCS#1 Signing
 
-$ go run 10_rsa_sign_data_pkcs1_to_base64.go test2.pem "Hello World"
+$ go run 10_rsa_sign_data_pkcs1_to_base64.go test2.pem 'Hello World'
 
 RRoTsrAQWMkKFLe/PfIPgCb+FkakkL62Zr+W8L500yz2BFQ6XKV7cqfcmKEJWlA0dmFO/HbBfe5DVE5FE6/OpQb+zYv3HXs4FJL+bMfE1T7wjrC2zQGb5N9evq6AWU1JFQbmOFPM6tnHsFsOr5d8n2h/xh66CANsV/W2XHBJbL0=
 
-$ go run 11_rsa_verify_data_pkcs1_from_base64.go test2.pem.pub "Hello World" RRoTsrAQWMkKFLe/PfIPgCb+FkakkL62Zr+W8L500yz2BFQ6XKV7cqfcmKEJWlA0dmFO/HbBfe5DVE5FE6/OpQb+zYv3HXs4FJL+bMfE1T7wjrC2zQGb5N9evq6AWU1JFQbmOFPM6tnHsFsOr5d8n2h/xh66CANsV/W2XHBJbL0=
+$ go run 11_rsa_verify_data_pkcs1_from_base64.go test2.pem.pub 'Hello World' RRoTsrAQWMkKFLe/PfIPgCb+FkakkL62Zr+W8L500yz2BFQ6XKV7cqfcmKEJWlA0dmFO/HbBfe5DVE5FE6/OpQb+zYv3HXs4FJL+bMfE1T7wjrC2zQGb5N9evq6AWU1JFQbmOFPM6tnHsFsOr5d8n2h/xh66CANsV/W2XHBJbL0=
 
 Signature Verification Succeeded
 
-$ go run 11_rsa_verify_data_pkcs1_from_base64.go test2.pem.pub "Hello World" AAoTsrAQWMkKFLe/PfIPgCb+FkakkL62Zr+W8L500yz2BFQ6XKV7cqfcmKEJWlA0dmFO/HbBfe5DVE5FE6/OpQb+zYv3HXs4FJL+bMfE1T7wjrC2zQGb5N9evq6AWU1JFQbmOFPM6tnHsFsOr5d8n2h/xh66CANsV/W2XHBJbL0=
+$ go run 11_rsa_verify_data_pkcs1_from_base64.go test2.pem.pub 'Hello World' AAoTsrAQWMkKFLe/PfIPgCb+FkakkL62Zr+W8L500yz2BFQ6XKV7cqfcmKEJWlA0dmFO/HbBfe5DVE5FE6/OpQb+zYv3HXs4FJL+bMfE1T7wjrC2zQGb5N9evq6AWU1JFQbmOFPM6tnHsFsOr5d8n2h/xh66CANsV/W2XHBJbL0=
 
 Signature Verification Failed
 
-exit status 1
+exit status 8
 
 ### OAEP Encryption
 
-$ go run 12_rsa_encrypt_data_oaep_to_base64.go test3.pem.pub first "Hello World"
+$ go run 12_rsa_encrypt_data_oaep_to_base64.go test3.pem.pub first 'Hello World'
 
 WcEisRyeQaiGYa8ArThh9n0FJkTOW7gO0lluQSyMReW0GFw44jUwrlTD1eVjyQDEo4+p6rxkKsfDlKR7n8zxJDMN5nLtpFTxGxjTc4ugqrRjfPEY0aIP+9jkcuSFTkdR525vVww5vdC1J03crM01sqVh1Jgu67DOkUcY32toafNBuZ/lutPR+5yWBBvSQsQKAzIPlTplWpa3YuXJYjURXlfmE0ea1GMnqzfesf/tF7Qt/ejTFHkYUdWwSazOqTVj70vSG15cr4h+0W+x9K7vwSM8PrpajHnFq8/jIXFd0jFc9hWN+XzeojyHVeLnzEBszIorFgU8SC+4aekU0KC2NQ==
 
@@ -154,33 +154,39 @@ Hello World
 
 ### PSS Signing
 
-$ go run 14_rsa_sign_data_pss_to_base64.go test3.pem "Hello World"
+$ go run 14_rsa_sign_data_pss_to_base64.go test3.pem 'Hello World'
 
 D18jN+2N9+cXXGKc8/4YvxYh0zgcM+p4U0wgczrwh3fa8hLM1+hoW4YC3ANMOzmTuDRsmh8iusDCI3Kx3huuHKLLiHRRK5qUFbSZkITZWjxE8zCNA2Ebe5ZyOeV8T5iqoNGT7xjt2efAi+GZOk4IpXB1pxdVsv6zF6zJCeumCHVgJx6cRJ7cyeqKr15Ry9sJhzmA0qmTkO2YiriKt+IFoulxYiJXwDgXWmADym00B4A3Di4qINEdLJwqbIuXfKQPm93RBXpqw7Pc621KEF/FJR725T6/95vrOqP59qntMmSV+oLVIqLPca/PwCEqhi7FJKeFNEEpwhqmYxUIWpBcfQ==
 
-$ go run 15_rsa_verify_data_pss_from_base64.go test3.pem.pub "Hello World" D18jN+2N9+cXXGKc8/4YvxYh0zgcM+p4U0wgczrwh3fa8hLM1+hoW4YC3ANMOzmTuDRsmh8iusDCI3Kx3huuHKLLiHRRK5qUFbSZkITZWjxE8zCNA2Ebe5ZyOeV8T5iqoNGT7xjt2efAi+GZOk4IpXB1pxdVsv6zF6zJCeumCHVgJx6cRJ7cyeqKr15Ry9sJhzmA0qmTkO2YiriKt+IFoulxYiJXwDgXWmADym00B4A3Di4qINEdLJwqbIuXfKQPm93RBXpqw7Pc621KEF/FJR725T6/95vrOqP59qntMmSV+oLVIqLPca/PwCEqhi7FJKeFNEEpwhqmYxUIWpBcfQ==
+$ go run 15_rsa_verify_data_pss_from_base64.go test3.pem.pub 'Hello World' D18jN+2N9+cXXGKc8/4YvxYh0zgcM+p4U0wgczrwh3fa8hLM1+hoW4YC3ANMOzmTuDRsmh8iusDCI3Kx3huuHKLLiHRRK5qUFbSZkITZWjxE8zCNA2Ebe5ZyOeV8T5iqoNGT7xjt2efAi+GZOk4IpXB1pxdVsv6zF6zJCeumCHVgJx6cRJ7cyeqKr15Ry9sJhzmA0qmTkO2YiriKt+IFoulxYiJXwDgXWmADym00B4A3Di4qINEdLJwqbIuXfKQPm93RBXpqw7Pc621KEF/FJR725T6/95vrOqP59qntMmSV+oLVIqLPca/PwCEqhi7FJKeFNEEpwhqmYxUIWpBcfQ==
 
 Signature Verification Succeeded
+
+$ go run 15_rsa_verify_data_pss_from_base64.go test3.pem.pub 'Hello World' D18jN+2N9+cXXGKc8/4YvxYh0zgcM+p4U0wgczrwh3fa8hLM1+hoW4YC3ANMOzmTuDRsmh8iusDCI3Kx3huuHKLLiHRRK5qUFbSZkITZWjxE8zCNA2Ebe5ZyOeV8T5iqoNGT7xjt2efAi+GZOk4IpXB1pxdVsv6zF6zJCeumCHVgJx6cRJ7cyeqKr15Ry9sJhzmA0qmTkO2YiriKt+IFoulxYiJXwDgXWmADym00B4A3Di4qINEdLJwqbIuXfKQPm93RBXpqw7Pc621KEF/FJR725T6/95vrOqP59qntMmSV+oLVIqLPca/PwCEqhi7FJKeFNEEpwhqmYxUIWpBcfq==
+
+Signature Verification Failed
+
+exit status 8
 
 ## Hashing
 
 ### SHA512
 
-$ go run 16_sha512_hash_to_base64.go "Hello World"
+$ go run 16_sha512_hash_to_base64.go 'Hello World'
 
 LHT9F+2v2A6ER7DUZ0HuJDt+t03SFJoKsbkkb7MDgvJ+hT2FhXGeDmfL2g2qj1FnEGRhXWRa4nrLFb+xRH9Fmw==
 
 ### HMAC
 
-$ HMAC_KEY="0123456789012345" go run 17_hmac_to_base64.go "Hello World"
+$ HMAC_KEY=0123456789012345 go run 17_hmac_to_base64.go 'Hello World'
 
 rxeUOuUKx3uVVO6qKQt+jawwRMvglw62D02h3ZTFfb3fz2gL0k29nmmYpe6n09X+LtZFdG4tTp8EOlM1jY75+A==
 
-$ HMAC_KEY="0123456789012345" go run 18_verify_hmac_from_base64.go "Hello World" rxeUOuUKx3uVVO6qKQt+jawwRMvglw62D02h3ZTFfb3fz2gL0k29nmmYpe6n09X+LtZFdG4tTp8EOlM1jY75+A==
+$ HMAC_KEY='0123456789012345' go run 18_verify_hmac_from_base64.go 'Hello World' rxeUOuUKx3uVVO6qKQt+jawwRMvglw62D02h3ZTFfb3fz2gL0k29nmmYpe6n09X+LtZFdG4tTp8EOlM1jY75+A==
 
 Signature Verification Succeeded
 
-$ HMAC_KEY="0123456789012345" go run 18_verify_hmac_from_base64.go "Hello World" rxeUOuUKx3uVVO6qKQt+jawwRMvglw62D02h3ZTFfb3fz2gL0k29nmmYpe6n09X+LtZFdG4tTp8EOlM1jY75+Z==
+$ HMAC_KEY=0123456789012345 go run 18_verify_hmac_from_base64.go 'Hello World' rxeUOuUKx3uVVO6qKQt+jawwRMvglw62D02h3ZTFfb3fz2gL0k29nmmYpe6n09X+LtZFdG4tTp8EOlM1jY75+Z==
 
 Signature Verification Failed
 
@@ -188,19 +194,21 @@ exit status 1
 
 ### HMAC Content Signatures
 
-$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 19_aes_encrypt_hmac_sign_content_to_base64.go "Hello World"
+$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 19_aes_encrypt_hmac_sign_content_to_base64.go 'Hello World'
 
 jz7vcg+B0kjBhTp5TfuV2XgrpA0JOKyAZcB9o+Qp7Jj4cE01W8hFfTLaqs3WFNM89MTfwAn9stUI9KfTRw3UOQ==f+tGhML1HsD0qqfQ+Gi+wNLRCskGtlXi+nhPEne73qM=
 
-$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 20_aes_decrypt_hmac_verify_content_from_base64.go "Hello World" jz7vcg+B0kjBhTp5TfuV2XgrpA0JOKyAZcB9o+Qp7Jj4cE01W8hFfTLaqs3WFNM89MTfwAn9stUI9KfTRw3UOQ==f+tGhML1HsD0qqfQ+Gi+wNLRCskGtlXi+nhPEne73qM=
+$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 20_aes_decrypt_hmac_verify_content_from_base64.go 'Hello World' jz7vcg+B0kjBhTp5TfuV2XgrpA0JOKyAZcB9o+Qp7Jj4cE01W8hFfTLaqs3WFNM89MTfwAn9stUI9KfTRw3UOQ==f+tGhML1HsD0qqfQ+Gi+wNLRCskGtlXi+nhPEne73qM=
 
 Signature Verification Succeeded
 
-$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 20_aes_decrypt_hmac_verify_content_from_base64.go "Hello World" jz7vcg+B0kjBhTp5TfuV2XgrpA0JOKyAZcB9o+Qp7Jj4cE01W8hFfTLaqs3WFNM89MTfwAn9stUI9KfTRw3UOQ==f+tGhML1HsD0qqfQ+Gi+wNLRCskGtlXi+nhPEne73qm=
+$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 20_aes_decrypt_hmac_verify_content_from_base64.go 'Hello World' jz7vcg+B0kjBhTp5TfuV2XgrpA0JOKyAZcB9o+Qp7Jj4cE01W8hFfTLaqs3WFNM89MTfwAn9stUI9KfTRw3UOQ==f+tGhML1HsD0qqfQ+Gi+wNLRCskGtlXi+nhPEne73qm=
+
+error: content doesn't match
 
 exit status 2
 
-$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 20_aes_decrypt_hmac_verify_content_from_base64.go "Hello World" jz7vcg+B0kjBhTp5TfuV2XgrpA0JOKyAZcB9o+Qp7Jj4cE01W8hFfTLaqs3WFNM89MTfwAn9stUI9KfTRw3UOq==f+tGhML1HsD0qqfQ+Gi+wNLRCskGtlXi+nhPEne73qM=
+$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 20_aes_decrypt_hmac_verify_content_from_base64.go 'Hello World' jz7vcg+B0kjBhTp5TfuV2XgrpA0JOKyAZcB9o+Qp7Jj4cE01W8hFfTLaqs3WFNM89MTfwAn9stUI9KfTRw3UOq==f+tGhML1HsD0qqfQ+Gi+wNLRCskGtlXi+nhPEne73qM=
 
 Signature Verification Failed
 
@@ -224,7 +232,7 @@ exit status 2
 
 ### HMAC Wrapper Signatures
 
-$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 22_aes_encrypt_hmac_sign_wrapper_to_base64.go "Hello World"
+$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 22_aes_encrypt_hmac_sign_wrapper_to_base64.go 'Hello World'
 
 dj82aiViZEVUZr++Q3Zz5Ix5Q7D0G7NX3DjyMm+i9O72/nXGcc6WKuqukg2n+c8TmlkC2t/rjXpLFmq5kNRsyw==tBpwJs9FZ0A+QPWoks7udfz6P0YA8h+vbwlduRcitS4=
 
@@ -373,3 +381,11 @@ $ go run 40_sqlite3_create_database.go test.db
 $ ls -al test.db
 
 -rw-r--r--  1 eleanor  admin  0 16 Oct 02:11 test.db
+
+$ go run 41_sqlite3_create_database.go test2.db
+
+$ ls -al *.db
+
+-rw-r--r--  1 eleanor  admin  0 16 Oct 02:11 test.db
+-rw-r--r--  1 eleanor  admin  0 16 Oct 13:03 test2.db
+
