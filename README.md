@@ -414,6 +414,30 @@ $ ls -al *.db
 
 ### Create Table
 
+$ go run 44_sqlite3_create_table.go test.db
+
+$ go run 44_sqlite3_create_table.go test.db
+
+$ sqlite3 test.db
+
+SQLite version 3.29.0 2019-07-10 17:32:03
+
+Enter ".help" for usage hints.
+
+sqlite> .schema
+
+CREATE TABLE Account (
+
+        id    INTEGER PRIMARY KEY,
+
+        Name  TEXT NOT NULL,
+
+        Email TEXT UNIQUE NOT NULL
+
+      );
+
+sqlite> .quit
+
 
 ### Add Index to Table
 
