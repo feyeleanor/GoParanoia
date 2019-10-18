@@ -426,29 +426,45 @@ Enter ".help" for usage hints.
 
 sqlite> .schema
 
-CREATE TABLE Account (
+	CREATE TABLE Account (
 
-        id    INTEGER PRIMARY KEY,
+		id    INTEGER PRIMARY KEY,
 
-        Name  TEXT NOT NULL,
+	    Name  TEXT NOT NULL,
 
-        Email TEXT UNIQUE NOT NULL
+	    Email TEXT UNIQUE NOT NULL
 
-      );
+	);
 
 sqlite> .quit
 
+### Drop Table, Insert, Select
+
+$ go run 45_sqlite3_create_table.go test.db
+
+rows in Account table = 3
+
+$ sqlite3 test.db
+
+SQLite version 3.29.0 2019-07-10 17:32:03
+
+Enter ".help" for usage hints.
+
+sqlite> select * from Account;
+
+a|Ellie|a@someserver.com
+
+b|Ellie|b@someserver.com
+
+c|Ellie|c@someserver.com
+
+sqlite> select count(*) from Account;
+
+3
+
+
 
 ### Add Index to Table
-
-
-### Drop Table
-
-
-### Insert Data into Table
-
-
-### Select from Table
 
 
 ### Update in Table
