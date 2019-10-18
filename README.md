@@ -387,5 +387,50 @@ $ go run 41_sqlite3_create_database.go test2.db
 $ ls -al *.db
 
 -rw-r--r--  1 eleanor  admin  0 16 Oct 02:11 test.db
+
 -rw-r--r--  1 eleanor  admin  0 16 Oct 13:03 test2.db
 
+$ go run 42_sqlite3_create_database.go test3
+
+$ ls -al *.db
+
+-rw-r--r--  1 eleanor  admin  0 16 Oct 19:26 test.db
+
+-rw-r--r--  1 eleanor  admin  0 16 Oct 19:26 test2.db
+
+-rw-r--r--  1 eleanor  admin  0 16 Oct 20:37 test3.db
+
+$ go run 43_sqlite3_create_database.go test4
+
+$ ls -al *.db
+
+-rw-r--r--  1 eleanor  admin  0 16 Oct 19:26 test.db
+
+-rw-r--r--  1 eleanor  admin  0 16 Oct 19:26 test2.db
+
+-rw-r--r--  1 eleanor  admin  0 16 Oct 20:37 test3.db
+
+-rw-r--r--  1 eleanor  admin  0 16 Oct 21:06 test4.db
+
+### Create Table
+
+
+### Add Index to Table
+
+
+### Drop Table
+
+
+### Insert Data into Table
+
+
+### Select from Table
+
+
+### Update in Table
+
+
+### Delete from Table
+
+
+### Join Tables
