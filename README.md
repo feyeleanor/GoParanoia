@@ -462,9 +462,53 @@ sqlite> select count(*) from Account;
 
 3
 
+### Create Table Index
 
+$ go run 46_sqlite3_create_index.go test.db
 
-### Add Index to Table
+UNIQUE constraint failed: Account.Name
+
+exit status 4
+
+$ sqlite3 test.db
+
+SQLite version 3.29.0 2019-07-10 17:32:03
+
+Enter ".help" for usage hints.
+
+sqlite> select count(*) from Account;
+
+1
+
+sqlite> select * from Account;
+
+a|Ellie|a@someserver.com
+
+sqlite> .quit
+
+$ go run 47_sqlite3_create_index.go test.db
+
+rows in Account table = 3
+
+$ sqlite3 test.db
+
+SQLite version 3.29.0 2019-07-10 17:32:03
+
+Enter ".help" for usage hints.
+
+sqlite> select count(*) from Account;
+
+3
+
+sqlite> select * from Account;
+
+a|Alpha|a@someserver.com
+
+b|Beta|b@someserver.com
+
+g|Gamma|g@someserver.com
+
+sqlite> .quit
 
 
 ### Update in Table
