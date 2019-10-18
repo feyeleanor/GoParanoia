@@ -15,11 +15,10 @@ const (
 func main() {
   db, e := sql.Open("sqlite3", os.Args[1])
   ExitOnError(e, DB_OPEN_FAILED)
+  defer db.Close()
 
   _, e = db.Prepare("")
   ExitOnError(e, DB_PREPARE_FAILED)
-
-  db.Close()
 }
 
 func ExitOnError(e error, n int) {
