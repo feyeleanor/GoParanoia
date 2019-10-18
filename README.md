@@ -510,11 +510,26 @@ g|Gamma|g@someserver.com
 
 sqlite> .quit
 
+## Encrypted Databases
 
-### Update in Table
+### Random Field ID
 
+$ go run 50_table_with_random_ids.go test.db
 
-### Delete from Table
+rows in Account table = 3
 
+$ sqlite3 test.db
 
-### Join Tables
+SQLite version 3.29.0 2019-07-10 17:32:03
+
+Enter ".help" for usage hints.
+
+sqlite> select * from Account;
+
+VlT/MgPQ9r7oll7X31DdQg==|Gamma|g@someserver.com
+
+Ws0y+Bnk33C/1FWTNaPxDQ==|Beta|b@someserver.com
+
+i5W/q5yjLO/zl8L5b2nIOQ==|Alpha|a@someserver.com
+
+sqlite> .quit
