@@ -533,3 +533,25 @@ Ws0y+Bnk33C/1FWTNaPxDQ==|Beta|b@someserver.com
 i5W/q5yjLO/zl8L5b2nIOQ==|Alpha|a@someserver.com
 
 sqlite> .quit
+
+### AES Encrypted Fields
+
+$ AES_KEY=0123456789012345 go run 51_table_with_encrypted_fields.go test.db
+
+rows in Account table = 3
+
+$ sqlite3 test.db
+
+SQLite version 3.29.0 2019-07-10 17:32:03
+
+Enter ".help" for usage hints.
+
+sqlite> select * from Account;
+
+E10a+ftltRrE11NazKmqQw==|voEyPVgO0IzwZRr0KVQvnhAdp1xDdjumqndGTg3+PqY=|hz7giZpDSrQj0pyGU+6mA0uoi3ZIhaDplbzDKV7jWRuXLNDZBU+Oc1IrSFydp8lm
+
+UoXYs2XFZn+0NwBPBUck1Q==|fSLD6i/NTwIUoJK6Y+cg8yEAQGo16P8dLPlR0NJgJbU=|/VXUhUvE3AVqabbHtode4omHzP++OLyT2z51A3rRJTbcvA67N36RaJ88WjoltrFs
+
+lQmkb9x1c3RzgnKWjcj0GQ==|08/u0jj7uYG3q0jGNr+STXGa4OJe5ScD1Biig4y99c8=|8NQi5V0Jed4B/MLJpscdoFL9gYezu6TXrq3qFXFUlLa47G+sePF84noglG3UBwo/
+
+sqlite> .quit
