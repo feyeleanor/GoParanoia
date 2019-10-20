@@ -2,7 +2,6 @@ package main
 
 import "crypto/hmac"
 import "crypto/sha512"
-import "encoding/base64"
 import "fmt"
 import "os"
 
@@ -39,17 +38,5 @@ func main() {
 		os.Exit(INVALID_SIGNATURE)
 	default:
 		fmt.Println("Signature Verification Succeeded")
-	}
-}
-
-func read_base64(s string) string {
-	b, _ := base64.StdEncoding.DecodeString(s)
-	return string(b)
-}
-
-func ExitOnError(e error, n int) {
-	if e != nil {
-		fmt.Println(e)
-		os.Exit(n)
 	}
 }

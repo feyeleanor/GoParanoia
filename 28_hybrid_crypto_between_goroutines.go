@@ -4,7 +4,6 @@ import "crypto/rand"
 import "crypto/rsa"
 import "crypto/sha512"
 import "crypto/x509"
-import "encoding/base64"
 import "encoding/pem"
 import "fmt"
 import "io/ioutil"
@@ -103,15 +102,6 @@ func SendMessageFrom(n string, c chan string, k, v string) {
 	c <- EncodeToString(b)
 }
 
-func read_base64(s string) string {
-	b, _ := base64.StdEncoding.DecodeString(s)
-	return string(b)
-}
-
-func EncodeToString(b []byte) string {
-	return base64.StdEncoding.EncodeToString(b)
-}
-
 func RSAEncrypt(k *rsa.PublicKey, m, l string) (b []byte, e error) {
 	return rsa.EncryptOAEP(sha512.New(), rand.Reader, k, []byte(m), []byte(l))
 }
@@ -148,12 +138,5 @@ func CreatePEM(k rsa.PublicKey) *pem.Block {
 	return &pem.Block{
 		Type:  "RSA PUBLIC KEY",
 		Bytes: x509.MarshalPKCS1PublicKey(&k),
-	}
-}
-
-func ExitOnError(e error, n int) {
-	if e != nil {
-		fmt.Println(e)
-		os.Exit(n)
 	}
 }

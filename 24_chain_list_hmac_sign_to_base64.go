@@ -1,8 +1,7 @@
 package main
 
 import "crypto/hmac"
-import "crypto/sha512"
-import "encoding/base64"
+import "crypto/sha512".
 import "fmt"
 import "os"
 
@@ -41,8 +40,4 @@ func (s *SignedList) Each(f func(SignedList)) {
     s.SignedList.Each(f)
   }
   return
-}
-
-func EncodeToString(b []byte) string {
-  return base64.StdEncoding.EncodeToString(b)
 }

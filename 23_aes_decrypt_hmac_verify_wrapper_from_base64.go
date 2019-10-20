@@ -34,15 +34,3 @@ func main() {
 		os.Exit(INVALID_SIGNATURE)
 	}
 }
-
-func read_base64(s string) string {
-	b, _ := base64.StdEncoding.DecodeString(s)
-	return string(b)
-}
-
-func ExitOnError(e error, n int) {
-	if e != nil {
-		fmt.Println(e)
-		os.Exit(n)
-	}
-}

@@ -2,7 +2,6 @@ package main
 
 import "crypto/hmac"
 import "crypto/sha512"
-import "encoding/base64"
 import "fmt"
 import "os"
 
@@ -25,19 +24,12 @@ func main() {
 	h := hmac.New(sha512.New, []byte(hk))
 	h.Write([]byte(s))
 
-	fmt.Println(EncodeToString(h.Sum(nil), m))
+	fmt.Println(EncodeStrings(h.Sum(nil), m))
 }
 
-func EncodeToString(b ...[]byte) (r string) {
+func EncodeStrings(b ...[]byte) (r string) {
 	for _, v := range b {
-		r += base64.StdEncoding.EncodeToString(v)
+		r += EncodeToString(v)
 	}
 	return
-}
-
-func ExitOnError(e error, n int) {
-	if e != nil {
-		fmt.Println(e)
-		os.Exit(n)
-	}
 }

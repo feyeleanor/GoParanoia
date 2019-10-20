@@ -2,7 +2,6 @@ package main
 
 import "crypto/rand"
 import "database/sql"
-import "encoding/base64"
 import _ "github.com/mattn/go-sqlite3"
 import "fmt"
 import "os"
@@ -85,15 +84,11 @@ func EncryptFields(k string, p ...interface{}) (r []interface{}) {
 	return
 }
 
-func EncodeToString(m []byte) string {
-	return base64.StdEncoding.EncodeToString(m)
-}
-
 func RandomToken(n int) (s string) {
 	b := make([]byte, n)
 	_, e := rand.Read(b)
 	ExitOnError(e, MAKE_TOKEN_FAILED)
-	return base64.StdEncoding.EncodeToString(b)
+	return EncodeToString(b)
 }
 
 func OpenDB(n string, f func(*sql.DB)) {
@@ -101,11 +96,4 @@ func OpenDB(n string, f func(*sql.DB)) {
 	ExitOnError(e, DB_OPEN_FAILED)
 	defer db.Close()
 	f(db)
-}
-
-func ExitOnError(e error, n int) {
-	if e != nil {
-		fmt.Println(e)
-		os.Exit(n)
-	}
 }
