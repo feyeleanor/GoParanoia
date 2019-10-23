@@ -6,7 +6,7 @@ Code from the workshop "Adventures in Paranoia with Go and SQLite"
 
 ### Encryption
 
-$ AES_KEY=0123456789012345 go run 01_encrypt_aes.go 'Hello World''
+$ AES_KEY=0123456789012345 go run 01_encrypt_aes.go 'Hello World'
 
 [189 66 213 32 192 240 163 198 89 18 112 190 150 234 133 248 10 214 159 253 11 245 129 197 68 225 13 23 141 226 137 82]
 
@@ -570,7 +570,7 @@ sqlite> .quit
 
 ### AES Encrypted Fields
 
-$ AES_KEY=0123456789012345 go run 51_table_with_encrypted_fields.go aes.go helpers.go test.db
+$ AES_KEY=0123456789012345 go run 51_table_with_encrypted_fields_add_record.go aes.go helpers.go test.db
 
 rows in Account table = 3
 
