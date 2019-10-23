@@ -80,7 +80,7 @@ func RandomToken(n int) (s string) {
 	b := make([]byte, n)
 	_, e := rand.Read(b)
 	ExitOnError(e, MAKE_TOKEN_FAILED)
-	return base64.StdEncoding.EncodeToString(b)
+	return EncodeToString(b)
 }
 
 func OpenDB(n string, f func(*sql.DB)) {

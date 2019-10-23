@@ -37,7 +37,7 @@ func main() {
 	k, e = x509.ParsePKCS1PublicKey(b)
 	ExitOnError(e, INVALID_PUBLIC_KEY)
 
-	if e = rsa.VerifyPSS(k, crypto.SHA512, hs[:], s, nil); e != nil {
+	if e = rsa.VerifyPSS(k, crypto.SHA512, hs[:], []byte(s), nil); e != nil {
 		fmt.Println("Signature Verification Failed")
 		os.Exit(VERIFICATION_FAILED)
 	}

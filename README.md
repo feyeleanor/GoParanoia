@@ -29,6 +29,7 @@ $ AES_KEY=0123456789012345 go run 04_decrypt_aes_from_base64.go aes.go 3Q9B81dbe
 Hello World
 
 $ AES_KEY=0123456789012345 go run 04_decrypt_aes_from_base64.go aes.go 4dlr5z3SkGP4jykKekFYs6J3IabHjecnz3leLbeM0DI=
+
 Hello World
 
 ## RSA Public Key Cryptography
@@ -106,7 +107,7 @@ XKhvWaZ89ahzdgiW9Eo/9M5gnav6zj2eKsl7RP/bROcOwl0HVZDZAgMBAAE=
 -----END RSA PUBLIC KEY-----
 ```
 
-$ go run 07_extract_rsa_pubkey.go helpers.go test3.pem 2048
+$ go run 07_extract_rsa_pubkey.go helpers.go test3.pem
 ```
 -----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEAsMy4eOgDV0bScY9JW2ePbc1YysCqk4vqkye+4DM2ZCyxXA9N
@@ -228,7 +229,7 @@ exit status 1
 
 ### HMAC Content Signatures
 
-$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 19_aes_encrypt_hmac_sign_content_to_base64.go aes.go  helpers.go 'Hello World'
+$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 19_aes_encrypt_hmac_sign_content_to_base64.go aes.go helpers.go 'Hello World'
 
 jz7vcg+B0kjBhTp5TfuV2XgrpA0JOKyAZcB9o+Qp7Jj4cE01W8hFfTLaqs3WFNM89MTfwAn9stUI9KfTRw3UOQ==f+tGhML1HsD0qqfQ+Gi+wNLRCskGtlXi+nhPEne73qM=
 

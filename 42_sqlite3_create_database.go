@@ -2,7 +2,6 @@ package main
 
 import "database/sql"
 import _ "github.com/mattn/go-sqlite3"
-import "fmt"
 import "os"
 
 const (

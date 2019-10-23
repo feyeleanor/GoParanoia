@@ -3,7 +3,6 @@ package main
 import "crypto/rsa"
 import "crypto/x509"
 import "encoding/pem"
-import "fmt"
 import "io/ioutil"
 import "os"
 

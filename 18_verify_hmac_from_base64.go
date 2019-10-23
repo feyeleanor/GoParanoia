@@ -2,7 +2,6 @@ package main
 
 import "crypto/hmac"
 import "crypto/sha512"
-import "encoding/base64"
 import "fmt"
 import "os"
 
