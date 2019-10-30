@@ -8,14 +8,6 @@ import "io/ioutil"
 import "os"
 import "strconv"
 
-const (
-	_ = iota
-	MISSING_FILENAME
-	INVALID_KEYSIZE
-	CREATE_KEY_FAILED
-	PEM_ENCRYPTION_FAILED
-	FILE_WRITE_FAILED
-)
 const DEFAULT_KEYSIZE = 1024
 
 func main() {
@@ -53,11 +45,20 @@ func CreatePrivateKey(n int) (*rsa.PrivateKey, error) {
 	return rsa.GenerateKey(rand.Reader, n)
 }
 
-func CreatePEM(k *rsa.PrivateKey) *pem.Block {
-	return &pem.Block{
-		Type:  "RSA PRIVATE KEY",
-		Bytes: x509.MarshalPKCS1PrivateKey(k),
+func CreatePEM(k interface{}) (r *pem.Block) {
+	switch k := k.(type) {
+	case *rsa.PrivateKey:
+		r = &pem.Block{
+			Type:  "RSA PRIVATE KEY",
+			Bytes: x509.MarshalPKCS1PrivateKey(k),
+		}
+	case rsa.PublicKey:
+		r = &pem.Block{
+			Type:  "RSA PUBLIC KEY",
+			Bytes: x509.MarshalPKCS1PublicKey(&k),
+		}
 	}
+	return
 }
 
 func EncryptPEM(p *pem.Block, s string) (*pem.Block, error) {

@@ -1,5 +1,6 @@
 package main
 
+import "crypto/rand"
 import "crypto/rsa"
 import "crypto/x509"
 import "encoding/pem"
@@ -10,40 +11,6 @@ const (
 	RSA_PRIVATE_KEY = iota
 	RSA_PUBLIC_KEY
 )
-
-func main() {
-	f := os.Args[1]
-	k, e := LoadPEM(RSA_PRIVATE_KEY, f, os.Getenv("PEM_KEY"))
-	ExitOnError(e, INVALID_PRIVATE_KEY)
-
-	f = f + ".pub"
-	e = SaveKey(f, CreatePEM(k.(*rsa.PrivateKey).PublicKey), 0644)
-	ExitOnError(e, FILE_WRITE_FAILED)
-}
-
-func LoadPEM(t int, f, pwd string) (k interface{}, e error) {
-	b := LoadFile(f)
-	p := DecodePEM(b, t)
-	b = DecryptPEM(p, pwd)
-	switch t {
-	case RSA_PRIVATE_KEY:
-		k, e = x509.ParsePKCS1PrivateKey(b)
-	case RSA_PUBLIC_KEY:
-		k, e = x509.ParsePKCS1PublicKey(b)
-	}
-	return
-}
-
-func LoadFile(s string) (b []byte) {
-	var e error
-	b, e = ioutil.ReadFile(s)
-	ExitOnError(e, FILE_UNREADABLE)
-	return
-}
-
-func SaveKey(f string, p *pem.Block, perm os.FileMode) error {
-	return ioutil.WriteFile(f, pem.EncodeToMemory(p), perm)
-}
 
 func CreatePEM(k interface{}) (r *pem.Block) {
 	switch k := k.(type) {
@@ -59,6 +26,33 @@ func CreatePEM(k interface{}) (r *pem.Block) {
 		}
 	}
 	return
+}
+
+func EncryptPEM(p *pem.Block, pwd string) (*pem.Block, error) {
+	return x509.EncryptPEMBlock(
+		rand.Reader,
+		p.Type,
+		p.Bytes,
+		[]byte(pwd),
+		x509.PEMCipherAES256,
+	)
+}
+
+func LoadPEM(t int, f, pwd string) (k interface{}, e error) {
+	b := LoadFile(f)
+	p := DecodePEM(b, t)
+	b = DecryptPEM(p, pwd)
+	switch t {
+	case RSA_PRIVATE_KEY:
+		k, e = x509.ParsePKCS1PrivateKey(b)
+	case RSA_PUBLIC_KEY:
+		k, e = x509.ParsePKCS1PublicKey(b)
+	}
+	return
+}
+
+func SaveKey(f string, p *pem.Block, perm os.FileMode) error {
+	return ioutil.WriteFile(f, pem.EncodeToMemory(p), perm)
 }
 
 func DecodePEM(b []byte, t int) (p *pem.Block) {

@@ -2,6 +2,7 @@ package main
 
 import "encoding/base64"
 import "fmt"
+import "io/ioutil"
 import "os"
 
 func EncodeToString(m []byte) string {
@@ -22,4 +23,11 @@ func ExitOnError(e error, n int) {
 func read_base64(s string) string {
 	b, _ := DecodeString(s)
 	return string(b)
+}
+
+func LoadFile(s string) (b []byte) {
+	var e error
+	b, e = ioutil.ReadFile(s)
+	ExitOnError(e, FILE_UNREADABLE)
+	return
 }

@@ -8,14 +8,6 @@ import "fmt"
 import "os"
 import "strconv"
 
-const (
-	_ = iota
-	MISSING_KEYSIZE
-	INVALID_KEYSIZE
-	CREATE_KEY_FAILED
-	PEM_ENCRYPTION_FAILED
-)
-
 func main() {
 	var n int
 	var e error
