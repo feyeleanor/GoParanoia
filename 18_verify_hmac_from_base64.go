@@ -5,11 +5,6 @@ import "crypto/sha512"
 import "fmt"
 import "os"
 
-const (
-	_ = iota
-	SIGNING_FAILED
-)
-
 func main() {
 	k := []byte(os.Getenv("HMAC_KEY"))
 	m := hmac.New(sha512.New, k)

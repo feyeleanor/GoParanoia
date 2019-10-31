@@ -187,13 +187,13 @@ exit status 20
 
 ### SHA512
 
-$ go run 16_sha512_hash_to_base64.go helpers.go errors.go 'Hello World'
+$ go run 16_sha512_hash_to_base64.go helpers.go 'Hello World'
 
 LHT9F+2v2A6ER7DUZ0HuJDt+t03SFJoKsbkkb7MDgvJ+hT2FhXGeDmfL2g2qj1FnEGRhXWRa4nrLFb+xRH9Fmw==
 
 ### HMAC
 
-$ HMAC_KEY=0123456789012345 go run 17_hmac_to_base64.go helpers.go errors.go 'Hello World'
+$ HMAC_KEY=0123456789012345 go run 17_hmac_to_base64.go helpers.go 'Hello World'
 
 rxeUOuUKx3uVVO6qKQt+jawwRMvglw62D02h3ZTFfb3fz2gL0k29nmmYpe6n09X+LtZFdG4tTp8EOlM1jY75+A==
 
@@ -205,7 +205,7 @@ $ HMAC_KEY=0123456789012345 go run 18_verify_hmac_from_base64.go helpers.go erro
 
 Signature Verification Failed
 
-exit status 1
+exit status 19
 
 ### HMAC Content Signatures
 
