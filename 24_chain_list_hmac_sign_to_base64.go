@@ -25,14 +25,13 @@ type SignedList struct {
 }
 
 func (s *SignedList) Push(k, v string) *SignedList {
-	h := hmac.New(sha512.New, []byte(k))
-	if s != nil {
-		h.Write([]byte(s.H))
+	var b []byte
+	if s == nil {
+		b = SignAll(k, v)
+	} else {
+		b = SignAll(k, s.H, v)
 	}
-	h.Write([]byte(v))
-	return &SignedList{
-		v, EncodeToString(h.Sum(nil)), s,
-	}
+	return &SignedList{v, EncodeToString(b), s}
 }
 
 func (s *SignedList) Each(f func(SignedList)) {
@@ -41,4 +40,12 @@ func (s *SignedList) Each(f func(SignedList)) {
 		s.SignedList.Each(f)
 	}
 	return
+}
+
+func SignAll(k string, m ...string) []byte {
+	h := hmac.New(sha512.New, []byte(k))
+	for _, v := range m {
+		h.Write([]byte(v))
+	}
+	return h.Sum(nil)
 }
