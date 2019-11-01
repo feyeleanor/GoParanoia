@@ -1,42 +1,31 @@
 package main
 
 import "crypto/hmac"
-import "crypto/sha512"
 import "fmt"
 import "os"
 
-const (
-	_ = iota
-	DECRYPTION_FAILED
-	INCORRECT_CONTENT
-	INVALID_SIGNATURE
-)
-
 func main() {
-	var e error
-
-	hk := os.Getenv("HMAC_KEY")
-	h := hmac.New(sha512.New, []byte(hk))
-
-	m := os.Args[1]
-	h.Write([]byte(m))
-
 	s := os.Args[2]
-	hs := []byte(read_base64(s[0:88]))
-	ms := read_base64(s[88:])
-
-	k := os.Getenv("AES_KEY")
-	ms, e = AESDecrypt(k, ms)
-	ExitOnError(e, DECRYPTION_FAILED)
+	hs := read_base64(s[0:88])
+	ms, e := AESDecrypt(
+		os.Getenv("AES_KEY"),
+		read_base64(s[88:]))
+	ExitOnError(e, AES_DECRYPTION_FAILED)
 
 	switch {
-	case ms != m:
+	case ms != os.Args[1]:
 		fmt.Println("error: content doesn't match")
-		os.Exit(INCORRECT_CONTENT)
-	case !hmac.Equal(h.Sum(nil), hs):
+		os.Exit(CONTENT_MISMATCH)
+	case !Verify(os.Getenv("HMAC_KEY"), hs, os.Args[1]):
 		fmt.Println("Signature Verification Failed")
-		os.Exit(INVALID_SIGNATURE)
+		os.Exit(VERIFICATION_FAILED)
 	default:
 		fmt.Println("Signature Verification Succeeded")
 	}
+}
+
+func Verify(k, hs, m string) bool {
+	return hmac.Equal(
+		[]byte(hs),
+		HMAC_Sign(k, m))
 }

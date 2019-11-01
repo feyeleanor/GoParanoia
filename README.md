@@ -213,59 +213,59 @@ $ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 19_aes_encrypt_hmac_
 
 jz7vcg+B0kjBhTp5TfuV2XgrpA0JOKyAZcB9o+Qp7Jj4cE01W8hFfTLaqs3WFNM89MTfwAn9stUI9KfTRw3UOQ==f+tGhML1HsD0qqfQ+Gi+wNLRCskGtlXi+nhPEne73qM=
 
-$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 20_aes_decrypt_hmac_verify_content_from_base64.go aes.go helpers.go errors.go 'Hello World' jz7vcg+B0kjBhTp5TfuV2XgrpA0JOKyAZcB9o+Qp7Jj4cE01W8hFfTLaqs3WFNM89MTfwAn9stUI9KfTRw3UOQ==f+tGhML1HsD0qqfQ+Gi+wNLRCskGtlXi+nhPEne73qM=
+$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 20_aes_decrypt_hmac_verify_content_from_base64.go aes.go hmac.go helpers.go errors.go 'Hello World' jz7vcg+B0kjBhTp5TfuV2XgrpA0JOKyAZcB9o+Qp7Jj4cE01W8hFfTLaqs3WFNM89MTfwAn9stUI9KfTRw3UOQ==f+tGhML1HsD0qqfQ+Gi+wNLRCskGtlXi+nhPEne73qM=
 
 Signature Verification Succeeded
 
-$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 20_aes_decrypt_hmac_verify_content_from_base64.go aes.go helpers.go errors.go 'Hello World' jz7vcg+B0kjBhTp5TfuV2XgrpA0JOKyAZcB9o+Qp7Jj4cE01W8hFfTLaqs3WFNM89MTfwAn9stUI9KfTRw3UOQ==f+tGhML1HsD0qqfQ+Gi+wNLRCskGtlXi+nhPEne73qm=
+$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 20_aes_decrypt_hmac_verify_content_from_base64.go aes.go hmac.go helpers.go errors.go 'Hello World' jz7vcg+B0kjBhTp5TfuV2XgrpA0JOKyAZcB9o+Qp7Jj4cE01W8hFfTLaqs3WFNM89MTfwAn9stUI9KfTRw3UOQ==f+tGhML1HsD0qqfQ+Gi+wNLRCskGtlXi+nhPEne73qm=
 
 error: content doesn't match
 
-exit status 2
+exit status 21
 
-$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 20_aes_decrypt_hmac_verify_content_from_base64.go aes.go helpers.go errors.go 'Hello World' jz7vcg+B0kjBhTp5TfuV2XgrpA0JOKyAZcB9o+Qp7Jj4cE01W8hFfTLaqs3WFNM89MTfwAn9stUI9KfTRw3UOq==f+tGhML1HsD0qqfQ+Gi+wNLRCskGtlXi+nhPEne73qM=
+$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 20_aes_decrypt_hmac_verify_content_from_base64.go aes.go hmac.go helpers.go errors.go 'Hello World' jz7vcg+B0kjBhTp5TfuV2XgrpA0JOKyAZcB9o+Qp7Jj4cE01W8hFfTLaqs3WFNM89MTfwAn9stUI9KfTRw3UOq==f+tGhML1HsD0qqfQ+Gi+wNLRCskGtlXi+nhPEne73qM=
 
 Signature Verification Failed
 
-exit status 3
+exit status 20
 
-$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 21_aes_decrypt_hmac_verify_content_from_base64.go aes.go helpers.go errors.go jz7vcg+B0kjBhTp5TfuV2XgrpA0JOKyAZcB9o+Qp7Jj4cE01W8hFfTLaqs3WFNM89MTfwAn9stUI9KfTRw3UOQ==f+tGhML1HsD0qqfQ+Gi+wNLRCskGtlXi+nhPEne73qM=
+$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 21_aes_decrypt_hmac_verify_content_from_base64.go aes.go hmac.go helpers.go errors.go jz7vcg+B0kjBhTp5TfuV2XgrpA0JOKyAZcB9o+Qp7Jj4cE01W8hFfTLaqs3WFNM89MTfwAn9stUI9KfTRw3UOQ==f+tGhML1HsD0qqfQ+Gi+wNLRCskGtlXi+nhPEne73qM=
 
 Signature Verification Succeeded
 
-$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 21_aes_decrypt_hmac_verify_content_from_base64.go aes.go helpers.go errors.go jz7vcg+B0kjBhTp5TfuV2XgrpA0JOKyAZcB9o+Qp7Jj4cE01W8hFfTLaqs3WFNM89MTfwAn9stUI9KfTRw3UOQ==f+tGhML1HsD0qqfQ+Gi+wNLRCskGtlXi+nhPEne73qm=
+$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 21_aes_decrypt_hmac_verify_content_from_base64.go aes.go hmac.go helpers.go errors.go jz7vcg+B0kjBhTp5TfuV2XgrpA0JOKyAZcB9o+Qp7Jj4cE01W8hFfTLaqs3WFNM89MTfwAn9stUI9KfTRw3UOQ==f+tGhML1HsD0qqfQ+Gi+wNLRCskGtlXi+nhPEne73qm=
 
 Signature Verification Failed
 
-exit status 2
+exit status 20
 
-$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 21_aes_decrypt_hmac_verify_content_from_base64.go aes.go helpers.go errors.go jz7vcg+B0kjBhTp5TfuV2XgrpA0JOKyAZcB9o+Qp7Jj4cE01W8hFfTLaqs3WFNM89MTfwAn9stUI9KfTRw3UOq==f+tGhML1HsD0qqfQ+Gi+wNLRCskGtlXi+nhPEne73qM=
+$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 21_aes_decrypt_hmac_verify_content_from_base64.go aes.go hmac.go helpers.go errors.go jz7vcg+B0kjBhTp5TfuV2XgrpA0JOKyAZcB9o+Qp7Jj4cE01W8hFfTLaqs3WFNM89MTfwAn9stUI9KfTRw3UOq==f+tGhML1HsD0qqfQ+Gi+wNLRCskGtlXi+nhPEne73qM=
 
 Signature Verification Failed
 
-exit status 2
+exit status 20
 
 ### HMAC Wrapper Signatures
 
-$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 22_aes_encrypt_hmac_sign_wrapper_to_base64.go aes.go helpers.go errors.go 'Hello World'
+$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 22_aes_encrypt_hmac_sign_wrapper_to_base64.go aes.go hmac.go helpers.go errors.go 'Hello World'
 
 dj82aiViZEVUZr++Q3Zz5Ix5Q7D0G7NX3DjyMm+i9O72/nXGcc6WKuqukg2n+c8TmlkC2t/rjXpLFmq5kNRsyw==tBpwJs9FZ0A+QPWoks7udfz6P0YA8h+vbwlduRcitS4=
 
-$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 23_aes_decrypt_hmac_verify_wrapper_from_base64.go aes.go helpers.go errors.go dj82aiViZEVUZr++Q3Zz5Ix5Q7D0G7NX3DjyMm+i9O72/nXGcc6WKuqukg2n+c8TmlkC2t/rjXpLFmq5kNRsyw==tBpwJs9FZ0A+QPWoks7udfz6P0YA8h+vbwlduRcitS4=
+$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 23_aes_decrypt_hmac_verify_wrapper_from_base64.go aes.go hmac.go helpers.go errors.go dj82aiViZEVUZr++Q3Zz5Ix5Q7D0G7NX3DjyMm+i9O72/nXGcc6WKuqukg2n+c8TmlkC2t/rjXpLFmq5kNRsyw==tBpwJs9FZ0A+QPWoks7udfz6P0YA8h+vbwlduRcitS4=
 
 Signature Verification Succeeded
 
-$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 23_aes_decrypt_hmac_verify_wrapper_from_base64.go aes.go helpers.go errors.go dj82aiViZEVUZr++Q3Zz5Ix5Q7D0G7NX3DjyMm+i9O72/nXGcc6WKuqukg2n+c8TmlkC2t/rjXpLFmq5kNRsyw==tBpwJs9FZ0A+QPWoks7udfz6P0YA8h+vbwlduRcitS0=
+$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 23_aes_decrypt_hmac_verify_wrapper_from_base64.go aes.go hmac.go helpers.go errors.go dj82aiViZEVUZr++Q3Zz5Ix5Q7D0G7NX3DjyMm+i9O72/nXGcc6WKuqukg2n+c8TmlkC2t/rjXpLFmq5kNRsyw==tBpwJs9FZ0A+QPWoks7udfz6P0YA8h+vbwlduRcitS0=
 
 Signature Verification Failed
 
-exit status 2
+exit status 20
 
-$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 23_aes_decrypt_hmac_verify_wrapper_from_base64.go aes.go helpers.go errors.go dj82aiViZEVUZr++Q3Zz5Ix5Q7D0G7NX3DjyMm+i9O72/nXGcc6WKuqukg2n+c8TmlkC2t/rjXpLFmq5kNRsyW==tBpwJs9FZ0A+QPWoks7udfz6P0YA8h+vbwlduRcitS4=
+$ AES_KEY=0123456789012345 HMAC_KEY=0987654321098765 go run 23_aes_decrypt_hmac_verify_wrapper_from_base64.go aes.go hmac.go helpers.go errors.go dj82aiViZEVUZr++Q3Zz5Ix5Q7D0G7NX3DjyMm+i9O72/nXGcc6WKuqukg2n+c8TmlkC2t/rjXpLFmq5kNRsyW==tBpwJs9FZ0A+QPWoks7udfz6P0YA8h+vbwlduRcitS4=
 
 Signature Verification Failed
 
-exit status 2
+exit status 20
 
 ### HMAC signed value chains
 

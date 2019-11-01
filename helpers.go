@@ -13,6 +13,13 @@ func DecodeString(s string) (b []byte, e error) {
 	return base64.StdEncoding.DecodeString(s)
 }
 
+func EncodeStrings(b ...[]byte) (r string) {
+	for _, v := range b {
+		r += EncodeToString(v)
+	}
+	return
+}
+
 func ExitOnError(e error, n int) {
 	if e != nil {
 		fmt.Println(e)

@@ -5,31 +5,15 @@ import "crypto/sha512"
 import "fmt"
 import "os"
 
-const (
-	_ = iota
-	ENCRYPTION_FAILED
-)
-
 func main() {
-	var e error
-	var m []byte
-
-	k := os.Getenv("AES_KEY")
-	s := os.Args[1]
-
-	m, e = AESEncrypt(k, s)
-	ExitOnError(e, ENCRYPTION_FAILED)
-
-	hk := os.Getenv("HMAC_KEY")
-	h := hmac.New(sha512.New, []byte(hk))
-	h.Write([]byte(s))
-
-	fmt.Println(EncodeStrings(h.Sum(nil), m))
+	h := Sign(os.Getenv("HMAC_KEY"), string(os.Args[1]))
+	m, e := AESEncrypt(os.Getenv("AES_KEY"), os.Args[1])
+	ExitOnError(e, AES_ENCRYPTION_FAILED)
+	fmt.Println(EncodeStrings(h, m))
 }
 
-func EncodeStrings(b ...[]byte) (r string) {
-	for _, v := range b {
-		r += EncodeToString(v)
-	}
-	return
+func Sign(k, m string) []byte {
+	h := hmac.New(sha512.New, []byte(k))
+	h.Write([]byte(m))
+	return h.Sum(nil)
 }
