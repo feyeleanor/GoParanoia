@@ -13,8 +13,8 @@ func main() {
 		s = s.Push(k, os.Args[i])
 	}
 	s.Each(
-		func(s SignedList) {
-			fmt.Println(s.H, s.V)
+		func(h, v string) {
+			fmt.Println(h, v)
 		})
 }
 
@@ -24,22 +24,22 @@ type SignedList struct {
 	*SignedList
 }
 
+func (s *SignedList) Each(f func(h, v string)) {
+	if s != nil {
+		f(s.H, s.V)
+		s.SignedList.Each(f)
+	}
+	return
+}
+
 func (s *SignedList) Push(k, v string) *SignedList {
 	var b []byte
 	if s == nil {
-		b = SignAll(k, v)
+		b = SignAll(k, "", v)
 	} else {
 		b = SignAll(k, s.H, v)
 	}
 	return &SignedList{v, EncodeToString(b), s}
-}
-
-func (s *SignedList) Each(f func(SignedList)) {
-	if s != nil {
-		f(*s)
-		s.SignedList.Each(f)
-	}
-	return
 }
 
 func SignAll(k string, m ...string) []byte {

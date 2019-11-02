@@ -1,55 +1,29 @@
 package main
 
-import "crypto/hmac"
-import "crypto/sha512"
 import "fmt"
 import "os"
 
-const (
-	_ = iota
-	VERIFICATION_FAILED
-	MISMATCHED_PARAMETERS
-)
-
 func main() {
-	var l *List
-	var s *SignedList
+  var s *SignedList
+	var h string
+  var ok bool
 
-	if len(os.Args)%2 != 1 {
-		os.Exit(MISMATCHED_PARAMETERS)
+  a := os.Args[1:]
+	if len(a)%2 != 0 {
+		os.Exit(UNEVEN_PARAMETERS)
 	}
 
 	k := os.Getenv("HMAC_KEY")
-	for i := len(os.Args) - 1; i > 1; i-- {
-		l = &List{os.Args[i], l}
-		i--
-		s = s.Push(k, os.Args[i])
-	}
-
-	s.Each(
-		func(s SignedList) {
-			l = l.Step(func(v string) {
-				s.IfNodeInvalid(v, func() {
-					fmt.Println("Signature Verification Failed")
-					fmt.Printf("%v != %v\n", s.H, v)
-					os.Exit(VERIFICATION_FAILED)
-				})
-			})
-		})
+  for i := len(a) - 1; i > 0; i-- {
+    h = a[i]
+    i--
+    if s, ok = s.PushAndCheck(k, h, a[i]); !ok {
+  		fmt.Println("Signature Verification Failed")
+			fmt.Printf("%v != %v\n", h, s.H)
+			os.Exit(VERIFICATION_FAILED)
+    }
+  }
 	fmt.Println("Signature Verification Succeeded")
-}
-
-type List struct {
-	V string
-	*List
-}
-
-func (l *List) Step(f func(string)) (r *List) {
-	if l != nil {
-		f(l.V)
-		r = l.List
-	}
-	return
 }
 
 type SignedList struct {
@@ -58,29 +32,26 @@ type SignedList struct {
 	*SignedList
 }
 
-func (s *SignedList) Push(k, v string) *SignedList {
-	h := hmac.New(sha512.New, []byte(k))
+func (s *SignedList) Each(f func(h, v string)) {
 	if s != nil {
-		h.Write([]byte(s.H))
-	}
-	h.Write([]byte(v))
-	return &SignedList{
-		v,
-		EncodeToString(h.Sum(nil)),
-		s,
-	}
-}
-
-func (s *SignedList) Each(f func(SignedList)) {
-	if s != nil {
-		f(*s)
+		f(s.H, s.V)
 		s.SignedList.Each(f)
 	}
 	return
 }
 
-func (s SignedList) IfNodeInvalid(h string, f func()) {
-	if h != s.H {
-		f()
+func (s *SignedList) Push(k, v string) *SignedList {
+	var b []byte
+	if s == nil {
+		b = HMAC_SignAll(k, "", v)
+	} else {
+		b = HMAC_SignAll(k, s.H, v)
 	}
+	return &SignedList{v, EncodeToString(b), s}
+}
+
+func (s *SignedList) PushAndCheck(k, h, v string) (r *SignedList, ok bool) {
+  r = s.Push(k, v)
+  ok = r.H == h
+  return
 }
