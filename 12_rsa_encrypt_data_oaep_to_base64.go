@@ -8,7 +8,7 @@ import "hash"
 import "os"
 
 func main() {
-	k, e := LoadPEM(RSA_PUBLIC_KEY, os.Args[1], "")
+	k, e := PEM_Load(RSA_PUBLIC_KEY, os.Args[1], "")
 	ExitOnError(e, INVALID_PUBLIC_KEY)
 
 	l := os.Args[2]

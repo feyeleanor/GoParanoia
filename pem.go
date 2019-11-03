@@ -12,7 +12,7 @@ const (
 	RSA_PUBLIC_KEY
 )
 
-func CreatePEM(k interface{}) (r *pem.Block) {
+func PEM_Create(k interface{}) (r *pem.Block) {
 	switch k := k.(type) {
 	case *rsa.PrivateKey:
 		r = &pem.Block{
@@ -28,7 +28,7 @@ func CreatePEM(k interface{}) (r *pem.Block) {
 	return
 }
 
-func EncryptPEM(p *pem.Block, pwd string) (*pem.Block, error) {
+func PEM_Encrypt(p *pem.Block, pwd string) (*pem.Block, error) {
 	return x509.EncryptPEMBlock(
 		rand.Reader,
 		p.Type,
@@ -38,10 +38,17 @@ func EncryptPEM(p *pem.Block, pwd string) (*pem.Block, error) {
 	)
 }
 
-func LoadPEM(t int, f, pwd string) (k interface{}, e error) {
-	b := LoadFile(f)
-	p := DecodePEM(b, t)
-	b = DecryptPEM(p, pwd)
+func PEM_Load(t int, f, pwd string) (k interface{}, e error) {
+	return PEM_ExtractKey(t, LoadFile(f), pwd)
+}
+
+func PEM_ReadBase64(t int, s, pwd string) (k interface{}, e error) {
+	return PEM_ExtractKey(t, []byte(read_base64(s)), pwd)
+}
+
+func PEM_ExtractKey(t int, b []byte, pwd string) (k interface{}, e error) {
+  p := PEM_Decode(b, t)
+	b = PEM_Decrypt(p, pwd)
 	switch t {
 	case RSA_PRIVATE_KEY:
 		k, e = x509.ParsePKCS1PrivateKey(b)
@@ -51,11 +58,11 @@ func LoadPEM(t int, f, pwd string) (k interface{}, e error) {
 	return
 }
 
-func SaveKey(f string, p *pem.Block, perm os.FileMode) error {
+func PEM_SaveKey(f string, p *pem.Block, perm os.FileMode) error {
 	return ioutil.WriteFile(f, pem.EncodeToMemory(p), perm)
 }
 
-func DecodePEM(b []byte, t int) (p *pem.Block) {
+func PEM_Decode(b []byte, t int) (p *pem.Block) {
 	switch p, _ = pem.Decode(b); {
 	case p == nil:
 		os.Exit(NOT_A_PEM_FILE)
@@ -67,7 +74,7 @@ func DecodePEM(b []byte, t int) (p *pem.Block) {
 	return
 }
 
-func DecryptPEM(p *pem.Block, pwd string) (b []byte) {
+func PEM_Decrypt(p *pem.Block, pwd string) (b []byte) {
 	if x509.IsEncryptedPEMBlock(p) {
 		if pwd != "" {
 			var e error

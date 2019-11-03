@@ -8,7 +8,7 @@ import "fmt"
 import "os"
 
 func main() {
-	k, e := LoadPEM(RSA_PRIVATE_KEY, os.Args[1], os.Getenv("PEM_KEY"))
+	k, e := PEM_Load(RSA_PRIVATE_KEY, os.Args[1], os.Getenv("PEM_KEY"))
 	ExitOnError(e, INVALID_PRIVATE_KEY)
 
 	var b []byte

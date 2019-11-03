@@ -40,7 +40,7 @@ $ PEM_KEY=0123456789012345 go run 05_generate_rsa_keypair.go helpers.go errors.g
 
 LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpQcm9jLVR5cGU6IDQsRU5DUllQVEVECkRFSy1JbmZvOiBBRVMtMjU2LUNCQywyZGYwNmEyMTUwY2VmODM2MDc0YTk2ZjNhMDA4N2NlYgoKeG9JSDJZVFhIVjQ4ckJCSWxZdmdtQ21Bc1M4bno2OHEwbFNLZHFJeHhralZNbjZJb3pQVndZN1A5SCtmOVIzRApYUmkwTVI5NnpHdkZYaXpjNEpLRk1odHFablhlRmJONnk3RXBnMWZObllhdzJ0MEtidlFjbXhiOEsyOEhRMXNJCjBlWjM4bEZzblFtWURWaHNpSlB0ZGpXeGxodjdrMFJlNEF0ZGk1NVhlZFhMaHVVSTkyeWhlZ2ttemV1NzhhbGIKWklLZUd0aUxCNWU4T2M5T3dEZnYyc0IwSEltaGFnbzRLeTJ3Yit2UG1SbElRR0lRb3FzcExIbWFxVUFHblpEZgpqcXY4SzJxRW9ITGluQVVLb3pVQm1CZnFFaUptRVdiOG45YUpvVWJDYlV1REM0dDZRRWRhS0lQbi9QeWZ3N1pOCnZuMERUZi9xditsd2JORElENUVhK2tENDhKcHdNODFpcmZwQlBncjlJd0E2cWtIZTExU2tCNDhhZmZYd1kvZzQKblBrRGhUc0Q4bExGeEJnVVJIaVJXQmhrMXNvdU5VRmVGQ2dhTTJwZkttMU1kNXdFVDBCdHVsNUZGbzV1QW1mVAp1RGp5TjlPTzJBaW5YRVpFeGZYOEV0MHJLODlEdWlaSmRrTzBKSks1MnhtL01NVkdIYkc3aXcreXYvYzlHTEtiCmF1REU4MDVHald6aTdUQXNxdlcxTzQ2ZkhWMEt6UUFuS1JoblJqOTdkRE83MkdGWUJKSWh0R3VPdkxwbEVKMUUKSWtkOWxpa0MrTmI5Q0YzMWMyTXNZQnRJTnh4L0UyZmtJRXhlRm50TkZxaFdNWW44Q1JWSVZGTTJXMlV2OFV5cQpQOFE3ZlNBeEhYYkhLUDlUTFNpcTZaeDdtM3JGeVBqV1hyNXJ6Zk16TXlXUWpBNk1hVmhNZ3ZPdHVFcFd0TWUrClV0c3FCL0ZBTStJbkI1MkhCUkdNT1dXeVM3bEF3SGVkL0pldWRxbGkzZ3llL29xTTFPQ0dzd296M05UUGsvaFcKVGJ1b2JSclJJS21namFnM3YzallSOC9aRnI5QS82YU84bTAxN0dGWVJadzJaMjR1L3lZR2FkK0Q0WUFPWEJBMwotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
 
-$ PEM_KEY=0123456789012345 go run 06_generate_rsa_keypair_to_pem.go helpers.go test.pem 1024
+$ PEM_KEY=0123456789012345 go run 06_generate_rsa_keypair_to_pem.go helpers.go errors.go test.pem 1024
 
 $ cat test.pem
 ```
@@ -64,7 +64,7 @@ JkK77NmZ7rtv1r5AMLBZxwyKBWCSytMYOH/iBa2jeWIJJisP2elI8TsHtj250MoX
 -----END RSA PRIVATE KEY-----
 ```
 
-$ go run 06_generate_rsa_keypair_to_pem.go helpers.go test2.pem 1024
+$ go run 06_generate_rsa_keypair_to_pem.go helpers.go errors.go test2.pem 1024
 
 $ cat test2.pem
 ```
@@ -85,7 +85,39 @@ U57b3iUnWPFoB0v/pcjY10slf6ruez++3zhWJdYBDjmeW5VmA1d4arzisRzd7Cya
 -----END RSA PRIVATE KEY-----
 ```
 
-$ PEM_KEY=0123456789012345 go run 07_extract_rsa_pubkey.go helpers.go test.pem
+$ go run 06_generate_rsa_keypair_to_pem.go helpers.go errors.go test3.pem 2048
+
+$ cat test3.pem
+```
+-----BEGIN RSA PRIVATE KEY-----
+MIIEpQIBAAKCAQEA+g9QHQztv2/761iqF+cf8GRcp8iReFv0uU38YuAaXE5rE0Hs
+St6UQMkDbK4yq9VTq4NvXdo+FLopz/+JOi1ao29YRim15MU6ZnaPILN8l+6u4Pjb
++kkLr2AhVIIgy5tw7VCHuf8bv4zrLNe2wH3SSUKINDXdGE0X4FthsS2hy8/nGcZq
+xPPBGaEvNXwRPV+gsa2ebSc1tA9Bn9ot5EKnLfZTDR2uIBRyr0h9Shc1p7bh7Ib+
+qa2kRmmoZ0PM1twc+Eh1qUk/JE74bQbnGJY3Ib3PHz+D3s+nyXj4UARF+Zet9PnK
+DQXUhF0PnBHT834HrA3z26VnIoO1fyJ6j8MmZwIDAQABAoIBAQDHYq5ee5CWtJQK
+dAgsRv4Qj/XRUvurHKdlmelEbayXLW/zSv0+NXvArIcugTemC9NLTuHd08bsgAQW
+9YpV+RPsfTvFtjxyzVBjouU9DeCqxIZsnAHK77OBgwUQfTHpJ2hD0ZJnnCJj+dkL
+SHVPxwOFpqcz+j7wwYfoPPUIcXoxJ2F+gOZivRVEgjMwHf/TM3weHOEH492EqY7T
+PBUGgrQj5SIdwn2E3tbrLWe6rQ5xpEuEbcabpx+Y2rs62/dHfKNkPsciodHklmzN
+XigveiEPVM7SGInoP09bddSf25xTIIcrccKVyF4RR2Ky8tqBIdP/637DUG4X15Xv
+7aqajbkBAoGBAPsHZNlCUB8RcRsXEPkmJFrfIXLxKY7+J1G6xfJ16vDX/MF7bxDa
+Tc9sCT5b108m9Fi8q1C73SEfe2HobX+NygTCUbL3PgsXiASvblHIQOTwi4ZIi6af
+oWT7VyWdbqlf9OlrOJOmMHchCuayqc/f8f2gldbkcBjB+puI6FeVCQ2LAoGBAP8D
+AZptnY7mDfGyeokxKQNEZPt9iNVioNOJKQqp9FkvITN+sNULoiG5bY5fLTNTNK0L
+NSOdU2+ObLAM6S6K0KtpDykOpiUgLOwKW6b2LlymMaqglQAzsQumIZZkl4L5l6pM
+pn5SFitA9lp6T1ZwDq3bgEV+5MywxbPescbCpF4VAoGBAPOnzZ+D2jkNuPdOgE8V
+UpxRkCn9IxWEY63U2GXrRsvXGaLDqJ53Bqeaea5pfqd5bBrlpnOKpayM3jm+XOo+
+OiQ8aQiJK1Og14mUrkP7V+HgCc2hhMuKjiFyRLhiAxOr7BDU3emSmeBH1kjuih0X
+hc9km4wl1xhw0Es/rCW2pz7ZAoGBANWnMySrSiJ7ZJtnqXpgEbiHCQQbvRTquUwB
+0rz4f5xo/CwkrQsR4BjZPozV+QzTXYLNrQvVuB3y+eTWLFeuPf4e23DOsSzRtFFe
+rENKZrWBGIOYXr34kRDtc56JUNePPh6UcbnMFH7QwpYze100LVhEW0fedNt6D2oP
+3mpkkUmxAoGAOaECRKq5zibXrDQzRceNHZzfxFfGiZgXz4n3nFwW35mHmud0Du2a
+8/bbdbWCeN4h11pD9C7lSHjmfY3LDW/4ENnqIgR2HWQ887kIRN2O/DazrJBkT58A
+yMuDjojWXbMeeM+yAvocE2mUm67q5VoEr8BO3CIEdjzPW0gg0UVmRB4=
+```
+
+$ PEM_KEY=0123456789012345 go run 07_extract_rsa_pubkey.go pem.go helpers.go errors.go test.pem
 
 $ cat test.pem.pub
 ```
@@ -96,7 +128,7 @@ IHO/qjMQT6j2o1zbGd7Fie0wiujQREegta5jnb67zt2OdDxAQpeNAgMBAAE=
 -----END RSA PUBLIC KEY-----
 ```
 
-$ go run 07_extract_rsa_pubkey.go helpers.go test2.pem
+$ go run 07_extract_rsa_pubkey.go pem.go helpers.go errors.go test2.pem
 
 $ cat test2.pem.pub
 ```
@@ -107,7 +139,7 @@ XKhvWaZ89ahzdgiW9Eo/9M5gnav6zj2eKsl7RP/bROcOwl0HVZDZAgMBAAE=
 -----END RSA PUBLIC KEY-----
 ```
 
-$ go run 07_extract_rsa_pubkey.go helpers.go test3.pem
+$ go run 07_extract_rsa_pubkey.go pem.go helpers.go errors.go test3.pem
 ```
 -----BEGIN RSA PUBLIC KEY-----
 MIIBCgKCAQEAsMy4eOgDV0bScY9JW2ePbc1YysCqk4vqkye+4DM2ZCyxXA9Ngjco
@@ -359,7 +391,7 @@ exit status 20
 
 ## Hybrid Cryptography
 
-$ go run 28_hybrid_crypto_between_goroutines.go aes.go helpers.go errors.go test3.pem session_label 0123456789012345 A B C
+$ go run 28_hybrid_crypto_between_goroutines.go pem.go rsa.go aes.go helpers.go errors.go test3.pem session_label 0123456789012345 A B C
 
 Bob heard: session_label
 

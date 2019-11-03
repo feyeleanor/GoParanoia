@@ -4,6 +4,7 @@ import "crypto"
 import "crypto/rand"
 import "crypto/rsa"
 import "crypto/sha512"
+import "hash"
 
 func PKCS1v15_Encrypt(k *rsa.PublicKey, m string) ([]byte, error) {
 	return rsa.EncryptPKCS1v15(rand.Reader, k, []byte(m))
@@ -35,12 +36,12 @@ func PKCS1v15_Verify(k *rsa.PublicKey, s, m string) error {
 }
 
 func OAEP_Encrypt(h hash.Hash, k *rsa.PublicKey, m, l string) ([]byte, error) {
-	return rsa.EncryptOAEP(h, rand.Reader, k, []byte(m), []byte(l))
+	return rsa.EncryptOAEP(sha512.New(), rand.Reader, k, []byte(m), []byte(l))
 }
 
-func OAEP_Decrypt(h hash.Hash, k *rsa.PrivateKey, m, l string) (r string, e error) {
+func OAEP_Decrypt(k *rsa.PrivateKey, m, l string) (r string, e error) {
 	var b []byte
-	b, e = rsa.DecryptOAEP(h, rand.Reader, k, []byte(m), []byte(l))
+	b, e = rsa.DecryptOAEP(sha512.New(), rand.Reader, k, []byte(m), []byte(l))
 	r = string(b)
 	return
 }

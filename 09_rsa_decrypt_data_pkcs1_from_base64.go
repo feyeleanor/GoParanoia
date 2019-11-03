@@ -7,7 +7,7 @@ import "os"
 
 func main() {
 	f := os.Args[1]
-	k, e := LoadPEM(RSA_PRIVATE_KEY, f, os.Getenv("PEM_KEY"))
+	k, e := PEM_Load(RSA_PRIVATE_KEY, f, os.Getenv("PEM_KEY"))
 	ExitOnError(e, INVALID_PRIVATE_KEY)
 
 	var s string
