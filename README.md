@@ -329,27 +329,33 @@ exit status 20
 
 $ HMAC_KEY=0123456789012345 go run 26_merkle_tree_hmac_sign_to_base64.go helpers.go errors.go
 
-XD3NWQD4H35xBS0E1cfrsFpECV8tTGN2JsCxbiEeO8LI1Sudg+5DrM2vBJSupUE++cBDTcNovQoLiX2u21OkSw== +
+NP0n+gNreXmqI4ATzz5rOcut9+317H1Ab6CgO0KLNJMQpS/vT4GDOhAiRMf+KUvMV+f9sApyc4V4iOng/1RXEw== +
 
-LFYhJE5EgA5MgEVIhbu3V3YGCknUmw1bcaOtqmcUwIT6In/wnM4kir2ONj+cXixGPLYoTwHBfkfoB0K1aOskUQ== *
+m3M6Y+orFgsXEZ0/HpZJME9cKy+/SpzQ/zvxLujK+CS3xqVX+x0QzIiwYikLswjWUUWgGR6splkAD7z0BLZExg== *
 
-KKpcA3TbQEjqg8Xj5wxOyVmjqA25hyhxl9mpR/dIFA+LFaO+788Y+7S3n4ddz+F/RKL2YsvNcTchNHDyWAOnUA== 3
+X0gyp/RcB31yImaxxDDo7L0mN83WYc3DtFTETS4FV3CKu7bgLHwolraIgcCE8VU+reP9Vh1tMq+9m1XALg0BNw== -
+
+PJwjHeAcTOaFAswC0nYD6wUaptsYB5wptVbdfBRTz8QRthFsJIqTPUWSGgcbVQWQMqTWgpP2es56jwtJnQLhJQ== x
+
+o/vbZre3SZqFmUqNP+x1dB6zJiYwcJl5pBSEfDHyQ/p6W2caSW4JbjhydykpWrKe2lwYJ6kQ9H1OqX3C7TzPYw== y
 
 IqEsHAfsvx4w/06gqbvQoU0iD+sIUXTtcunF4nyEWBPLUEsBeg7aUyID3Kmy1uutz5To/Mrjb3pu5BqhdLX/rA== 2
 
+npF9VUehurfZWBax5ZUuqKOfE79yg7rPJF0aSQ7u7i6G/POVx95rKJV0qFOYKDbGyMwxJ8BUupcCfnC1p0WGOQ== 7
+
 lCo6zpPpmoEaF9xW7a+ch0dKC+HzlOUGxpVvIorjXIen0H2iphehmZSEhK9LxMbWxE+D64N8/Xvi2cl91DDr2Q== 1
 
-$ HMAC_KEY=0123456789012345 go run 27_merkle_tree_hmac_verify_from_base64.go helpers.go errors.go XD3NWQD4H35xBS0E1cfrsFpECV8tTGN2JsCxbiEeO8LI1Sudg+5DrM2vBJSupUE++cBDTcNovQoLiX2u21OkSw== LFYhJE5EgA5MgEVIhbu3V3YGCknUmw1bcaOtqmcUwIT6In/wnM4kir2ONj+cXixGPLYoTwHBfkfoB0K1aOskUQ== KKpcA3TbQEjqg8Xj5wxOyVmjqA25hyhxl9mpR/dIFA+LFaO+788Y+7S3n4ddz+F/RKL2YsvNcTchNHDyWAOnUA== IqEsHAfsvx4w/06gqbvQoU0iD+sIUXTtcunF4nyEWBPLUEsBeg7aUyID3Kmy1uutz5To/Mrjb3pu5BqhdLX/rA== lCo6zpPpmoEaF9xW7a+ch0dKC+HzlOUGxpVvIorjXIen0H2iphehmZSEhK9LxMbWxE+D64N8/Xvi2cl91DDr2Q==
+$ HMAC_KEY=0123456789012345 go run 27_merkle_tree_hmac_verify_from_base64.go hmac.go helpers.go errors.go NP0n+gNreXmqI4ATzz5rOcut9+317H1Ab6CgO0KLNJMQpS/vT4GDOhAiRMf+KUvMV+f9sApyc4V4iOng/1RXEw== m3M6Y+orFgsXEZ0/HpZJME9cKy+/SpzQ/zvxLujK+CS3xqVX+x0QzIiwYikLswjWUUWgGR6splkAD7z0BLZExg== X0gyp/RcB31yImaxxDDo7L0mN83WYc3DtFTETS4FV3CKu7bgLHwolraIgcCE8VU+reP9Vh1tMq+9m1XALg0BNw== PJwjHeAcTOaFAswC0nYD6wUaptsYB5wptVbdfBRTz8QRthFsJIqTPUWSGgcbVQWQMqTWgpP2es56jwtJnQLhJQ== o/vbZre3SZqFmUqNP+x1dB6zJiYwcJl5pBSEfDHyQ/p6W2caSW4JbjhydykpWrKe2lwYJ6kQ9H1OqX3C7TzPYw== IqEsHAfsvx4w/06gqbvQoU0iD+sIUXTtcunF4nyEWBPLUEsBeg7aUyID3Kmy1uutz5To/Mrjb3pu5BqhdLX/rA== npF9VUehurfZWBax5ZUuqKOfE79yg7rPJF0aSQ7u7i6G/POVx95rKJV0qFOYKDbGyMwxJ8BUupcCfnC1p0WGOQ== lCo6zpPpmoEaF9xW7a+ch0dKC+HzlOUGxpVvIorjXIen0H2iphehmZSEhK9LxMbWxE+D64N8/Xvi2cl91DDr2Q==
 
 Signature Verification Succeeded
 
-$ HMAC_KEY=0123456789012345 go run 27_merkle_tree_hmac_verify_from_base64.go helpers.go errors.go XD3NWQD4H35xBS0E1cfrsFpECV8tTGN2JsCxbiEeO8LI1Sudg+5DrM2vBJSupUE++cBDTcNovQoLiX2u21OkSw== lCo6zpPpmoEaF9xW7a+ch0dKC+HzlOUGxpVvIorjXIen0H2iphehmZSEhK9LxMbWxE+D64N8/Xvi2cl91DDr2Q== LFYhJE5EgA5MgEVIhbu3V3YGCknUmw1bcaOtqmcUwIT6In/wnM4kir2ONj+cXixGPLYoTwHBfkfoB0K1aOskUQ== KKpcA3TbQEjqg8Xj5wxOyVmjqA25hyhxl9mpR/dIFA+LFaO+788Y+7S3n4ddz+F/RKL2YsvNcTchNHDyWAOnUA== IqEsHAfsvx4w/06gqbvQoU0iD+sIUXTtcunF4nyEWBPLUEsBeg7aUyID3Kmy1uutz5To/Mrjb3pu5BqhdLX/rA==
+$ HMAC_KEY=0123456789012345 go run 27_merkle_tree_hmac_verify_from_base64.go hmac.go helpers.go errors.go NP0n+gNreXmqI4ATzz5rOcut9+317H1Ab6CgO0KLNJMQpS/vT4GDOhAiRMf+KUvMV+f9sApyc4V4iOng/1RXEw== m3M6Y+orFgsXEZ0/HpZJME9cKy+/SpzQ/zvxLujK+CS3xqVX+x0QzIiwYikLswjWUUWgGR6splkAD7z0BLZExg== X0gyp/RcB31yImaxxDDo7L0mN83WYc3DtFTETS4FV3CKu7bgLHwolraIgcCE8VU+reP9Vh1tMq+9m1XALg0BNw== PJwjHeAcTOaFAswC0nYD6wUaptsYB5wptVbdfBRTz8QRthFsJIqTPUWSGgcbVQWQMqTWgpP2es56jwtJnQLhJQ== o/vbZre3SZqFmUqNP+x1dB6zJiYwcJl5pBSEfDHyQ/p6W2caSW4JbjhydykpWrKe2lwYJ6kQ9H1OqX3C7TzPYw== IqEsHAfsvx4w/06gqbvQoU0iD+sIUXTtcunF4nyEWBPLUEsBeg7aUyID3Kmy1uutz5To/Mrjb3pu5BqhdLX/rA== npF9VUehurfZWBax5ZUuqKOfE79yg7rPJF0aSQ7u7i6G/POVx95rKJV0qFOYKDbGyMwxJ8BUupcCfnC1p0WGOQ== lCo6zpPpmoEaF9xW7a+ch0dKC+HzlOUGxpVvIorjXIen0H2iphehmZSEhK9LxMbWxE+D64N8/Xvi2cl91DDr2q==
 
 Signature Verification Failed
 
-LFYhJE5EgA5MgEVIhbu3V3YGCknUmw1bcaOtqmcUwIT6In/wnM4kir2ONj+cXixGPLYoTwHBfkfoB0K1aOskUQ== != lCo6zpPpmoEaF9xW7a+ch0dKC+HzlOUGxpVvIorjXIen0H2iphehmZSEhK9LxMbWxE+D64N8/Xvi2cl91DDr2Q==
+lCo6zpPpmoEaF9xW7a+ch0dKC+HzlOUGxpVvIorjXIen0H2iphehmZSEhK9LxMbWxE+D64N8/Xvi2cl91DDr2Q== != lCo6zpPpmoEaF9xW7a+ch0dKC+HzlOUGxpVvIorjXIen0H2iphehmZSEhK9LxMbWxE+D64N8/Xvi2cl91DDr2q==
 
-exit status 1
+exit status 20
 
 ## Hybrid Cryptography
 

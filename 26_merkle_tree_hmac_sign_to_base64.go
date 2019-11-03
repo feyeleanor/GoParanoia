@@ -1,20 +1,18 @@
 package main
 
-import "crypto/hmac"
-import "crypto/sha512"
 import "fmt"
 import "os"
 
 func main() {
-	var m *MerkleTree
-
 	k := os.Getenv("HMAC_KEY")
-
-	m = Root(k, "+",
-		Root(k, "*",
-			Root(k, "3", nil, nil),
-			Root(k, "2", nil, nil)),
-		Root(k, "1", nil, nil))
+	m := Tree(k, "+",
+		Tree(k, "*",
+			Tree(k, "-",
+        Tree(k, "x"),
+        Tree(k, "y")),
+			Tree(k, "2"),
+			Tree(k, "7")),
+		Tree(k, "1"))
 
 	m.Each(
 		func(m MerkleTree) {
@@ -25,33 +23,30 @@ func main() {
 type MerkleTree struct {
 	V string
 	h string
-	l *MerkleTree
-	r *MerkleTree
+  t []*MerkleTree
 }
 
-func Root(k, v string, l, r *MerkleTree) (m *MerkleTree) {
-	m = &MerkleTree{v, "", l, r}
+func Tree(k, v string, t ...*MerkleTree) (m *MerkleTree) {
+	m = &MerkleTree{ v, "", make([]*MerkleTree, len(t)) }
+  copy(m.t, t)
 	m.h = m.hash(k)
 	return
 }
 
 func (m *MerkleTree) hash(k string) string {
-	h := hmac.New(sha512.New, []byte(k))
-	h.Write([]byte(m.V))
-	if m.l != nil {
-		h.Write([]byte(m.l.h))
-	}
-	if m.r != nil {
-		h.Write([]byte(m.r.h))
-	}
-	return EncodeToString(h.Sum(nil))
+  h := []string{ m.V }
+  for _, v := range m.t {
+    h = append(h, v.h)
+  }
+	return EncodeToString(HMAC_SignAll(k, h...))
 }
 
 func (m *MerkleTree) Each(f func(MerkleTree)) {
 	if m != nil {
 		f(*m)
-		m.l.Each(f)
-		m.r.Each(f)
+    for _, v := range m.t {
+      v.Each(f)
+    }
 	}
 	return
 }
