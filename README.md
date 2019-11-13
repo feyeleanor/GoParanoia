@@ -6,31 +6,25 @@ Code from the workshop "Adventures in Paranoia with Go and SQLite"
 
 ### Encryption
 
+```bash
 $ AES_KEY=0123456789012345 go run 01_encrypt_aes.go 'Hello World'
-
 [189 66 213 32 192 240 163 198 89 18 112 190 150 234 133 248 10 214 159 253 11 245 129 197 68 225 13 23 141 226 137 82]
+```
 
 ### Decryption
 
+```bash
 $ AES_KEY=0123456789012345 go run 02_decrypt_aes.go 189 66 213 32 192 240 163 198 89 18 112 190 150 234 133 248 10 214 159 253 11 245 129 197 68 225 13 23 141 226 137 82
-
 Hello World
-
 $ AES_KEY=0123456789012345 go run 03_encrypt_aes_to_base64.go aes.go 'Hello World!'
-
 3Q9B81dbetzrdptKdv0TBgbanOZX9wgSViRGoF6YxUs=
-
 $ AES_KEY=0123456789012345 go run 03_encrypt_aes_to_base64.go aes.go 'Hello World'
-
 4dlr5z3SkGP4jykKekFYs6J3IabHjecnz3leLbeM0DI=
-
 $ AES_KEY=0123456789012345 go run 04_decrypt_aes_from_base64.go aes.go 3Q9B81dbetzrdptKdv0TBgbanOZX9wgSViRGoF6YxUs=
-
 Hello World
-
 $ AES_KEY=0123456789012345 go run 04_decrypt_aes_from_base64.go aes.go 4dlr5z3SkGP4jykKekFYs6J3IabHjecnz3leLbeM0DI=
-
 Hello World
+```
 
 ## RSA Public Key Cryptography
 
@@ -480,6 +474,32 @@ Alice heard: C
 Alice wants to say: C received
 
 Bob heard: C received
+
+$ go run 33_web_service_ping_pong.go helpers.go errors.go 1 2 3 4 5 6
+
+B: 1
+
+A: 1
+
+B: 2
+
+A: 2
+
+B: 3
+
+A: 3
+
+B: 4
+
+A: 4
+
+B: 5
+
+A: 5
+
+B: 6
+
+A: 6
 
 ## SQLite3 Databases
 
