@@ -7,11 +7,11 @@ import "os"
 
 const DEFAULT_ADDRESS = ":3000"
 const HTTP = "http://"
-const PING = "/ping/"
+const PING_URL = "/ping/"
 
 func init() {
-	http.HandleFunc("/ping/", func(w http.ResponseWriter, r *http.Request) {
-    m := r.URL.Path[len("/ping/"):]
+	http.HandleFunc(PING_URL, func(w http.ResponseWriter, r *http.Request) {
+    m := r.URL.Path[len(PING_URL):]
     fmt.Println("B:", m)
     fmt.Fprint(w, m)
   })
@@ -27,7 +27,7 @@ func main() {
     http.ListenAndServe(a, nil)
   }()
 
-  url := HTTP + a + PING + "%v"
+  url := HTTP + a + PING_URL + "%v"
   for _, v := range os.Args[1:] {
     r, e := http.Get(fmt.Sprintf(url, v))
     ExitOnError(e, WEB_REQUEST_FAILED)
