@@ -32,10 +32,13 @@ func main() {
     r, e := http.Get(fmt.Sprintf(url, v))
     ExitOnError(e, WEB_REQUEST_FAILED)
 
-    defer r.Body.Close()
-    var b []byte
-    b, e = ioutil.ReadAll(r.Body)
-    ExitOnError(e, WEB_NO_BODY)
-    fmt.Println("A:", string(b))
+    fmt.Println("A:", HTTP_read(r))
   }
+}
+
+func HTTP_read(r *http.Response) string {
+  defer r.Body.Close()
+  b, e := ioutil.ReadAll(r.Body)
+  ExitOnError(e, WEB_NO_BODY)
+  return string(b)
 }
