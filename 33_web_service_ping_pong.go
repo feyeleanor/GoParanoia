@@ -1,6 +1,7 @@
 package main
 
 import "fmt"
+import "io"
 import "io/ioutil"
 import "net/http"
 import "os"
@@ -32,13 +33,20 @@ func main() {
     r, e := http.Get(fmt.Sprintf(url, v))
     ExitOnError(e, WEB_REQUEST_FAILED)
 
-    fmt.Println("A:", HTTP_read(r))
+    if s, e := read_body(r.Body); e == nil {
+      fmt.Println("A:", s)
+    } else {
+      ExitOnError(e, WEB_NO_BODY)
+    }
   }
 }
 
-func HTTP_read(r *http.Response) string {
-  defer r.Body.Close()
-  b, e := ioutil.ReadAll(r.Body)
-  ExitOnError(e, WEB_NO_BODY)
-  return string(b)
+func read_body(r io.ReadCloser) (s string, e error) {
+  var b []byte
+
+  defer r.Close()
+  if b, e = ioutil.ReadAll(r); e == nil {
+    s = string(b)
+  }
+  return
 }
