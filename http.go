@@ -12,3 +12,10 @@ func HTTP_readbody(r io.ReadCloser) (s string, e error) {
   }
   return
 }
+
+func HTTP_put(url, m string) (*http.Response, error) {
+	r, e := http.NewRequest("PUT", url, strings.NewReader(m))
+	ExitOnError(e, WEB_REQUEST_FAILED)
+	r.ContentLength = int64(len(m))
+	return http.DefaultClient.Do(r)
+}

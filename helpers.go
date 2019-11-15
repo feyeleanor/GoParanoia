@@ -1,7 +1,9 @@
 package main
 
+import "bytes"
 import "encoding/base64"
 import "fmt"
+import "io"
 import "io/ioutil"
 import "os"
 
@@ -18,6 +20,10 @@ func EncodeStrings(b ...[]byte) (r string) {
 		r += EncodeToString(v)
 	}
 	return
+}
+
+func EncodeToReader(m []byte) io.Reader {
+	return bytes.NewBufferString(EncodeToString(m))
 }
 
 func ExitOnError(e error, n int) {
