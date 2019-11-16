@@ -9,8 +9,12 @@ import "os"
 func main() {
 	AtoB := make(chan string)
   BtoA := Launch(AtoB, func(in, out chan string) {
-    kp, p := LoadKeys(os.Args[1], "")
-    ki, ko := ServerHandshake(kp, p, in, out)
+    k, e := PEM_Load(RSA_PRIVATE_KEY, os.Args[1], "")
+  	ExitOnError(e, INVALID_PRIVATE_KEY)
+
+    priv := k.(*rsa.PrivateKey)
+    p := PEM_Create(priv.PublicKey)
+    ki, ko := ServerHandshake(priv, p, in, out)
 
     Transmitter(ki, os.Args[4:], func(k, v string) {
   	  fmt.Println("Bob wants to say:", v)
@@ -64,15 +68,6 @@ func Launch(in chan string, f func(chan string, chan string)) (out chan string) 
     f(i, o)
   }(in, out)
   return
-}
-
-func LoadKeys(f, pwd string) (*rsa.PrivateKey, *pem.Block) {
-  k, e := PEM_Load(RSA_PRIVATE_KEY, f, pwd)
-	ExitOnError(e, INVALID_PRIVATE_KEY)
-
-  kp := k.(*rsa.PrivateKey)
-	p := PEM_Create(kp.PublicKey)
-  return kp, p
 }
 
 func RequestPublicKey(i, o chan string, n string) *rsa.PublicKey {

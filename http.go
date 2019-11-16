@@ -2,6 +2,8 @@ package main
 
 import "io"
 import "io/ioutil"
+import "net/http"
+import "strings"
 
 func HTTP_readbody(r io.ReadCloser) (s string, e error) {
   var b []byte
