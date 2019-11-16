@@ -16,8 +16,20 @@ func HTTP_readbody(r io.ReadCloser) (s string, e error) {
 }
 
 func HTTP_put(url, m string) (*http.Response, error) {
-	r, e := http.NewRequest("PUT", url, strings.NewReader(m))
-	ExitOnError(e, WEB_REQUEST_FAILED)
-	r.ContentLength = int64(len(m))
-	return http.DefaultClient.Do(r)
+  return HTTP_doRequest("PUT", url, m)
+}
+
+func HTTP_delete(url, m string) (*http.Response, error) {
+  return HTTP_doRequest("DELETE", url, m)
+}
+
+func HTTP_doRequest(method, url, m string) (r *http.Response, e error) {
+  var req *http.Request
+
+	req, e = http.NewRequest(method, url, strings.NewReader(m))
+  if e == nil {
+  	req.ContentLength = int64(len(m))
+    r, e = http.DefaultClient.Do(req)
+  }
+	return
 }

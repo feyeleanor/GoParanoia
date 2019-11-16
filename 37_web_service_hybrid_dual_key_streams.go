@@ -53,9 +53,7 @@ func init() {
       }
       fmt.Println("Bob received symmetric key:", s)
 
-      b := make([]byte, 32)
-      _, e := rand.Read(b)
-      ExitOnError(e, NOT_ENOUGH_RANDOMNESS)
+      b := MakeNewKey(16)
       fmt.Println("Bob sends symmetric key:", EncodeToString(b))
 
       sessions[n] = &channel { ko: s, ki: string(b) }
@@ -67,23 +65,20 @@ func init() {
     switch r.Method {
     case http.MethodPut:
       n := r.URL.Path[len(MESSAGE):]
-      s := sessions[n]
-      if s == nil {
+      if s := sessions[n]; s == nil {
         http.Error(w, "unknown nonce", 500)
+      } else {
+        if m, e := HTTP_readbody(r.Body); e != nil {
+          http.Error(w, "missing message", 500)
+        } else {
+          m = DecryptMessage(s.ki, m)
+          fmt.Println("Bod heard:", m)
+
+          m = fmt.Sprintf("%v received", m)
+          fmt.Println("Bob wants to say:", m)
+          fmt.Fprint(w, EncryptMessage(s.ko, m))
+        }
       }
-
-      m, e := HTTP_readbody(r.Body)
-      if e != nil {
-        http.Error(w, "missing message", 500)
-        return
-      }
-
-      m = DecryptMessage(s.ki, m)
-      fmt.Println("Bod heard:", m)
-
-      m = fmt.Sprintf("%v received", m)
-      fmt.Println("Bob wants to say:", m)
-      fmt.Fprint(w, EncryptMessage(s.ko, m))
     }
   })
 }
@@ -169,9 +164,20 @@ func EncryptMessage(k, v string) string {
   return EncodeToString(b)
 }
 
-func Put(url, m string) (*http.Response, error) {
-	r, e := http.NewRequest("PUT", url, strings.NewReader(m))
-	ExitOnError(e, WEB_REQUEST_FAILED)
-	r.ContentLength = int64(len(m))
-	return http.DefaultClient.Do(r)
+func MakeNewKey(n int) (r []byte) {
+  r = make([]byte, n)
+  _, e := rand.Read(r)
+  ExitOnError(e, NOT_ENOUGH_RANDOMNESS)
+  return
+}
+
+func Put(url, m string) (r *http.Response, e error) {
+  var req *http.Request
+
+	req, e = http.NewRequest("PUT", url, strings.NewReader(m))
+  if e == nil {
+  	req.ContentLength = int64(len(m))
+    r, e = http.DefaultClient.Do(req)
+  }
+	return
 }
