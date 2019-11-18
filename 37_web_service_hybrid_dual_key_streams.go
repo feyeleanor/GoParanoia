@@ -34,30 +34,23 @@ func init() {
           pem.EncodeToMemory(p)))
 
     case http.MethodPost:
-      var s string
-
       n := r.URL.Path[len(KEY):]
       if len(n) == 0 {
         http.Error(w, "missing nonce", 500)
-        return
+      } else {
+        s := HTTP_readbody(r.Body)
+        if s, e = OAEP_Decrypt(priv, read_base64(s), n); e != nil {
+          http.Error(w, "decryption failed", 500)
+        } else {
+          fmt.Println("Bob received symmetric key:", s)
+
+          b := MakeNewKey(16)
+          fmt.Println("Bob sends symmetric key:", EncodeToString(b))
+
+          sessions[n] = &channel { ko: s, ki: string(b) }
+    	    fmt.Fprint(w, EncryptMessage(s, sessions[n].ki))
+        }
       }
-
-      if s, e = HTTP_readbody(r.Body); e != nil {
-        http.Error(w, "missing symmetric key", 500)
-        return
-      }
-
-      if s, e = OAEP_Decrypt(priv, read_base64(s), n); e != nil {
-        http.Error(w, "decryption failed", 500)
-        return
-      }
-      fmt.Println("Bob received symmetric key:", s)
-
-      b := MakeNewKey(16)
-      fmt.Println("Bob sends symmetric key:", EncodeToString(b))
-
-      sessions[n] = &channel { ko: s, ki: string(b) }
-	    fmt.Fprint(w, EncryptMessage(s, sessions[n].ki))
     }
   })
 
@@ -67,17 +60,15 @@ func init() {
       n := r.URL.Path[len(MESSAGE):]
       if s := sessions[n]; s == nil {
         http.Error(w, "unknown nonce", 500)
+      } else if m := HTTP_readbody(r.Body); m == "" {
+        http.Error(w, "missing message", 500)
       } else {
-        if m, e := HTTP_readbody(r.Body); e != nil {
-          http.Error(w, "missing message", 500)
-        } else {
-          m = DecryptMessage(s.ki, m)
-          fmt.Println("Bod heard:", m)
+        m = DecryptMessage(s.ki, m)
+        fmt.Println("Bod heard:", m)
 
-          m = fmt.Sprintf("%v received", m)
-          fmt.Println("Bob wants to say:", m)
-          fmt.Fprint(w, EncryptMessage(s.ko, m))
-        }
+        m = fmt.Sprintf("%v received", m)
+        fmt.Println("Bob wants to say:", m)
+        fmt.Fprint(w, EncryptMessage(s.ko, m))
       }
     }
   })
@@ -110,15 +101,11 @@ func main() {
 
 func RequestPublicKey(a string, n string) *rsa.PublicKey {
   var k interface{}
-  var s string
 
   r, e := http.Get(HTTP + a + KEY + n)
   ExitOnError(e, WEB_REQUEST_FAILED)
 
-  s, e = HTTP_readbody(r.Body)
-	ExitOnError(e, WEB_NO_BODY)
-
-  k, e = PEM_ReadBase64(RSA_PUBLIC_KEY, s, "")
+  k, e = PEM_ReadBase64(RSA_PUBLIC_KEY, HTTP_readbody(r.Body), "")
 	ExitOnError(e, INVALID_PUBLIC_KEY)
   return k.(*rsa.PublicKey)
 }
@@ -134,21 +121,13 @@ func SendSymmetricKey(pk *rsa.PublicKey, a, k, n string) (s string) {
     EncodeToReader(b))
 
   ExitOnError(e, WEB_REQUEST_FAILED)
-
-  s, e = HTTP_readbody(r.Body)
-	ExitOnError(e, WEB_NO_BODY)
-
-  return DecryptMessage(k, s)
+  return DecryptMessage(k, HTTP_readbody(r.Body))
 }
 
 func SendMessage(a, n, k, ks, m string) string {
   r, e := Put(HTTP + a + MESSAGE + n, EncryptMessage(ks, m))
   ExitOnError(e, WEB_REQUEST_FAILED)
-
-  m, e = HTTP_readbody(r.Body)
-	ExitOnError(e, WEB_NO_BODY)
-
-  return DecryptMessage(k, m)
+  return DecryptMessage(k, HTTP_readbody(r.Body))
 }
 
 func DecryptMessage(k, v string) string {

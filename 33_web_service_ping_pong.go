@@ -10,6 +10,9 @@ const DEFAULT_ADDRESS = ":3000"
 const HTTP = "http://"
 const PING_URL = "/ping/"
 
+const HTTP_ADDRESS = "HTTP_ADDRESS"
+const NO_BODY_RECEIVED = "HTTP message has no body"
+
 func init() {
 	http.HandleFunc(PING_URL, func(w http.ResponseWriter, r *http.Request) {
     m := r.URL.Path[len(PING_URL):]
@@ -19,7 +22,7 @@ func init() {
 }
 
 func main() {
-  a := os.Getenv("HTTP_ADDRESS")
+  a := os.Getenv(HTTP_ADDRESS)
 	if a == "" {
     a = DEFAULT_ADDRESS
   }
@@ -33,19 +36,17 @@ func main() {
     r, e := http.Get(fmt.Sprintf(url, v))
     ExitOnError(e, WEB_REQUEST_FAILED)
 
-    if s, e := read_body(r.Body); e == nil {
-      fmt.Println("A:", s)
-    } else {
-      ExitOnError(e, WEB_NO_BODY)
+    s := read_body(r.Body)
+    if s == "" {
+      s = NO_BODY_RECEIVED
     }
+    fmt.Println("A:", s)
   }
 }
 
-func read_body(r io.ReadCloser) (s string, e error) {
-  var b []byte
-
+func read_body(r io.ReadCloser) (s string) {
   defer r.Close()
-  if b, e = ioutil.ReadAll(r); e == nil {
+  if b, e := ioutil.ReadAll(r); e == nil {
     s = string(b)
   }
   return

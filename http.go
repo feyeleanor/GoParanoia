@@ -5,11 +5,9 @@ import "io/ioutil"
 import "net/http"
 import "strings"
 
-func HTTP_readbody(r io.ReadCloser) (s string, e error) {
-  var b []byte
-
+func HTTP_readbody(r io.ReadCloser)  (s string) {
   defer r.Close()
-  if b, e = ioutil.ReadAll(r); e == nil {
+  if b, e := ioutil.ReadAll(r); e == nil {
     s = string(b)
   }
   return

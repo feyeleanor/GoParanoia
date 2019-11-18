@@ -49,8 +49,9 @@ func RequestPublicKey(a string, n string) *rsa.PublicKey {
   r, e := http.Get(fmt.Sprintf(url, n))
   ExitOnError(e, WEB_REQUEST_FAILED)
 
-  s, e = HTTP_readbody(r.Body)
-  ExitOnError(e, WEB_NO_BODY)
+  if s = HTTP_readbody(r.Body); s == "" {
+    os.Exit(WEB_NO_BODY)
+  }
 
   k, e = PEM_ReadBase64(RSA_PUBLIC_KEY, s, "")
 	ExitOnError(e, INVALID_PUBLIC_KEY)

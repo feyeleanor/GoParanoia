@@ -39,11 +39,7 @@ func init() {
         return
       }
 
-      if s, e = HTTP_readbody(r.Body); e != nil {
-        http.Error(w, "missing symmetric key", 500)
-        return
-      }
-
+      s = HTTP_readbody(r.Body)
       if s, e = OAEP_Decrypt(priv, read_base64(s), n); e != nil {
         http.Error(w, "decryption failed", 500)
         return
@@ -62,13 +58,7 @@ func init() {
         http.Error(w, "unknown nonce", 500)
       }
 
-      m, e := HTTP_readbody(r.Body)
-      if e != nil {
-        http.Error(w, "missing message", 500)
-        return
-      }
-
-      m = DecryptMessage(s, m)
+      m := DecryptMessage(s, HTTP_readbody(r.Body))
       fmt.Println("Bod heard:", m)
 
       m = fmt.Sprintf("%v received", m)
@@ -109,8 +99,9 @@ func RequestPublicKey(a string, n string) *rsa.PublicKey {
   r, e := http.Get(HTTP + a + KEY + n)
   ExitOnError(e, WEB_REQUEST_FAILED)
 
-  s, e = HTTP_readbody(r.Body)
-	ExitOnError(e, WEB_NO_BODY)
+  if s = HTTP_readbody(r.Body); s == "" {
+  	os.Exit(WEB_NO_BODY)
+  }
 
   k, e = PEM_ReadBase64(RSA_PUBLIC_KEY, s, "")
 	ExitOnError(e, INVALID_PUBLIC_KEY)
@@ -132,11 +123,7 @@ func SendSymmetricKey(pk *rsa.PublicKey, a, k, n string) {
 func SendMessage(a, n, k, m string) string {
   r, e := Put(HTTP + a + MESSAGE + n, EncryptMessage(k, m))
   ExitOnError(e, WEB_REQUEST_FAILED)
-
-  m, e = HTTP_readbody(r.Body)
-	ExitOnError(e, WEB_NO_BODY)
-
-  return DecryptMessage(k, m)
+  return DecryptMessage(k, HTTP_readbody(r.Body))
 }
 
 func DecryptMessage(k, v string) string {
