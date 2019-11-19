@@ -6,7 +6,7 @@ import "os"
 
 func main() {
 	k := os.Getenv("AES_KEY")
-	if m, e := AESEncrypt(k, os.Args[1]); e == nil {
+	if m, e := AES_Encrypt(k, os.Args[1]); e == nil {
 		PrintEncrypted(m)
 	} else {
 		fmt.Printf("error: %v\n", e)

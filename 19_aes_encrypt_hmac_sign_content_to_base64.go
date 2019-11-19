@@ -7,7 +7,7 @@ import "os"
 
 func main() {
 	h := Sign(os.Getenv("HMAC_KEY"), string(os.Args[1]))
-	m, e := AESEncrypt(os.Getenv("AES_KEY"), os.Args[1])
+	m, e := AES_Encrypt(os.Getenv("AES_KEY"), os.Args[1])
 	ExitOnError(e, AES_ENCRYPTION_FAILED)
 	fmt.Println(EncodeStrings(h, m))
 }

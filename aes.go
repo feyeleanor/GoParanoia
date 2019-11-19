@@ -4,7 +4,7 @@ import "crypto/aes"
 import "crypto/cipher"
 import "crypto/rand"
 
-func AESEncrypt(k, m string) (o []byte, e error) {
+func AES_Encrypt(k, m string) (o []byte, e error) {
 	if o, e = PaddedBuffer([]byte(m)); e == nil {
 		var b cipher.Block
 
@@ -15,7 +15,7 @@ func AESEncrypt(k, m string) (o []byte, e error) {
 	return
 }
 
-func AESDecrypt(k, s string) (r string, e error) {
+func AES_Decrypt(k, s string) (r string, e error) {
 	var b cipher.Block
 	if b, e = aes.NewCipher([]byte(k)); e == nil {
 		iv, m := Unpack(s)
