@@ -1,14 +1,12 @@
 package main
 
 import "crypto/rsa"
+import "encoding/pem"
 import "fmt"
 import "net/http"
 import "os"
 import "strings"
 import "time"
-
-const BOB Person = "Bob"
-const ALICE Person = "Alice"
 
 const DEFAULT_ADDRESS = ":3000"
 const HTTP = "http://"
@@ -28,9 +26,10 @@ func init() {
 	http.HandleFunc(KEY, func(w http.ResponseWriter, r *http.Request) {
     switch r.Method {
     case http.MethodGet:
-      GetPublicKey(w, p, func() {
-        BOB.Report("received request for public key from", r.RemoteAddr)
-      })
+      BOB.Report("received request for public key from", r.RemoteAddr)
+      fmt.Fprint(w,
+        EncodeToString(
+          pem.EncodeToMemory(p)))
 
     case http.MethodPost:
       n := r.URL.Path[len(KEY):]
