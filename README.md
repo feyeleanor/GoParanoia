@@ -447,6 +447,38 @@ Alice wants to say: C
 Bod heard: C
 Bob wants to say: C received
 Alice heard: C received
+
+$ go run 38_web_service_hybrid_key_rollover.go echo_server.go personality.go http.go pem.go rsa.go aes.go helpers.go errors.go test3.pem session_label 0123456789012345 A B C
+Bob received request for public key from 127.0.0.1:61252
+Alice received public key: &{31567127335276920051778986890983418137235118195788341168325280010141872825942730386604890414504330424121846232915529846111962553425801730338442721710329105996928572139897441647445680540638619159385964576015724962916475593889066666184228021802959434558601451977786671232463588955484699002568869232321539136212150321079973869708311234964749352015864656432491046294093762734492605713775237154595184621558656835799069556866308339741960587974969797335759107872113116845565849526376848130079712356076286876918399283180445566867123603330810480774172961213531196691266615312515557045027778553516298941059154014833011840984679 65537}
+Bob encodes messages with: MDEyMzQ1Njc4OTAxMjM0NQ==
+Bob decodes messages with: TO/Q21TBJu3VO+RoMicCSA==
+Alice encodes messages with: TO/Q21TBJu3VO+RoMicCSA==
+Alice decodes messages with: MDEyMzQ1Njc4OTAxMjM0NQ==
+Alice wants to say: A
+Bob heard: A
+Bob wants to say: A received
+Alice heard: A received
+Bob encodes messages with: /ZLdJyAYsNxVld8kOimIYQ==
+Bob decodes messages with: 1knNC5IRJfYrSD4zvCQ1mg==
+Alice encodes messages with: 1knNC5IRJfYrSD4zvCQ1mg==
+Alice decodes messages with: /ZLdJyAYsNxVld8kOimIYQ==
+Alice wants to say: B
+Bob heard: B
+Bob wants to say: B received
+Alice heard: B received
+Bob encodes messages with: Lheb1AYFqUA2QgRDO7Ewjw==
+Bob decodes messages with: iUIr+2ChgHXomOTzIftsqQ==
+Alice encodes messages with: iUIr+2ChgHXomOTzIftsqQ==
+Alice decodes messages with: Lheb1AYFqUA2QgRDO7Ewjw==
+Alice wants to say: C
+Bob heard: C
+Bob wants to say: C received
+Alice heard: C received
+Bob encodes messages with: 9E6tjf1X7/FaHxBGL7vyQw==
+Bob decodes messages with: LbJUm/RREsya646dqg9shg==
+Alice encodes messages with: LbJUm/RREsya646dqg9shg==
+Alice decodes messages with: 9E6tjf1X7/FaHxBGL7vyQw==
 ```
 
 ## SQLite3 Databases
