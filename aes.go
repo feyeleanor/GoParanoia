@@ -4,6 +4,26 @@ import "crypto/aes"
 import "crypto/cipher"
 import "crypto/rand"
 
+type AES_channel struct { ko, ki string }
+
+func (a *AES_channel) EncryptMessage(m string) string {
+  b, _ := AES_Encrypt(a.ko, m)
+	return EncodeToString(b)
+}
+
+func (a *AES_channel) DecryptMessage(m string) (r string) {
+	r = read_base64(m)
+	r, _ = AES_Decrypt(a.ki, r)
+  return
+}
+
+func AES_MakeKey(n int) string {
+  s := make([]byte, n)
+  _, e := rand.Read(s)
+  ExitOnError(e, NOT_ENOUGH_RANDOMNESS)
+  return string(s)
+}
+
 func AES_Encrypt(k, m string) (o []byte, e error) {
 	if o, e = PaddedBuffer([]byte(m)); e == nil {
 		var b cipher.Block
