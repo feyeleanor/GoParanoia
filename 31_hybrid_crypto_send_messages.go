@@ -89,13 +89,13 @@ func Receiver(k string, in chan string, f func(string)) {
 
 func DecryptMessage(k, v string) string {
 	v = read_base64(v)
-	r, e := AESDecrypt(k, v)
+	r, e := AES_Decrypt(k, v)
 	ExitOnError(e, AES_DECRYPTION_FAILED)
   return r
 }
 
 func EncryptMessage(k, v string) string {
-	b, e := AESEncrypt(k, v)
+	b, e := AES_Encrypt(k, v)
 	ExitOnError(e, AES_ENCRYPTION_FAILED)
   return EncodeToString(b)
 }
