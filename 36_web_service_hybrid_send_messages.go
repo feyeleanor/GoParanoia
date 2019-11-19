@@ -1,22 +1,25 @@
 package main
 
 import "crypto/rsa"
-import "encoding/pem"
 import "fmt"
 import "net/http"
 import "os"
 import "strings"
 import "time"
 
+const BOB Person = "Bob"
+const ALICE Person = "Alice"
+
 const DEFAULT_ADDRESS = ":3000"
 const HTTP = "http://"
 const KEY = "/key/"
 const MESSAGE = "/message/"
+const OCTETS = "application/octet-stream"
 
-var sessions map[string] string
+const HTTP_ADDRESS = "HTTP_ADDRESS"
 
 func init() {
-  sessions = make(map[string] string)
+  sessions := make(map[string] string)
   k, e := PEM_Load(RSA_PRIVATE_KEY, os.Args[1], "")
 	ExitOnError(e, INVALID_PRIVATE_KEY)
 
@@ -25,27 +28,23 @@ func init() {
 	http.HandleFunc(KEY, func(w http.ResponseWriter, r *http.Request) {
     switch r.Method {
     case http.MethodGet:
-      fmt.Println("Bob received request for public key from", r.RemoteAddr)
-      fmt.Fprint(w,
-        EncodeToString(
-          pem.EncodeToMemory(p)))
+      GetPublicKey(w, p, func() {
+        BOB.Report("received request for public key from", r.RemoteAddr)
+      })
 
     case http.MethodPost:
-      var s string
-
       n := r.URL.Path[len(KEY):]
       if len(n) == 0 {
         http.Error(w, "missing nonce", 500)
-        return
+      } else {
+        s := HTTP_readbody(r.Body)
+        if s, e = OAEP_Decrypt(priv, read_base64(s), n); e != nil {
+          http.Error(w, "decryption failed", 500)
+        } else {
+          BOB.Report("received symmetric key:", s)
+          sessions[n] = s
+        }
       }
-
-      s = HTTP_readbody(r.Body)
-      if s, e = OAEP_Decrypt(priv, read_base64(s), n); e != nil {
-        http.Error(w, "decryption failed", 500)
-        return
-      }
-      fmt.Println("Bob received symmetric key:", s)
-      sessions[n] = s
     }
   })
 
@@ -59,17 +58,17 @@ func init() {
       }
 
       m := DecryptMessage(s, HTTP_readbody(r.Body))
-      fmt.Println("Bod heard:", m)
+      BOB.Report("heard:", m)
 
       m = fmt.Sprintf("%v received", m)
-      fmt.Println("Bob wants to say:", m)
+      BOB.Report("wants to say:", m)
       fmt.Fprint(w, EncryptMessage(s, m))
     }
   })
 }
 
 func main() {
-  a := os.Getenv("HTTP_ADDRESS")
+  a := os.Getenv(HTTP_ADDRESS)
 	if a == "" {
     a = DEFAULT_ADDRESS
   }
@@ -82,13 +81,13 @@ func main() {
   n := os.Args[2]
   k := os.Args[3]
   p := RequestPublicKey(a, n)
-  fmt.Println("Alice received public key:", p)
-  fmt.Println("Alice sends symmetric key:", k)
+  ALICE.Report("received public key:", p)
+  ALICE.Report("sends symmetric key:", k)
   SendSymmetricKey(p, a, k, n)
 
   for _, m := range os.Args[4:] {
-    fmt.Println("Alice wants to say:", m)
-    fmt.Println("Alice heard:", SendMessage(a, n, k, m))
+    ALICE.Report("wants to say:", m)
+    ALICE.Report("heard:", SendMessage(a, n, k, m))
   }
 }
 
@@ -114,7 +113,7 @@ func SendSymmetricKey(pk *rsa.PublicKey, a, k, n string) {
 
   _, e = http.Post(
     HTTP + a + KEY + n,
-    "application/octet-stream",
+    OCTETS,
     EncodeToReader(b))
 
   ExitOnError(e, WEB_REQUEST_FAILED)
@@ -128,13 +127,13 @@ func SendMessage(a, n, k, m string) string {
 
 func DecryptMessage(k, v string) string {
 	v = read_base64(v)
-	r, e := AESDecrypt(k, v)
+	r, e := AES_Decrypt(k, v)
 	ExitOnError(e, AES_DECRYPTION_FAILED)
   return r
 }
 
 func EncryptMessage(k, v string) string {
-	b, e := AESEncrypt(k, v)
+	b, e := AES_Encrypt(k, v)
 	ExitOnError(e, AES_ENCRYPTION_FAILED)
   return EncodeToString(b)
 }

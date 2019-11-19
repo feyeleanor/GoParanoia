@@ -2,24 +2,24 @@ package main
 
 import "crypto/rand"
 import "crypto/rsa"
-import "encoding/pem"
 import "fmt"
 import "net/http"
 import "os"
-import "strings"
 import "time"
+
+const BOB Person = "Bob"
+const ALICE Person = "Alice"
 
 const DEFAULT_ADDRESS = ":3000"
 const HTTP = "http://"
 const KEY = "/key/"
 const MESSAGE = "/message/"
+const OCTETS = "application/octet-stream"
 
-type channel struct { ko, ki string }
-
-var sessions map[string] *channel
+const HTTP_ADDRESS = "HTTP_ADDRESS"
 
 func init() {
-  sessions = make(map[string] *channel)
+  sessions := make(map[string] *channel)
   k, e := PEM_Load(RSA_PRIVATE_KEY, os.Args[1], "")
 	ExitOnError(e, INVALID_PRIVATE_KEY)
 
@@ -28,10 +28,9 @@ func init() {
 	http.HandleFunc(KEY, func(w http.ResponseWriter, r *http.Request) {
     switch r.Method {
     case http.MethodGet:
-      fmt.Println("Bob received request for public key from", r.RemoteAddr)
-      fmt.Fprint(w,
-        EncodeToString(
-          pem.EncodeToMemory(p)))
+      GetPublicKey(w, p, func() {
+        BOB.Report("received request for public key from", r.RemoteAddr)
+      })
 
     case http.MethodPost:
       n := r.URL.Path[len(KEY):]
@@ -42,13 +41,11 @@ func init() {
         if s, e = OAEP_Decrypt(priv, read_base64(s), n); e != nil {
           http.Error(w, "decryption failed", 500)
         } else {
-          fmt.Println("Bob received symmetric key:", s)
-
-          b := MakeNewKey(16)
-          fmt.Println("Bob sends symmetric key:", EncodeToString(b))
-
-          sessions[n] = &channel { ko: s, ki: string(b) }
-    	    fmt.Fprint(w, EncryptMessage(s, sessions[n].ki))
+          c := &channel { ko: s, ki: MakeNewKey(16) }
+          sessions[n] = c
+          BOB.Report("received symmetric key:", s)
+          BOB.Report("sends symmetric key:", EncodeToString([]byte(c.ki)))
+    	    fmt.Fprint(w, c.EncryptMessage(c.ki))
         }
       }
     }
@@ -63,19 +60,19 @@ func init() {
       } else if m := HTTP_readbody(r.Body); m == "" {
         http.Error(w, "missing message", 500)
       } else {
-        m = DecryptMessage(s.ki, m)
-        fmt.Println("Bod heard:", m)
+        m = s.DecryptMessage(m)
+        BOB.Report("heard:", m)
 
         m = fmt.Sprintf("%v received", m)
-        fmt.Println("Bob wants to say:", m)
-        fmt.Fprint(w, EncryptMessage(s.ko, m))
+        BOB.Report("wants to say:", m)
+        fmt.Fprint(w, s.EncryptMessage(m))
       }
     }
   })
 }
 
 func main() {
-  a := os.Getenv("HTTP_ADDRESS")
+  a := os.Getenv(HTTP_ADDRESS)
 	if a == "" {
     a = DEFAULT_ADDRESS
   }
@@ -86,16 +83,16 @@ func main() {
   time.Sleep(2 * time.Second)
 
   n := os.Args[2]
-  k := os.Args[3]
+  c := &channel{ ki: os.Args[3] }
   p := RequestPublicKey(a, n)
-  fmt.Println("Alice received public key:", p)
-  fmt.Println("Alice sends symmetric key:", k)
-  ks := SendSymmetricKey(p, a, k, n)
-  fmt.Println("Alice received symmetric key:", EncodeToString([]byte(ks)))
+  ALICE.Report("received public key:", p)
+  ALICE.Report("sends symmetric key:", c.ki)
+  c.ko = SendSymmetricKey(p, c, a, n)
+  ALICE.Report("received symmetric key:", EncodeToString([]byte(c.ko)))
 
   for _, m := range os.Args[4:] {
-    fmt.Println("Alice wants to say:", m)
-    fmt.Println("Alice heard:", SendMessage(a, n, k, ks, m))
+    ALICE.Report("wants to say:", m)
+    ALICE.Report("heard:", SendMessage(c, a, n, m))
   }
 }
 
@@ -110,53 +107,42 @@ func RequestPublicKey(a string, n string) *rsa.PublicKey {
   return k.(*rsa.PublicKey)
 }
 
-func SendSymmetricKey(pk *rsa.PublicKey, a, k, n string) (s string) {
-	b, e := OAEP_Encrypt(pk, k, n)
+func SendSymmetricKey(pk *rsa.PublicKey, c *channel, a, n string) (s string) {
+	b, e := OAEP_Encrypt(pk, c.ki, n)
 	ExitOnError(e, RSA_ENCRYPTION_FAILED)
 
   var r *http.Response
   r, e = http.Post(
     HTTP + a + KEY + n,
-    "application/octet-stream",
+    OCTETS,
     EncodeToReader(b))
 
   ExitOnError(e, WEB_REQUEST_FAILED)
-  return DecryptMessage(k, HTTP_readbody(r.Body))
+  return c.DecryptMessage(HTTP_readbody(r.Body))
 }
 
-func SendMessage(a, n, k, ks, m string) string {
-  r, e := Put(HTTP + a + MESSAGE + n, EncryptMessage(ks, m))
+func SendMessage(c *channel, a, n, m string) string {
+  r, e := HTTP_put(HTTP + a + MESSAGE + n, c.EncryptMessage(m))
   ExitOnError(e, WEB_REQUEST_FAILED)
-  return DecryptMessage(k, HTTP_readbody(r.Body))
+  return c.DecryptMessage(HTTP_readbody(r.Body))
 }
 
-func DecryptMessage(k, v string) string {
-	v = read_base64(v)
-	r, e := AESDecrypt(k, v)
-	ExitOnError(e, AES_DECRYPTION_FAILED)
-  return r
-}
-
-func EncryptMessage(k, v string) string {
-	b, e := AESEncrypt(k, v)
-	ExitOnError(e, AES_ENCRYPTION_FAILED)
-  return EncodeToString(b)
-}
-
-func MakeNewKey(n int) (r []byte) {
-  r = make([]byte, n)
-  _, e := rand.Read(r)
+func MakeNewKey(n int) string {
+  b := make([]byte, n)
+  _, e := rand.Read(b)
   ExitOnError(e, NOT_ENOUGH_RANDOMNESS)
-  return
+  return string(b)
 }
 
-func Put(url, m string) (r *http.Response, e error) {
-  var req *http.Request
+type channel struct { ko, ki string }
 
-	req, e = http.NewRequest("PUT", url, strings.NewReader(m))
-  if e == nil {
-  	req.ContentLength = int64(len(m))
-    r, e = http.DefaultClient.Do(req)
-  }
-	return
+func (a *channel) EncryptMessage(m string) string {
+  b, _ := AES_Encrypt(a.ko, m)
+	return EncodeToString(b)
+}
+
+func (a *channel) DecryptMessage(m string) (r string) {
+	r = read_base64(m)
+	r, _ = AES_Decrypt(a.ki, r)
+  return
 }

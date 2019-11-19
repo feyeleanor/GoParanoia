@@ -2,16 +2,20 @@ package main
 
 import "bytes"
 import "crypto/rsa"
-import "encoding/pem"
-import "fmt"
 import "io"
 import "net/http"
 import "os"
 import "time"
 
+const BOB Person = "Bob"
+const ALICE Person = "Alice"
+
 const DEFAULT_ADDRESS = ":3000"
 const HTTP = "http://"
 const KEY = "/key/"
+const OCTETS = "application/octet-stream"
+
+const HTTP_ADDRESS = "HTTP_ADDRESS"
 
 func init() {
   k, e := PEM_Load(RSA_PRIVATE_KEY, os.Args[1], "")
@@ -22,32 +26,28 @@ func init() {
 	http.HandleFunc(KEY, func(w http.ResponseWriter, r *http.Request) {
     switch r.Method {
     case http.MethodGet:
-      fmt.Println("Bob received request for public key from", r.RemoteAddr)
-      fmt.Fprint(w,
-        EncodeToString(
-          pem.EncodeToMemory(p)))
+      GetPublicKey(w, p, func() {
+        BOB.Report("received request for public key from", r.RemoteAddr)
+      })
 
     case http.MethodPost:
-      var s string
-
       n := r.URL.Path[len(KEY):]
       if len(n) == 0 {
         http.Error(w, "missing nonce", 500)
-        return
+      } else {
+        s := HTTP_readbody(r.Body)
+        if s, e = OAEP_Decrypt(priv, read_base64(s), n); e != nil {
+          http.Error(w, "decryption failed", 500)
+        } else {
+          BOB.Report("received symmetric key:", s)
+        }
       }
-
-      s = HTTP_readbody(r.Body)
-      if s, e = OAEP_Decrypt(priv, read_base64(s), n); e != nil {
-        http.Error(w, "decryption failed", 500)
-        return
-      }
-      fmt.Println("Bob received symmetric key:", s)
     }
   })
 }
 
 func main() {
-  a := os.Getenv("HTTP_ADDRESS")
+  a := os.Getenv(HTTP_ADDRESS)
 	if a == "" {
     a = DEFAULT_ADDRESS
   }
@@ -60,8 +60,8 @@ func main() {
   n := os.Args[2]
   k := os.Args[3]
   p := RequestPublicKey(a, n)
-  fmt.Println("Alice received public key:", p)
-  fmt.Println("Alice sends symmetric key:", k)
+  ALICE.Report("received public key:", p)
+  ALICE.Report("sends symmetric key:", k)
   SendSymmetricKey(p, a, k, n)
 }
 
@@ -87,7 +87,7 @@ func SendSymmetricKey(pk *rsa.PublicKey, a, k, n string) {
 
   _, e = http.Post(
     HTTP + a + KEY + n,
-    "application/octet-stream",
+    OCTETS,
     EncodeToIOReader(b))
 
   ExitOnError(e, WEB_REQUEST_FAILED)
