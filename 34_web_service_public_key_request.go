@@ -7,9 +7,21 @@ import "net/http"
 import "os"
 import "time"
 
+type Person string
+
+func (p Person) Report(m ...interface{}) {
+  i := []interface{} { p }
+  fmt.Println(append(i, m...)...)
+}
+
+const BOB Person = "Bob"
+const ALICE Person = "Alice"
+
 const DEFAULT_ADDRESS = ":3000"
 const HTTP = "http://"
 const KEY = "/key/"
+
+const HTTP_ADDRESS = "HTTP_ADDRESS"
 
 func init() {
   k, e := PEM_Load(RSA_PRIVATE_KEY, os.Args[1], "")
@@ -18,7 +30,7 @@ func init() {
   p := PEM_Create(k.(*rsa.PrivateKey).PublicKey)
 	http.HandleFunc(KEY, func(w http.ResponseWriter, r *http.Request) {
     n := r.URL.Path[len(KEY):]
-    fmt.Println("Bob received nonce:", n)
+    BOB.Report("received nonce:", n)
     fmt.Fprint(w,
       EncodeToString(
         pem.EncodeToMemory(p)))
@@ -26,7 +38,7 @@ func init() {
 }
 
 func main() {
-  a := os.Getenv("HTTP_ADDRESS")
+  a := os.Getenv(HTTP_ADDRESS)
 	if a == "" {
     a = DEFAULT_ADDRESS
   }
@@ -36,9 +48,7 @@ func main() {
   }()
   time.Sleep(2 * time.Second)
 
-  fmt.Println(
-    "Alice received public key:",
-    RequestPublicKey(a, os.Args[2]))
+  ALICE.Report("received public key:", RequestPublicKey(a, os.Args[2]))
 }
 
 func RequestPublicKey(a string, n string) *rsa.PublicKey {
