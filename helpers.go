@@ -7,6 +7,10 @@ import "io"
 import "io/ioutil"
 import "os"
 
+func EncodeToBase64(s string) string {
+  return EncodeToString([]byte(s))
+}
+
 func EncodeToString(m []byte) string {
 	return base64.StdEncoding.EncodeToString(m)
 }

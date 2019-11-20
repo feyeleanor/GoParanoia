@@ -63,7 +63,7 @@ func RequestPublicKey(i, o chan string, n string) *rsa.PublicKey {
 }
 
 func SendSymmetricKey(pk *rsa.PublicKey, out chan string, k, l string) {
-	k = EncodeToString([]byte(k))
+	k = EncodeToBase64(k)
 	b, e := OAEP_Encrypt(pk, k, l)
 	ExitOnError(e, RSA_ENCRYPTION_FAILED)
 	out <- string(b)

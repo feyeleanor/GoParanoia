@@ -27,9 +27,7 @@ func main() {
   n := os.Args[2]
   ki := os.Args[3]
   ko := ClientHandshake(ki, n, BtoA, AtoB)
-  fmt.Println(
-    "Alice received symmetric key:",
-    EncodeToString([]byte(ko)))
+  fmt.Println("Alice received symmetric key:", EncodeToBase64(ko))
 
   Receiver(ki, BtoA, func(v string) {
 		fmt.Println("Alice heard:", v)
@@ -40,6 +38,7 @@ func main() {
 }
 
 func ClientHandshake(ki, n string, in, out chan string) string {
+  fmt.Println("Alice sends symmetric key:", EncodeToBase64(ki))
 	SendSymmetricKey(
     RequestPublicKey(in, out, n), out, ki, n)
 
@@ -52,12 +51,13 @@ func ServerHandshake(kp *rsa.PrivateKey, p *pem.Block, in, out chan string) (ki,
 
 	out <- EncodeToString(pem.EncodeToMemory(p))
   ko = ReceiveSymmetricKey(kp, in, n)
-	fmt.Println("Bob received symmetric key:", ko)
+	fmt.Println("Bob received symmetric key:", EncodeToBase64(ko))
 
   b := make([]byte, 32)
   _, e := rand.Read(b)
   ExitOnError(e, NOT_ENOUGH_RANDOMNESS)
   ki = string(b)
+  fmt.Println("Bob sends symmetric key:", EncodeToBase64(ki))
 	out <- EncryptMessage(ko, ki)
   return
 }
@@ -78,7 +78,7 @@ func RequestPublicKey(i, o chan string, n string) *rsa.PublicKey {
 }
 
 func SendSymmetricKey(pk *rsa.PublicKey, out chan string, k, l string) {
-	k = EncodeToString([]byte(k))
+	k = EncodeToBase64(k)
 	b, e := OAEP_Encrypt(pk, k, l)
 	ExitOnError(e, RSA_ENCRYPTION_FAILED)
 	out <- string(b)
