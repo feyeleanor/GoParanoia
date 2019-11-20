@@ -1,11 +1,11 @@
 package main
 
-import "crypto/rand"
 import "crypto/rsa"
 import "encoding/pem"
 import "fmt"
 import "net/http"
 import "os"
+import "strings"
 import "time"
 
 const DEFAULT_ADDRESS = ":3000"
@@ -17,7 +17,7 @@ const OCTETS = "application/octet-stream"
 const HTTP_ADDRESS = "HTTP_ADDRESS"
 
 func init() {
-	sessions := make(map[string]*channel)
+	sessions := make(map[string]*AES_channel)
 	k, e := PEM_Load(RSA_PRIVATE_KEY, os.Args[1], "")
 	ExitOnError(e, INVALID_PRIVATE_KEY)
 
@@ -40,13 +40,32 @@ func init() {
 				if s, e = OAEP_Decrypt(priv, read_base64(s), n); e != nil {
 					http.Error(w, "decryption failed", 500)
 				} else {
-					c := &channel{ko: s, ki: MakeNewKey(16)}
+					c := &AES_channel{ko: s, ki: AES_MakeKey(16)}
 					sessions[n] = c
-					BOB.Report("received symmetric key:", s)
-					BOB.Report("sends symmetric key:", EncodeToString([]byte(c.ki)))
+					BOB.ShowCurrentKeys(c)
 					fmt.Fprint(w, c.EncryptMessage(c.ki))
 				}
 			}
+
+		case http.MethodPut:
+			n := r.URL.Path[len(KEY):]
+			if len(n) == 0 {
+				http.Error(w, "missing nonce", 500)
+			} else if s := sessions[n]; s == nil {
+				http.Error(w, "unknown nonce", 500)
+			} else if m := HTTP_readbody(r.Body); m == "" {
+				http.Error(w, "missing symmetric key", 500)
+			} else {
+				s.ko = s.DecryptMessage(m)
+				s.ki = AES_MakeKey(16)
+				BOB.ShowCurrentKeys(s)
+				fmt.Fprint(w, s.EncryptMessage(sessions[n].ki))
+			}
+
+		case http.MethodDelete:
+			n := r.URL.Path[len(KEY):]
+			BOB.Report("is forgotting all about:", n)
+			delete(sessions, n)
 		}
 	})
 
@@ -83,35 +102,37 @@ func main() {
 
 	n := os.Args[2]
 	c := NewSession(os.Args[3], a, n)
-	ALICE.Report("received symmetric key:", EncodeToString([]byte(c.ko)))
+	ALICE.ShowCurrentKeys(c)
 
 	for _, m := range os.Args[4:] {
 		ALICE.Report("wants to say:", m)
 		ALICE.Report("heard:", SendMessage(c, a, n, m))
+
+		c.ki = AES_MakeKey(16)
+		c.ko = UpdateSymmetricKey(c, a, n)
+		ALICE.ShowCurrentKeys(c)
 	}
 }
 
-func NewSession(ki, a, n string) (c *channel) {
+func NewSession(ki, a, n string) (c *AES_channel) {
 	p := RequestPublicKey(a, n)
 	ALICE.Report("received public key:", p)
-	c = &channel{ki: ki}
-	ALICE.Report("sends symmetric key:", c.ki)
+	c = &AES_channel{ki: ki}
 	c.ko = SendSymmetricKey(p, c, a, n)
 	return
 }
 
 func RequestPublicKey(a string, n string) *rsa.PublicKey {
-	var k interface{}
-
 	r, e := http.Get(HTTP + a + KEY + n)
 	ExitOnError(e, WEB_REQUEST_FAILED)
 
+	var k interface{}
 	k, e = PEM_ReadBase64(RSA_PUBLIC_KEY, HTTP_readbody(r.Body), "")
 	ExitOnError(e, INVALID_PUBLIC_KEY)
 	return k.(*rsa.PublicKey)
 }
 
-func SendSymmetricKey(pk *rsa.PublicKey, c *channel, a, n string) (s string) {
+func SendSymmetricKey(pk *rsa.PublicKey, c *AES_channel, a, n string) (s string) {
 	b, e := OAEP_Encrypt(pk, c.ki, n)
 	ExitOnError(e, RSA_ENCRYPTION_FAILED)
 
@@ -125,28 +146,31 @@ func SendSymmetricKey(pk *rsa.PublicKey, c *channel, a, n string) (s string) {
 	return c.DecryptMessage(HTTP_readbody(r.Body))
 }
 
-func SendMessage(c *channel, a, n, m string) string {
-	r, e := HTTP_put(HTTP+a+MESSAGE+n, c.EncryptMessage(m))
+func SendReceive(c *AES_channel, m string, f func(string) *http.Response) string {
+	return c.DecryptMessage(
+		HTTP_readbody(
+			f(c.EncryptMessage(m)).Body))
+}
+
+func UpdateSymmetricKey(c *AES_channel, a, n string) (s string) {
+	return SendReceive(c, c.ki, func(m string) *http.Response {
+		r, e := HTTP_put(HTTP+a+KEY+n, m)
+		ExitOnError(e, WEB_REQUEST_FAILED)
+		return r
+	})
+}
+
+func SendMessage(c *AES_channel, a, n, m string) string {
+	return SendReceive(c, m, func(m string) *http.Response {
+		r, e := HTTP_put(HTTP+a+MESSAGE+n, m)
+		ExitOnError(e, WEB_REQUEST_FAILED)
+		return r
+	})
+}
+
+func Delete(url, m string) (*http.Response, error) {
+	r, e := http.NewRequest("DELETE", url, strings.NewReader(m))
 	ExitOnError(e, WEB_REQUEST_FAILED)
-	return c.DecryptMessage(HTTP_readbody(r.Body))
-}
-
-func MakeNewKey(n int) string {
-	b := make([]byte, n)
-	_, e := rand.Read(b)
-	ExitOnError(e, NOT_ENOUGH_RANDOMNESS)
-	return string(b)
-}
-
-type channel struct{ ko, ki string }
-
-func (a *channel) EncryptMessage(m string) string {
-	b, _ := AES_Encrypt(a.ko, m)
-	return EncodeToString(b)
-}
-
-func (a *channel) DecryptMessage(m string) (r string) {
-	r = read_base64(m)
-	r, _ = AES_Decrypt(a.ki, r)
-	return
+	r.ContentLength = int64(len(m))
+	return http.DefaultClient.Do(r)
 }
