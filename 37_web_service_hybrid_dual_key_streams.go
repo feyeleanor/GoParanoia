@@ -43,7 +43,7 @@ func init() {
 					c := &channel{ko: s, ki: MakeNewKey(16)}
 					sessions[n] = c
 					BOB.Report("received symmetric key:", s)
-					BOB.Report("sends symmetric key:", EncodeToString([]byte(c.ki)))
+					BOB.Report("sends symmetric key:", EncodeToBase64(c.ki))
 					fmt.Fprint(w, c.EncryptMessage(c.ki))
 				}
 			}
@@ -83,7 +83,7 @@ func main() {
 
 	n := os.Args[2]
 	c := NewSession(os.Args[3], a, n)
-	ALICE.Report("received symmetric key:", EncodeToString([]byte(c.ko)))
+	ALICE.Report("received symmetric key:", EncodeToBase64(c.ko))
 
 	for _, m := range os.Args[4:] {
 		ALICE.Report("wants to say:", m)

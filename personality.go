@@ -13,6 +13,6 @@ func (p Person) Report(m ...interface{}) {
 }
 
 func (p Person) ShowCurrentKeys(a *AES_channel) {
-  p.Report("encodes messages with:", EncodeToString([]byte(a.ko)))
-  p.Report("decodes messages with:", EncodeToString([]byte(a.ki)))
+  p.Report("encodes messages with:", EncodeToBase64(a.ko))
+  p.Report("decodes messages with:", EncodeToBase64(a.ki))
 }
