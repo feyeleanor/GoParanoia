@@ -90,8 +90,6 @@ func init() {
 }
 
 func main() {
-	var c *AES_channel
-
 	a := os.Getenv(HTTP_ADDRESS)
 	if a == "" {
 		a = DEFAULT_ADDRESS
@@ -103,8 +101,9 @@ func main() {
 	time.Sleep(2 * time.Second)
 
 	n := os.Args[2]
-	c = NewSession(os.Args[3], a, n)
+	c := NewSession(os.Args[3], a, n)
 	ALICE.ShowCurrentKeys(c)
+
 	for _, m := range os.Args[4:] {
 		ALICE.Report("wants to say:", m)
 		ALICE.Report("heard:", SendMessage(c, a, n, m))
