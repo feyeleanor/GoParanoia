@@ -9,7 +9,6 @@ import "os"
 import "time"
 
 const DEFAULT_ADDRESS = ":3000"
-const HTTP = "http://"
 const KEY = "/key/"
 const MESSAGE = "/message/"
 const OCTETS = "application/octet-stream"
@@ -103,7 +102,7 @@ func NewSession(ki, a, n string) (c *channel) {
 func RequestPublicKey(a string, n string) *rsa.PublicKey {
 	var k interface{}
 
-	r, e := http.Get(HTTP + a + KEY + n)
+	r, e := http.Get(HTTP_URL(a, KEY, n))
 	ExitOnError(e, WEB_REQUEST_FAILED)
 
 	k, e = PEM_ReadBase64(RSA_PUBLIC_KEY, HTTP_readbody(r.Body), "")
@@ -117,7 +116,7 @@ func SendSymmetricKey(pk *rsa.PublicKey, c *channel, a, n string) (s string) {
 
 	var r *http.Response
 	r, e = http.Post(
-		HTTP+a+KEY+n,
+		HTTP_URL(a, KEY, n),
 		OCTETS,
 		EncodeToReader(b))
 
@@ -126,7 +125,7 @@ func SendSymmetricKey(pk *rsa.PublicKey, c *channel, a, n string) (s string) {
 }
 
 func SendMessage(c *channel, a, n, m string) string {
-	r, e := HTTP_put(HTTP+a+MESSAGE+n, c.EncryptMessage(m))
+	r, e := HTTP_put(HTTP_URL(a, MESSAGE, n), c.EncryptMessage(m))
 	ExitOnError(e, WEB_REQUEST_FAILED)
 	return c.DecryptMessage(HTTP_readbody(r.Body))
 }

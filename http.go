@@ -31,3 +31,7 @@ func HTTP_doRequest(method, url, m string) (r *http.Response, e error) {
   }
 	return
 }
+
+func HTTP_URL(a, p string, n ...string) string {
+  return "http://" + a + p + strings.Join(n, "/")
+}

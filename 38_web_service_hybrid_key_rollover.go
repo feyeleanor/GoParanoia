@@ -8,7 +8,6 @@ import "os"
 import "time"
 
 const DEFAULT_ADDRESS = ":3000"
-const HTTP = "http://"
 const KEY = "/key/"
 const MESSAGE = "/message/"
 const OCTETS = "application/octet-stream"
@@ -116,7 +115,7 @@ func NewSession(ki, a, n string) (c *AES_channel) {
 }
 
 func RequestPublicKey(a string, n string) *rsa.PublicKey {
-	r, e := http.Get(HTTP + a + KEY + n)
+	r, e := http.Get(HTTP_URL(a, KEY, n))
 	ExitOnError(e, WEB_REQUEST_FAILED)
 
 	var k interface{}
@@ -131,7 +130,7 @@ func SendSymmetricKey(pk *rsa.PublicKey, c *AES_channel, a, n string) (s string)
 
 	var r *http.Response
 	r, e = http.Post(
-		HTTP+a+KEY+n,
+		HTTP_URL(a, KEY, n),
 		OCTETS,
 		EncodeToReader(b))
 
@@ -148,7 +147,7 @@ func SendReceive(c *AES_channel, m string, f func(string) *http.Response) string
 func ChangeSymmetricKey(c *AES_channel, k, a, n string) (r *AES_channel) {
 	r = &AES_channel{ko: c.ko, ki: k}
 	r.ko = SendReceive(r, k, func(m string) *http.Response {
-		res, e := HTTP_put(HTTP+a+KEY+n, m)
+		res, e := HTTP_put(HTTP_URL(a, KEY, n), m)
 		ExitOnError(e, WEB_REQUEST_FAILED)
 		return res
 	})
@@ -157,7 +156,7 @@ func ChangeSymmetricKey(c *AES_channel, k, a, n string) (r *AES_channel) {
 
 func SendMessage(c *AES_channel, a, n, m string) string {
 	return SendReceive(c, m, func(m string) *http.Response {
-		r, e := HTTP_put(HTTP+a+MESSAGE+n, m)
+		r, e := HTTP_put(HTTP_URL(a, MESSAGE, n), m)
 		ExitOnError(e, WEB_REQUEST_FAILED)
 		return r
 	})

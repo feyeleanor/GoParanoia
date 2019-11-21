@@ -9,7 +9,6 @@ import "strings"
 import "time"
 
 const DEFAULT_ADDRESS = ":3000"
-const HTTP = "http://"
 const KEY = "/key/"
 const MESSAGE = "/message/"
 const OCTETS = "application/octet-stream"
@@ -97,7 +96,7 @@ func RequestPublicKey(a string, n string) *rsa.PublicKey {
 	var k interface{}
 	var s string
 
-	r, e := http.Get(HTTP + a + KEY + n)
+	r, e := http.Get(HTTP_URL(a, KEY, n))
 	ExitOnError(e, WEB_REQUEST_FAILED)
 
 	if s = HTTP_readbody(r.Body); s == "" {
@@ -114,7 +113,7 @@ func SendSymmetricKey(pk *rsa.PublicKey, a, k, n string) {
 	ExitOnError(e, RSA_ENCRYPTION_FAILED)
 
 	_, e = http.Post(
-		HTTP+a+KEY+n,
+		HTTP_URL(a, KEY, n),
 		OCTETS,
 		EncodeToReader(b))
 
@@ -122,7 +121,7 @@ func SendSymmetricKey(pk *rsa.PublicKey, a, k, n string) {
 }
 
 func SendMessage(a, n, k, m string) string {
-	r, e := Put(HTTP+a+MESSAGE+n, EncryptMessage(k, m))
+	r, e := Put(HTTP_URL(a, MESSAGE, n), EncryptMessage(k, m))
 	ExitOnError(e, WEB_REQUEST_FAILED)
 	return DecryptMessage(k, HTTP_readbody(r.Body))
 }
