@@ -385,7 +385,8 @@ Bob heard: C received
 ### Over HTTP
 
 ```bash
-$ go run 33_web_service_ping_pong.go helpers.go errors.go 1 2 3 4 5 6
+$ go run 33_web_server_ping_pong.go &
+$ go run 33_web_client_ping_pong.go errors.go helpers.go 1 2 3 4 5 6
 B: 1
 A: 1
 B: 2
@@ -399,86 +400,93 @@ A: 5
 B: 6
 A: 6
 
-$ go run 34_web_service_public_key_request.go http.go pem.go rsa.go helpers.go errors.go test3.pem session_label
+$ go run 34_web_server_public_key_request.go pem.go errors.go helpers.go test3.pem &
+$ go run 34_web_client_public_key_request.go http.go pem.go errors.go helpers.go session_label
 Bob received nonce: session_label
 Alice received public key: &{31567127335276920051778986890983418137235118195788341168325280010141872825942730386604890414504330424121846232915529846111962553425801730338442721710329105996928572139897441647445680540638619159385964576015724962916475593889066666184228021802959434558601451977786671232463588955484699002568869232321539136212150321079973869708311234964749352015864656432491046294093762734492605713775237154595184621558656835799069556866308339741960587974969797335759107872113116845565849526376848130079712356076286876918399283180445566867123603330810480774172961213531196691266615312515557045027778553516298941059154014833011840984679 65537}
 
-$ go run 35_web_service_hybrid_key_exchange.go personality.go http.go pem.go rsa.go aes.go helpers.go errors.go test3.pem session_label "0123456789012345"
-Bob received request for public key from 127.0.0.1:49592
+$ go run 35_web_server_hybrid_key_exchange.go personality.go http.go pem.go rsa.go aes.go errors.go helpers.go test3.pem &
+$ go run 35_web_client_hybrid_key_exchange.go personality.go http.go pem.go rsa.go aes.go errors.go helpers.go session_label 0123456789012345
+Bob received request for public key from 127.0.0.1:60074
 Alice received public key: &{31567127335276920051778986890983418137235118195788341168325280010141872825942730386604890414504330424121846232915529846111962553425801730338442721710329105996928572139897441647445680540638619159385964576015724962916475593889066666184228021802959434558601451977786671232463588955484699002568869232321539136212150321079973869708311234964749352015864656432491046294093762734492605713775237154595184621558656835799069556866308339741960587974969797335759107872113116845565849526376848130079712356076286876918399283180445566867123603330810480774172961213531196691266615312515557045027778553516298941059154014833011840984679 65537}
 Alice sends symmetric key: 0123456789012345
 Bob received symmetric key: 0123456789012345
 
-$ go run 36_web_service_hybrid_send_messages.go personality.go http.go pem.go rsa.go aes.go helpers.go errors.go test3.pem session_label 0123456789012345 A B C
-Bob received request for public key from 127.0.0.1:62473
+$ go run 36_web_server_hybrid_send_messages.go personality.go http.go pem.go rsa.go aes.go errors.go helpers.go test3.pem &
+$ go run 36_web_client_hybrid_send_messages.go personality.go http.go pem.go rsa.go aes.go errors.go helpers.go session_label 0123456789012345 A B C
+Bob received request for public key from 127.0.0.1:60404
 Alice received public key: &{31567127335276920051778986890983418137235118195788341168325280010141872825942730386604890414504330424121846232915529846111962553425801730338442721710329105996928572139897441647445680540638619159385964576015724962916475593889066666184228021802959434558601451977786671232463588955484699002568869232321539136212150321079973869708311234964749352015864656432491046294093762734492605713775237154595184621558656835799069556866308339741960587974969797335759107872113116845565849526376848130079712356076286876918399283180445566867123603330810480774172961213531196691266615312515557045027778553516298941059154014833011840984679 65537}
 Alice sends symmetric key: 0123456789012345
 Bob received symmetric key: 0123456789012345
-Bob stored symmetric key: 0123456789012345
 Alice wants to say: A
-Bod heard: A
+Bob heard: A
 Bob wants to say: A received
 Alice heard: A received
 Alice wants to say: B
-Bod heard: B
+Bob heard: B
 Bob wants to say: B received
 Alice heard: B received
 Alice wants to say: C
-Bod heard: C
+Bob heard: C
 Bob wants to say: C received
 Alice heard: C received
 
-$ go run 37_web_service_hybrid_dual_key_streams.go personality.go http.go pem.go rsa.go aes.go helpers.go errors.go test3.pem session_label 0123456789012345 A B C
-Bob received request for public key from 127.0.0.1:54350
+$ go run 37_web_server_hybrid_dual_key_streams.go personality.go http.go pem.go rsa.go aes.go errors.go helpers.go test3.pem &
+$ go run 37_web_client_hybrid_dual_key_streams.go personality.go http.go pem.go rsa.go aes.go errors.go helpers.go session_label 0123456789012345 A B C
+Bob received request for public key from 127.0.0.1:49373
 Alice received public key: &{31567127335276920051778986890983418137235118195788341168325280010141872825942730386604890414504330424121846232915529846111962553425801730338442721710329105996928572139897441647445680540638619159385964576015724962916475593889066666184228021802959434558601451977786671232463588955484699002568869232321539136212150321079973869708311234964749352015864656432491046294093762734492605713775237154595184621558656835799069556866308339741960587974969797335759107872113116845565849526376848130079712356076286876918399283180445566867123603330810480774172961213531196691266615312515557045027778553516298941059154014833011840984679 65537}
 Alice sends symmetric key: 0123456789012345
 Bob received symmetric key: 0123456789012345
-Bob sends symmetric key: +cjpOf3QyekMx5k6zFOZ7/6xKYIsKxXKql/3aYdDgVA=
-Alice received symmetric key: +cjpOf3QyekMx5k6zFOZ7/6xKYIsKxXKql/3aYdDgVA=
+Bob sends symmetric key: m4b1CUFqGMMqZ/42jEJ1Rg==
+Alice received symmetric key: m4b1CUFqGMMqZ/42jEJ1Rg==
 Alice wants to say: A
-Bod heard: A
+Bob heard: A
 Bob wants to say: A received
 Alice heard: A received
 Alice wants to say: B
-Bod heard: B
+Bob heard: B
 Bob wants to say: B received
 Alice heard: B received
 Alice wants to say: C
-Bod heard: C
+Bob heard: C
 Bob wants to say: C received
 Alice heard: C received
 
-$ go run 38_web_service_hybrid_key_rollover.go personality.go http.go pem.go rsa.go aes.go helpers.go errors.go test3.pem session_label 0123456789012345 A B C
-Bob received request for public key from 127.0.0.1:61252
+$ go run 38_web_server_hybrid_key_rollover.go personality.go http.go pem.go rsa.go aes.go errors.go helpers.go test3.pem &
+$ go run 38_web_client_hybrid_key_rollover.go personality.go http.go pem.go rsa.go aes.go errors.go helpers.go session_label 0123456789012345 A B C
+Bob received request for public key from 127.0.0.1:49837
 Alice received public key: &{31567127335276920051778986890983418137235118195788341168325280010141872825942730386604890414504330424121846232915529846111962553425801730338442721710329105996928572139897441647445680540638619159385964576015724962916475593889066666184228021802959434558601451977786671232463588955484699002568869232321539136212150321079973869708311234964749352015864656432491046294093762734492605713775237154595184621558656835799069556866308339741960587974969797335759107872113116845565849526376848130079712356076286876918399283180445566867123603330810480774172961213531196691266615312515557045027778553516298941059154014833011840984679 65537}
 Bob encodes messages with: MDEyMzQ1Njc4OTAxMjM0NQ==
-Bob decodes messages with: TO/Q21TBJu3VO+RoMicCSA==
-Alice encodes messages with: TO/Q21TBJu3VO+RoMicCSA==
+Bob decodes messages with: mi3sDlhoW3tr4dVP8e6FTw==
+Alice encodes messages with: mi3sDlhoW3tr4dVP8e6FTw==
 Alice decodes messages with: MDEyMzQ1Njc4OTAxMjM0NQ==
 Alice wants to say: A
 Bob heard: A
 Bob wants to say: A received
 Alice heard: A received
-Bob encodes messages with: /ZLdJyAYsNxVld8kOimIYQ==
-Bob decodes messages with: 1knNC5IRJfYrSD4zvCQ1mg==
-Alice encodes messages with: 1knNC5IRJfYrSD4zvCQ1mg==
-Alice decodes messages with: /ZLdJyAYsNxVld8kOimIYQ==
+Bob encodes messages with: MA2xbALx8Oj88cG9Nt+Mag==
+Bob decodes messages with: H7DupDPZoOkQV60wY0Kcig==
+Alice encodes messages with: H7DupDPZoOkQV60wY0Kcig==
+Alice decodes messages with: MA2xbALx8Oj88cG9Nt+Mag==
 Alice wants to say: B
 Bob heard: B
 Bob wants to say: B received
 Alice heard: B received
-Bob encodes messages with: Lheb1AYFqUA2QgRDO7Ewjw==
-Bob decodes messages with: iUIr+2ChgHXomOTzIftsqQ==
-Alice encodes messages with: iUIr+2ChgHXomOTzIftsqQ==
-Alice decodes messages with: Lheb1AYFqUA2QgRDO7Ewjw==
+Bob encodes messages with: cDgiPNkV5hp6JdxYbAKL1w==
+Bob decodes messages with: q921Z50gTJgjLLRHfWIRpA==
+Alice encodes messages with: q921Z50gTJgjLLRHfWIRpA==
+Alice decodes messages with: cDgiPNkV5hp6JdxYbAKL1w==
 Alice wants to say: C
 Bob heard: C
 Bob wants to say: C received
 Alice heard: C received
-Bob encodes messages with: 9E6tjf1X7/FaHxBGL7vyQw==
-Bob decodes messages with: LbJUm/RREsya646dqg9shg==
-Alice encodes messages with: LbJUm/RREsya646dqg9shg==
-Alice decodes messages with: 9E6tjf1X7/FaHxBGL7vyQw==
+Bob encodes messages with: 4hng6py4AqByiHPESaAvuA==
+Bob decodes messages with: vu/t/7RN4GzmkIAn43BT2w==
+Alice encodes messages with: vu/t/7RN4GzmkIAn43BT2w==
+Alice decodes messages with: 4hng6py4AqByiHPESaAvuA==
+
+$ go run 39_web_server_hybrid_key_rollover.go personality.go http.go pem.go rsa.go aes.go errors.go helpers.go test3.pem &
+$ go run 39_web_client_hybrid_key_rollover.go personality.go http.go pem.go rsa.go aes.go errors.go helpers.go session_label 0123456789012345 A B C
 ```
 
 ## SQLite3 Databases

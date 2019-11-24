@@ -2,9 +2,6 @@ package main
 
 import "fmt"
 
-const BOB Person = "Bob"
-const ALICE Person = "Alice"
-
 type Person string
 
 func (p Person) Report(m ...interface{}) {
