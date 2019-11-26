@@ -15,6 +15,6 @@ func main() {
 }
 
 func read_base64(s string) string {
-	b, _ := base64.StdEncoding.DecodeString(s)
+	b, _ := base64.URLEncoding.DecodeString(s)
 	return string(b)
 }
