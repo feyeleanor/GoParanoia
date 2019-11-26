@@ -14,5 +14,5 @@ func main() {
 }
 
 func PrintEncrypted(m []byte) {
-	fmt.Println(base64.URLEncoding.EncodeToString(m))
+	fmt.Println(base64.StdEncoding.EncodeToString(m))
 }

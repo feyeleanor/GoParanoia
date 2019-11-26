@@ -12,11 +12,11 @@ func EncodeToBase64(s string) string {
 }
 
 func EncodeToString(m []byte) string {
-	return base64.URLEncoding.EncodeToString(m)
+	return base64.StdEncoding.EncodeToString(m)
 }
 
 func DecodeString(s string) (b []byte, e error) {
-	return base64.URLEncoding.DecodeString(s)
+	return base64.StdEncoding.DecodeString(s)
 }
 
 func EncodeStrings(b ...[]byte) (r string) {
