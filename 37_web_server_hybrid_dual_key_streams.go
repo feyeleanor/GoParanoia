@@ -34,7 +34,7 @@ func init() {
 				if s, e = OAEP_Decrypt(priv, read_base64(s), n); e != nil {
 					http.Error(w, "decryption failed", 500)
 				} else {
-					c := &channel{ko: s, ki: MakeNewKey(16)}
+					c := &channel{ko: s, ki: MakeNewKey(32)}
 					sessions[n] = c
 					BOB.Report("received symmetric key:", s)
 					BOB.Report("sends symmetric key:", EncodeToBase64(c.ki))

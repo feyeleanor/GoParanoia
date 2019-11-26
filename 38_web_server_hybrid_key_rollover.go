@@ -33,7 +33,7 @@ func init() {
 				if s, e = OAEP_Decrypt(priv, read_base64(s), n); e != nil {
 					http.Error(w, "decryption failed", 500)
 				} else {
-					c := &AES_channel{ko: s, ki: AES_MakeKey(16)}
+					c := &AES_channel{ko: s, ki: AES_MakeKey(32)}
 					sessions[n] = c
 					BOB.ShowCurrentKeys(c)
 					fmt.Fprint(w, c.EncryptMessage(c.ki))
@@ -49,7 +49,7 @@ func init() {
 				http.Error(w, "missing symmetric key", 500)
 			} else {
 				s.ko = s.DecryptMessage(m)
-				s.ki = AES_MakeKey(16)
+				s.ki = AES_MakeKey(32)
 				BOB.ShowCurrentKeys(s)
 				fmt.Fprint(w, s.EncryptMessage(sessions[n].ki))
 			}

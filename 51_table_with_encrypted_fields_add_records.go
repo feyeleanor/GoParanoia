@@ -66,10 +66,10 @@ func CreateIndex(db *sql.DB, n string, f ...string) {
 func AddAccount(k string, s *sql.Stmt, p ...interface{}) {
 	var e error
 
-	t := append([]interface{}{RandomToken(16)}, EncryptFields(k, p...)...)
+	t := append([]interface{}{RandomToken(32)}, EncryptFields(k, p...)...)
 	_, e = s.Exec(t...)
 	if e != nil {
-		t[0] = RandomToken(16)
+		t[0] = RandomToken(32)
 		_, e = s.Exec(t...)
 	}
 	ExitOnError(e, DB_INSERT_FAILED)

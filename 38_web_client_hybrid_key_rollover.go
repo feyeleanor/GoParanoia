@@ -18,7 +18,7 @@ func main() {
 		ALICE.Report("wants to say:", m)
 		ALICE.Report("heard:", SendMessage(c, a, n, m))
 
-		c = ChangeSymmetricKey(c, AES_MakeKey(16), a, n)
+		c = ChangeSymmetricKey(c, AES_MakeKey(32), a, n)
 		ALICE.ShowCurrentKeys(c)
 	}
 }
