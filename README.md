@@ -485,8 +485,8 @@ Bob decodes messages with: vu/t/7RN4GzmkIAn43BT2w==
 Alice encodes messages with: vu/t/7RN4GzmkIAn43BT2w==
 Alice decodes messages with: 4hng6py4AqByiHPESaAvuA==
 
-$ go run 39_web_server_hybrid_key_rollover.go personality.go http.go pem.go rsa.go aes.go errors.go helpers.go test3.pem &
-$ go run 39_web_client_hybrid_key_rollover.go personality.go http.go pem.go rsa.go aes.go errors.go helpers.go session_label 0123456789012345 A B C
+$ go run 39_web_server_session_termination.go personality.go http.go pem.go rsa.go aes.go errors.go helpers.go test3.pem &
+$ go run 39_web_client_session_termination.go personality.go http.go pem.go rsa.go aes.go errors.go helpers.go session_label 0123456789012345 A B C
 ```
 
 ## SQLite3 Databases

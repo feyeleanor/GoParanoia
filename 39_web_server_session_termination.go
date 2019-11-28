@@ -48,10 +48,16 @@ func init() {
 			} else if m := HTTP_readbody(r.Body); m == "" {
 				http.Error(w, "missing symmetric key", 500)
 			} else {
-				s.ko = s.DecryptMessage(m)
-				s.ki = AES_MakeKey(32)
-				BOB.ShowCurrentKeys(s)
-				fmt.Fprint(w, s.EncryptMessage(s.ki))
+				c := &AES_channel{ko: s.DecryptMessage(m), ki: AES_MakeKey(32)}
+				BOB.Report("c.ko:", EncodeToBase64(c.ko))
+				BOB.Report("c.ki:", EncodeToBase64(c.ki))
+
+				if ke := s.EncryptMessage(c.ki); ke != c.DecryptMessage(ke) {
+					BOB.Report("I CAN'T DECRYPT MY OWN KEY")
+				}
+				fmt.Fprint(w, s.EncryptMessage(c.ki))
+				sessions[n] = c
+				BOB.ShowCurrentKeys(sessions[n])
 			}
 
 		case http.MethodDelete:
@@ -83,5 +89,5 @@ func init() {
 
 func main() {
 	http.ListenAndServe(
-    ServerAddress(HTTP_ADDRESS), nil)
+		ServerAddress(HTTP_ADDRESS), nil)
 }

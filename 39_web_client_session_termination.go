@@ -13,19 +13,18 @@ func main() {
 	a := ServerAddress(HTTP_ADDRESS)
 	n := os.Args[1]
 	for _, m := range os.Args[3:] {
-  	c := NewSession(os.Args[2], a, n)
-ALICE.Report("using new session")
-  	ALICE.ShowCurrentKeys(c)
-		ALICE.Report("wants to say:", m)
-		ALICE.Report("heard:", SendMessage(c, a, n, m))
+		AsSession(os.Args[2], a, n, func(c *AES_channel) {
+			ALICE.Report("using new session")
+			ALICE.ShowCurrentKeys(c)
+			ALICE.Report("wants to say:", m)
+			ALICE.Report("heard:", SendMessage(c, a, n, m))
 
-//		c.ki = AES_MakeKey(32)
-//ALICE.Report("changing session keys")
-//		c.ko = UpdateSymmetricKey(c, a, n)
-//		ALICE.ShowCurrentKeys(c)
-//		ALICE.Report("wants to say:", m)
-//		ALICE.Report("heard:", SendMessage(c, a, n, m))
-    CloseSession(c, a, n)
+			ALICE.Report("changing session keys")
+			c = UpdateSymmetricKey(c, a, n)
+			ALICE.ShowCurrentKeys(c)
+			ALICE.Report("wants to say:", m)
+			ALICE.Report("heard:", SendMessage(c, a, n, m))
+		})
 	}
 }
 
@@ -35,6 +34,12 @@ func NewSession(ki, a, n string) (c *AES_channel) {
 	c = &AES_channel{ki: ki}
 	c.ko = SendSymmetricKey(p, c, a, n)
 	return
+}
+
+func AsSession(ki, a, n string, f func(*AES_channel)) {
+	c := NewSession(ki, a, n)
+	defer CloseSession(c, a, n)
+	f(c)
 }
 
 func RequestPublicKey(a string, n string) *rsa.PublicKey {
@@ -67,12 +72,20 @@ func SendReceive(c *AES_channel, m string, f func(string) *http.Response) string
 			f(c.EncryptMessage(m)).Body))
 }
 
-func UpdateSymmetricKey(c *AES_channel, a, n string) string {
-	return SendReceive(c, c.ki, func(m string) *http.Response {
+func UpdateSymmetricKey(c *AES_channel, a, n string) (r *AES_channel) {
+	//	if ke := c.EncryptMessage(c.ki); ke != c.DecryptMessage(ke) {
+	//		ALICE.Report("I CAN'T DECRYPT MY OWN KEY")
+	//	}
+
+	r = &AES_channel{ki: AES_MakeKey(len(c.ki))}
+	ALICE.Report("r.ki:", EncodeToBase64(r.ki))
+	r.ko = SendReceive(c, r.ki, func(m string) *http.Response {
+		//		ALICE.Report("m:", m)
 		r, e := HTTP_put(HTTP_URL(a, KEY, n), m)
 		ExitOnError(e, WEB_REQUEST_FAILED)
 		return r
 	})
+	return
 }
 
 func SendMessage(c *AES_channel, a, n, m string) string {
@@ -84,7 +97,7 @@ func SendMessage(c *AES_channel, a, n, m string) string {
 }
 
 func CloseSession(c *AES_channel, a, n string) {
-  _, e := Delete(HTTP_URL(a, KEY, n), c.EncryptMessage(c.ki))
+	_, e := Delete(HTTP_URL(a, KEY, n), c.EncryptMessage(c.ki))
 	ExitOnError(e, WEB_REQUEST_FAILED)
 }
 
