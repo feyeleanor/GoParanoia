@@ -40,7 +40,7 @@ func CryptBlocks(b []byte, c cipher.Block) (o []byte, e error) {
     copy(o, iv)
   	cipher.
   	  NewCBCEncrypter(c, o[:aes.BlockSize]).
-  	  CryptBlocks(o[aes.BlockSize:], b)
+  	    CryptBlocks(o[aes.BlockSize:], b)
   }
   return
 }

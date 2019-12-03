@@ -36,7 +36,7 @@ func Decrypt(k string, m []byte) (r []byte, e error) {
     r = make([]byte, len(m))
     cipher.
       NewCBCDecrypter(b, iv).
-      CryptBlocks(r, m)
+        CryptBlocks(r, m)
   }
   return
 }
