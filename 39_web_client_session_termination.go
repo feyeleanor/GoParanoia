@@ -1,6 +1,7 @@
 package main
 
 import "crypto/rsa"
+import "io"
 import "net/http"
 import "os"
 import "strings"
@@ -30,7 +31,6 @@ func main() {
 
 func NewSession(ki, a, n string) (c *AES_channel) {
 	p := RequestPublicKey(a, n)
-	ALICE.Report("received public key:", p)
 	c = &AES_channel{ki: ki}
 	c.ko = SendSymmetricKey(p, c, a, n)
 	return
@@ -69,22 +69,24 @@ func SendSymmetricKey(pk *rsa.PublicKey, c *AES_channel, a, n string) (s string)
 func SendReceive(c *AES_channel, m string, f func(string) *http.Response) string {
 	return c.DecryptMessage(
 		HTTP_readbody(
-			f(c.EncryptMessage(m)).Body))
+      func() io.ReadCloser {
+        ALICE.Report(c.EncryptMessage(m))
+  			return f(c.EncryptMessage(m)).Body
+      }()))
 }
 
 func UpdateSymmetricKey(c *AES_channel, a, n string) (r *AES_channel) {
-	//	if ke := c.EncryptMessage(c.ki); ke != c.DecryptMessage(ke) {
-	//		ALICE.Report("I CAN'T DECRYPT MY OWN KEY")
-	//	}
-
 	r = &AES_channel{ki: AES_MakeKey(len(c.ki))}
 	ALICE.Report("r.ki:", EncodeToBase64(r.ki))
 	r.ko = SendReceive(c, r.ki, func(m string) *http.Response {
-		//		ALICE.Report("m:", m)
 		r, e := HTTP_put(HTTP_URL(a, KEY, n), m)
 		ExitOnError(e, WEB_REQUEST_FAILED)
 		return r
 	})
+	ALICE.Report("r.ko:", EncodeToBase64(r.ko))
+  if len(r.ko) % 16 != 0 {
+    ALICE.Report("key received too short:", len(r.ko), "bytes")
+  }
 	return
 }
 

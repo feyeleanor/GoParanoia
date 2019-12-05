@@ -6,7 +6,7 @@ import "os"
 
 func main() {
 	k := os.Getenv("AES_KEY")
-	s := read_base64(os.Args[1])
+	s := ReadBase64(os.Args[1])
 	if m, e := AES_Decrypt(k, s); e == nil {
 		fmt.Println(m)
 	} else {
@@ -14,7 +14,7 @@ func main() {
 	}
 }
 
-func read_base64(s string) string {
+func ReadBase64(s string) string {
 	b, _ := base64.StdEncoding.DecodeString(s)
 	return string(b)
 }

@@ -3,18 +3,36 @@ package main
 import "crypto/aes"
 import "crypto/cipher"
 import "crypto/rand"
+import "fmt"
 
 type AES_channel struct { ko, ki string }
 
 func (a *AES_channel) EncryptMessage(m string) string {
-  b, _ := AES_Encrypt(a.ko, m)
+  b, e := AES_Encrypt(a.ko, m)
+  if e != nil {
+    fmt.Println("EncryptMessage:", e)
+    fmt.Println("EncryptMessage:", []byte(a.ko))
+  }
 	return EncodeToString(b)
 }
 
 func (a *AES_channel) DecryptMessage(m string) (r string) {
 	r = read_base64(m)
-	r, _ = AES_Decrypt(a.ki, r)
+  var e error
+	r, e = AES_Decrypt(a.ki, r)
+  if e != nil {
+    fmt.Println("DecryptMessage:", e)
+  }
   return
+}
+
+func (a *AES_channel) EncryptKey(m string) string {
+  b, e := AES_Encrypt(a.ko, m)
+  if e != nil {
+    fmt.Println("EncryptMessage:", e)
+    fmt.Println("EncryptMessage:", []byte(a.ko))
+  }
+	return EncodeToString(b)
 }
 
 func AES_MakeKey(n int) string {
@@ -48,14 +66,10 @@ func AES_Decrypt(k, s string) (r string, e error) {
 	return
 }
 
-func TrimBuffer(m []byte) (r []byte) {
-	r = m
-	for i := len(m) - 1; i > 0; i-- {
-		if m[i] == 0 {
-			r = m[:i]
-		}
-	}
-	return
+func TrimBuffer(m []byte) []byte {
+  i := len(m)
+  for ; i > 0 && m[i - 1] == 0; i-- {}
+	return m[:i]
 }
 
 func PaddedBuffer(m []byte) (b []byte, e error) {

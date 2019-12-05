@@ -34,7 +34,11 @@ func init() {
 					http.Error(w, "decryption failed", 500)
 				} else {
 					c := &AES_channel{ko: s, ki: AES_MakeKey(32)}
-					sessions[n] = c
+
+  BOB.Report("http.MethodPut:", []byte(s))
+  BOB.Report("http.MethodPut:", []byte(c.ko))
+
+				sessions[n] = c
 					BOB.ShowCurrentKeys(c)
 					fmt.Fprint(w, c.EncryptMessage(c.ki))
 				}
@@ -49,6 +53,10 @@ func init() {
 				http.Error(w, "missing symmetric key", 500)
 			} else {
 				s.ko = s.DecryptMessage(m)
+
+//  BOB.Report("http.MethodPut:", []byte(m))
+//  BOB.Report("http.MethodPut:", []byte(s.ko))
+
 				s.ki = AES_MakeKey(32)
 				BOB.ShowCurrentKeys(s)
 				fmt.Fprint(w, s.EncryptMessage(sessions[n].ki))

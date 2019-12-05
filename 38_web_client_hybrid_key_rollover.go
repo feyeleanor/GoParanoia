@@ -42,6 +42,7 @@ func RequestPublicKey(a string, n string) *rsa.PublicKey {
 }
 
 func SendSymmetricKey(pk *rsa.PublicKey, c *AES_channel, a, n string) string {
+ALICE.Report("SendSymmetricKey:", []byte(c.ki))
 	b, e := OAEP_Encrypt(pk, c.ki, n)
 	ExitOnError(e, RSA_ENCRYPTION_FAILED)
 
@@ -62,8 +63,10 @@ func SendReceive(c *AES_channel, m string, f func(string) *http.Response) string
 }
 
 func ChangeSymmetricKey(c *AES_channel, k, a, n string) (r *AES_channel) {
+ALICE.Report("ChangeSymmetricKey:", []byte(k))
 	r = &AES_channel{ko: c.ko, ki: k}
 	r.ko = SendReceive(r, k, func(m string) *http.Response {
+ALICE.Report("ChangeSymmetricKey:", []byte(m))
 		res, e := HTTP_put(HTTP_URL(a, KEY, n), m)
 		ExitOnError(e, WEB_REQUEST_FAILED)
 		return res
@@ -72,9 +75,9 @@ func ChangeSymmetricKey(c *AES_channel, k, a, n string) (r *AES_channel) {
 }
 
 func SendMessage(c *AES_channel, a, n, m string) string {
-	return SendReceive(c, m, func(m string) *http.Response {
-		r, e := HTTP_put(HTTP_URL(a, MESSAGE, n), m)
-		ExitOnError(e, WEB_REQUEST_FAILED)
-		return r
-	})
+  me := c.EncryptMessage(m)
+  r, e := HTTP_put(HTTP_URL(a, MESSAGE, n), me)
+  ExitOnError(e, WEB_REQUEST_FAILED)
+	return c.DecryptMessage(
+		HTTP_readbody(r.Body))
 }

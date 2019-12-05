@@ -17,16 +17,16 @@ $ AES_KEY=0123456789012345 go run 01_encrypt_aes.go 'Hello World'
 $ AES_KEY=0123456789012345 go run 02_decrypt_aes.go 189 66 213 32 192 240 163 198 89 18 112 190 150 234 133 248 10 214 159 253 11 245 129 197 68 225 13 23 141 226 137 82
 Hello World
 
-$ AES_KEY=0123456789012345 go run 03_encrypt_aes_to_base64.go aes.go 'Hello World!'
+$ AES_KEY=0123456789012345 go run 03_encrypt_aes_to_base64.go aes.go errors.go helpers.go 'Hello World!'
 3Q9B81dbetzrdptKdv0TBgbanOZX9wgSViRGoF6YxUs=
 
-$ AES_KEY=0123456789012345 go run 03_encrypt_aes_to_base64.go aes.go 'Hello World'
+$ AES_KEY=0123456789012345 go run 03_encrypt_aes_to_base64.go aes.go errors.go helpers.go 'Hello World'
 4dlr5z3SkGP4jykKekFYs6J3IabHjecnz3leLbeM0DI=
 
-$ AES_KEY=0123456789012345 go run 04_decrypt_aes_from_base64.go aes.go 3Q9B81dbetzrdptKdv0TBgbanOZX9wgSViRGoF6YxUs=
+$ AES_KEY=0123456789012345 go run 04_decrypt_aes_from_base64.go aes.go errors.go helpers.go 3Q9B81dbetzrdptKdv0TBgbanOZX9wgSViRGoF6YxUs=
 Hello World
 
-$ AES_KEY=0123456789012345 go run 04_decrypt_aes_from_base64.go aes.go 4dlr5z3SkGP4jykKekFYs6J3IabHjecnz3leLbeM0DI=
+$ AES_KEY=0123456789012345 go run 04_decrypt_aes_from_base64.go aes.go errors.go helpers.go 4dlr5z3SkGP4jykKekFYs6J3IabHjecnz3leLbeM0DI=
 Hello World
 ```
 
@@ -200,14 +200,14 @@ exit status 20
 ### SHA512
 
 ```bash
-$ go run 16_sha512_hash_to_base64.go helpers.go 'Hello World'
+$ go run 16_sha512_hash_to_base64.go helpers.go errors.go 'Hello World'
 LHT9F+2v2A6ER7DUZ0HuJDt+t03SFJoKsbkkb7MDgvJ+hT2FhXGeDmfL2g2qj1FnEGRhXWRa4nrLFb+xRH9Fmw==
 ```
 
 ### HMAC
 
 ```bash
-$ HMAC_KEY=0123456789012345 go run 17_hmac_to_base64.go helpers.go 'Hello World'
+$ HMAC_KEY=0123456789012345 go run 17_hmac_to_base64.go helpers.go errors.go 'Hello World'
 rxeUOuUKx3uVVO6qKQt+jawwRMvglw62D02h3ZTFfb3fz2gL0k29nmmYpe6n09X+LtZFdG4tTp8EOlM1jY75+A==
 
 $ HMAC_KEY='0123456789012345' go run 18_verify_hmac_from_base64.go helpers.go errors.go 'Hello World' rxeUOuUKx3uVVO6qKQt+jawwRMvglw62D02h3ZTFfb3fz2gL0k29nmmYpe6n09X+LtZFdG4tTp8EOlM1jY75+A==
@@ -269,45 +269,45 @@ exit status 20
 
 ```bash
 $ HMAC_KEY=0123456789012345 go run 24_chain_list_hmac_sign_to_base64.go helpers.go errors.go Hello World Goodbye World
-nDo7/2Jel9aP4RtT/v2vzkqvAuZC5mGjvsNKGGXofqZEMumfFZoIZDqFHLdMqsCQr2n1ujeKyXlvURO/iDAa5w== Hello
-RX7rJOTD89VN7Kn/mWo6RTRaQPMkRexAjYH8w27NTG3Vfn9ST2oeguGuraOmHM8KXQLCu08tgaUYnCcy0wH/fQ== World
-vt1b+boo+Qnpnx2E/knshgPAHmvXph3dHRacUXtn+bIOS61v2UyPpBFuK/ck5Uz40e7q+mC3kWcT3zWtMzKOXg== Goodbye
-wl0TqHTzm5s3+FZYh5R7+rfkFfy4ffjY1LVPUEHO3DlHXOnRbRusEcfiTpPz41QEjvQ6Ywqb3RI3ugHL89DLyg== World
+Fz+pln0t/ksSMs6TY8OwRg0ic1rCRwEPlgIuNDTPN/thPoD2JCbGuA2FdcVGT4xG7s6fS3RpCmvMY907gMQtpQ== World
+4eWDNqYpVbCHDM+1M8/aoCOxnKXgsbZ/D2PBtXzMlfHX6byIDYxFAhYZvsX1s8+t9i0DioWlw5rFzWeySyBz1g== Goodbye
+H3sEVj4dh0DTNfhOtE/HN1ctUdumrVoGAm5LiFEiDVV3h04ym8D8KgTUp/CxiCzb11aeBO6ew+IpWL43eMl98A== World
+ZM+mFTS0ryQqFHtIAPmkXhd9yr33WLR1xMC/NRyiqZlyxxc8KoGWIvjEyobljDgBKEvlv8wm0Z/CMvz69VG3+w== Hello
 
 $ HMAC_KEY=0123456789012345 go run 24_chain_list_hmac_sign_to_base64.go helpers.go errors.go Goodbye World Hello World
-36Mee0SiQQr4yeJkgBJZfP4eMlRVG9O+FFcwNG6GlfkQOgvBXabzW0P+3ZqJ9qvppJzww2pMXZg4XsfOpaitpA== Goodbye
-vuAFbTAZgmuFdo3xpZqY6n7TAq/HNA3PqXrCmgA+SsCMDzlc4GgfPsURx5IFiDY3RIdFoXnivRih/KIHQr+vwQ== World
-p18Nb4M1msr7eIv27eIrMDaOUTX4qopGm5nL9T6QS6/PrXMI3at3Wq0vqbrkb9kRNFuWSzgFERyRax7GvBsajw== Hello
-wl0TqHTzm5s3+FZYh5R7+rfkFfy4ffjY1LVPUEHO3DlHXOnRbRusEcfiTpPz41QEjvQ6Ywqb3RI3ugHL89DLyg== World
+J8KG78PlsCU6Z5jFv83hj8Ahn84AuaAreXDqtzeimHqVlOIMoAi5O2ahOmsfAvtRND6AvFB7be9KE97v0UhnAg== World
+TtP0roBk1DjVyBqGcQAvomg32mtoUq92srkFYsjG1kQ0SgiRwVOblIFOQo6wpzNudZeG5sM0RniiuwJ5aNgADw== Hello
+uj1IKokNyAc1DD+M55w0l5rL5vmzKI99QgvbEeZTtt4Hiw7gHnapHPT4wcXjFfVfQSj95wVM7ap6Qo0HjzplUg== World
+0Eto8Uo5D/a1Yb1s1YK7Cauc3zFC7V5z3Otqh5Eb/jivEEFC8B+orqMyAhEyR693/JJMTPAdwcj3FFic1INVHA== Goodbye
 
-$ HMAC_KEY=0123456789012345 go run 25_chain_list_hmac_verify_from_base64.go hmac.go helpers.go errors.go Hello nDo7/2Jel9aP4RtT/v2vzkqvAuZC5mGjvsNKGGXofqZEMumfFZoIZDqFHLdMqsCQr2n1ujeKyXlvURO/iDAa5w== World RX7rJOTD89VN7Kn/mWo6RTRaQPMkRexAjYH8w27NTG3Vfn9ST2oeguGuraOmHM8KXQLCu08tgaUYnCcy0wH/fQ== Goodbye vt1b+boo+Qnpnx2E/knshgPAHmvXph3dHRacUXtn+bIOS61v2UyPpBFuK/ck5Uz40e7q+mC3kWcT3zWtMzKOXg== World wl0TqHTzm5s3+FZYh5R7+rfkFfy4ffjY1LVPUEHO3DlHXOnRbRusEcfiTpPz41QEjvQ6Ywqb3RI3ugHL89DLyg==
+$ HMAC_KEY=0123456789012345 go run 25_chain_list_hmac_verify_from_base64.go hmac.go helpers.go errors.go Hello ZM+mFTS0ryQqFHtIAPmkXhd9yr33WLR1xMC/NRyiqZlyxxc8KoGWIvjEyobljDgBKEvlv8wm0Z/CMvz69VG3+w== World H3sEVj4dh0DTNfhOtE/HN1ctUdumrVoGAm5LiFEiDVV3h04ym8D8KgTUp/CxiCzb11aeBO6ew+IpWL43eMl98A== Goodbye 4eWDNqYpVbCHDM+1M8/aoCOxnKXgsbZ/D2PBtXzMlfHX6byIDYxFAhYZvsX1s8+t9i0DioWlw5rFzWeySyBz1g== World Fz+pln0t/ksSMs6TY8OwRg0ic1rCRwEPlgIuNDTPN/thPoD2JCbGuA2FdcVGT4xG7s6fS3RpCmvMY907gMQtpQ==
 Signature Verification Succeeded
 
-$ HMAC_KEY=0123456789012345 go run 25_chain_list_hmac_verify_from_base64.go hmac.go helpers.go errors.go Hello nDo7/2Jel9aP4RtT/v2vzkqvAuZC5mGjvsNKGGXofqZEMumfFZoIZDqFHLdMqsCQr2n1ujeKyXlvURO/iDAa5w== World RX7rJOTD89VN7Kn/mWo6RTRaQPMkRexAjYH8w27NTG3Vfn9ST2oeguGuraOmHM8KXQLCu08tgaUYnCcy0wH/fQ== Goodbye vt1b+boo+Qnpnx2E/knshgPAHmvXph3dHRacUXtn+bIOS61v2UyPpBFuK/ck5Uz40e7q+mC3kWcT3zWtMzKOXg== World wl0TqHTzm5s3+FZYh5R7+rfkFfy4ffjY1LVPUEHO3DlHXOnRbRusEcfiTpPz41QEjvQ6Ywqb3RI3ugHL89DLyG==
+$ HMAC_KEY=0123456789012345 go run 25_chain_list_hmac_verify_from_base64.go hmac.go helpers.go errors.go Hello ZM+mFTS0ryQqFHtIAPmkXhd9yr33WLR1xMC/NRyiqZlyxxc8KoGWIvjEyobljDgBKEvlv8wm0Z/CMvz69VG3+w== World H3sEVj4dh0DTNfhOtE/HN1ctUdumrVoGAm5LiFEiDVV3h04ym8D8KgTUp/CxiCzb11aeBO6ew+IpWL43eMl98A== Goodbye 4eWDNqYpVbCHDM+1M8/aoCOxnKXgsbZ/D2PBtXzMlfHX6byIDYxFAhYZvsX1s8+t9i0DioWlw5rFzWeySyBz1g== World Fz+pln0t/ksSMs6TY8OwRg0ic1rCRwEPlgIuNDTPN/thPoD2JCbGuA2FdcVGT4xG7s6fS3RpCmvMY907gMQtpq==
 Signature Verification Failed
-wl0TqHTzm5s3+FZYh5R7+rfkFfy4ffjY1LVPUEHO3DlHXOnRbRusEcfiTpPz41QEjvQ6Ywqb3RI3ugHL89DLyg== != wl0TqHTzm5s3+FZYh5R7+rfkFfy4ffjY1LVPUEHO3DlHXOnRbRusEcfiTpPz41QEjvQ6Ywqb3RI3ugHL89DLyG==
+Fz+pln0t/ksSMs6TY8OwRg0ic1rCRwEPlgIuNDTPN/thPoD2JCbGuA2FdcVGT4xG7s6fS3RpCmvMY907gMQtpq== != Fz+pln0t/ksSMs6TY8OwRg0ic1rCRwEPlgIuNDTPN/thPoD2JCbGuA2FdcVGT4xG7s6fS3RpCmvMY907gMQtpQ==
 exit status 20
 
-$ HMAC_KEY=0123456789012345 go run 25_chain_list_hmac_verify_from_base64.go hmac.go helpers.go errors.go Hello nDo7/2Jel9aP4RtT/v2vzkqvAuZC5mGjvsNKGGXofqZEMumfFZoIZDqFHLdMqsCQr2n1ujeKyXlvURO/iDAa5w== World RX7rJOTD89VN7Kn/mWo6RTRaQPMkRexAjYH8w27NTG3Vfn9ST2oeguGuraOmHM8KXQLCu08tgaUYnCcy0wH/fQ== Goodbye vt1b+boo+Qnpnx2E/knshgPAHmvXph3dHRacUXtn+bIOS61v2UyPpBFuK/ck5Uz40e7q+mC3kWcT3zWtMzKOXG== World wl0TqHTzm5s3+FZYh5R7+rfkFfy4ffjY1LVPUEHO3DlHXOnRbRusEcfiTpPz41QEjvQ6Ywqb3RI3ugHL89DLyg==
+$ HMAC_KEY=0123456789012345 go run 25_chain_list_hmac_verify_from_base64.go hmac.go helpers.go errors.go Hello ZM+mFTS0ryQqFHtIAPmkXhd9yr33WLR1xMC/NRyiqZlyxxc8KoGWIvjEyobljDgBKEvlv8wm0Z/CMvz69VG3+w== World H3sEVj4dh0DTNfhOtE/HN1ctUdumrVoGAm5LiFEiDVV3h04ym8D8KgTUp/CxiCzb11aeBO6ew+IpWL43eMl98A== Goodbye 3eWDNqYpVbCHDM+1M8/aoCOxnKXgsbZ/D2PBtXzMlfHX6byIDYxFAhYZvsX1s8+t9i0DioWlw5rFzWeySyBz1g== World Fz+pln0t/ksSMs6TY8OwRg0ic1rCRwEPlgIuNDTPN/thPoD2JCbGuA2FdcVGT4xG7s6fS3RpCmvMY907gMQtpQ==
 Signature Verification Failed
-vt1b+boo+Qnpnx2E/knshgPAHmvXph3dHRacUXtn+bIOS61v2UyPpBFuK/ck5Uz40e7q+mC3kWcT3zWtMzKOXg== != vt1b+boo+Qnpnx2E/knshgPAHmvXph3dHRacUXtn+bIOS61v2UyPpBFuK/ck5Uz40e7q+mC3kWcT3zWtMzKOXG==
+3eWDNqYpVbCHDM+1M8/aoCOxnKXgsbZ/D2PBtXzMlfHX6byIDYxFAhYZvsX1s8+t9i0DioWlw5rFzWeySyBz1g== != 4eWDNqYpVbCHDM+1M8/aoCOxnKXgsbZ/D2PBtXzMlfHX6byIDYxFAhYZvsX1s8+t9i0DioWlw5rFzWeySyBz1g==
 exit status 20
 
-$ HMAC_KEY=0123456789012345 go run 25_chain_list_hmac_verify_from_base64.go hmac.go helpers.go errors.go Hello nDo7/2Jel9aP4RtT/v2vzkqvAuZC5mGjvsNKGGXofqZEMumfFZoIZDqFHLdMqsCQr2n1ujeKyXlvURO/iDAa5w== World RX7rJOTD89VN7Kn/mWo6RTRaQPMkRexAjYH8w27NTG3Vfn9ST2oeguGuraOmHM8KXQLCu08tgaUYnCcy0wH/fq== Goodbye vt1b+boo+Qnpnx2E/knshgPAHmvXph3dHRacUXtn+bIOS61v2UyPpBFuK/ck5Uz40e7q+mC3kWcT3zWtMzKOXg== World wl0TqHTzm5s3+FZYh5R7+rfkFfy4ffjY1LVPUEHO3DlHXOnRbRusEcfiTpPz41QEjvQ6Ywqb3RI3ugHL89DLyg==
+$ HMAC_KEY=0123456789012345 go run 25_chain_list_hmac_verify_from_base64.go hmac.go helpers.go errors.go Hello ZM+mFTS0ryQqFHtIAPmkXhd9yr33WLR1xMC/NRyiqZlyxxc8KoGWIvjEyobljDgBKEvlv8wm0Z/CMvz69VG3+w== World World Goodbye 4eWDNqYpVbCHDM+1M8/aoCOxnKXgsbZ/D2PBtXzMlfHX6byIDYxFAhYZvsX1s8+t9i0DioWlw5rFzWeySyBz1g== World Fz+pln0t/ksSMs6TY8OwRg0ic1rCRwEPlgIuNDTPN/thPoD2JCbGuA2FdcVGT4xG7s6fS3RpCmvMY907gMQtpQ==
 Signature Verification Failed
-RX7rJOTD89VN7Kn/mWo6RTRaQPMkRexAjYH8w27NTG3Vfn9ST2oeguGuraOmHM8KXQLCu08tgaUYnCcy0wH/fQ== != RX7rJOTD89VN7Kn/mWo6RTRaQPMkRexAjYH8w27NTG3Vfn9ST2oeguGuraOmHM8KXQLCu08tgaUYnCcy0wH/fq==
+World != H3sEVj4dh0DTNfhOtE/HN1ctUdumrVoGAm5LiFEiDVV3h04ym8D8KgTUp/CxiCzb11aeBO6ew+IpWL43eMl98A==
 exit status 20
 
-$ HMAC_KEY=0123456789012345 go run 25_chain_list_hmac_verify_from_base64.go hmac.go helpers.go errors.go Hello nDo7/2Jel9aP4RtT/v2vzkqvAuZC5mGjvsNKGGXofqZEMumfFZoIZDqFHLdMqsCQr2n1ujeKyXlvURO/iDAa5W== World RX7rJOTD89VN7Kn/mWo6RTRaQPMkRexAjYH8w27NTG3Vfn9ST2oeguGuraOmHM8KXQLCu08tgaUYnCcy0wH/fQ== Goodbye vt1b+boo+Qnpnx2E/knshgPAHmvXph3dHRacUXtn+bIOS61v2UyPpBFuK/ck5Uz40e7q+mC3kWcT3zWtMzKOXg== World wl0TqHTzm5s3+FZYh5R7+rfkFfy4ffjY1LVPUEHO3DlHXOnRbRusEcfiTpPz41QEjvQ6Ywqb3RI3ugHL89DLyg==
+$ HMAC_KEY=0123456789012345 go run 25_chain_list_hmac_verify_from_base64.go hmac.go helpers.go errors.go HELLO ZM+mFTS0ryQqFHtIAPmkXhd9yr33WLR1xMC/NRyiqZlyxxc8KoGWIvjEyobljDgBKEvlv8wm0Z/CMvz69VG3+w== World H3sEVj4dh0DTNfhOtE/HN1ctUdumrVoGAm5LiFEiDVV3h04ym8D8KgTUp/CxiCzb11aeBO6ew+IpWL43eMl98A== Goodbye 4eWDNqYpVbCHDM+1M8/aoCOxnKXgsbZ/D2PBtXzMlfHX6byIDYxFAhYZvsX1s8+t9i0DioWlw5rFzWeySyBz1g== World Fz+pln0t/ksSMs6TY8OwRg0ic1rCRwEPlgIuNDTPN/thPoD2JCbGuA2FdcVGT4xG7s6fS3RpCmvMY907gMQtpQ==
 Signature Verification Failed
-nDo7/2Jel9aP4RtT/v2vzkqvAuZC5mGjvsNKGGXofqZEMumfFZoIZDqFHLdMqsCQr2n1ujeKyXlvURO/iDAa5w== != nDo7/2Jel9aP4RtT/v2vzkqvAuZC5mGjvsNKGGXofqZEMumfFZoIZDqFHLdMqsCQr2n1ujeKyXlvURO/iDAa5W==
+ZM+mFTS0ryQqFHtIAPmkXhd9yr33WLR1xMC/NRyiqZlyxxc8KoGWIvjEyobljDgBKEvlv8wm0Z/CMvz69VG3+w== != rXb9voapdHq6l2dnwNwrWusUv34tCvdpMo0dRn57Epvqi8atK8TrhDxYmnh5tKQxZFBY9J9dlu5wLCFjYJ0qUw==
 exit status 20
 ```
 
 ### Merkle Trees
 
 ```bash
-$ HMAC_KEY=0123456789012345 go run 26_merkle_tree_hmac_sign_to_base64.go helpers.go errors.go
+$ HMAC_KEY=0123456789012345 go run 26_merkle_tree_hmac_sign_to_base64.go hmac.go helpers.go errors.go
 NP0n+gNreXmqI4ATzz5rOcut9+317H1Ab6CgO0KLNJMQpS/vT4GDOhAiRMf+KUvMV+f9sApyc4V4iOng/1RXEw== +
 m3M6Y+orFgsXEZ0/HpZJME9cKy+/SpzQ/zvxLujK+CS3xqVX+x0QzIiwYikLswjWUUWgGR6splkAD7z0BLZExg== *
 X0gyp/RcB31yImaxxDDo7L0mN83WYc3DtFTETS4FV3CKu7bgLHwolraIgcCE8VU+reP9Vh1tMq+9m1XALg0BNw== -
@@ -400,7 +400,7 @@ A: 5
 B: 6
 A: 6
 
-$ go run 34_web_server_public_key_request.go pem.go errors.go helpers.go test3.pem &
+$ go run 34_web_server_public_key_request.go http.go pem.go errors.go helpers.go test3.pem &
 $ go run 34_web_client_public_key_request.go http.go pem.go errors.go helpers.go session_label
 Bob received nonce: session_label
 Alice received public key: &{31567127335276920051778986890983418137235118195788341168325280010141872825942730386604890414504330424121846232915529846111962553425801730338442721710329105996928572139897441647445680540638619159385964576015724962916475593889066666184228021802959434558601451977786671232463588955484699002568869232321539136212150321079973869708311234964749352015864656432491046294093762734492605713775237154595184621558656835799069556866308339741960587974969797335759107872113116845565849526376848130079712356076286876918399283180445566867123603330810480774172961213531196691266615312515557045027778553516298941059154014833011840984679 65537}

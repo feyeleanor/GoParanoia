@@ -20,12 +20,14 @@ func init() {
 	HandleFunc(KEY, func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
+      BOB.Report("KEY.GET")
 			BOB.Report("received request for public key from", r.RemoteAddr)
 			fmt.Fprint(w,
 				EncodeToString(
 					pem.EncodeToMemory(p)))
 
 		case http.MethodPost:
+      BOB.Report("KEY.POST")
 			if n := SubPath(KEY, r); len(n) == 0 {
 				http.Error(w, "missing nonce", 500)
 			} else {
@@ -34,6 +36,9 @@ func init() {
 					http.Error(w, "decryption failed", 500)
 				} else {
 					c := &AES_channel{ko: s, ki: AES_MakeKey(32)}
+          if len(c.ko) % 16 != 0 {
+            BOB.Report("key received too short:", len(c.ko), "bytes")
+          }
 					sessions[n] = c
 					BOB.ShowCurrentKeys(c)
 					fmt.Fprint(w, c.EncryptMessage(c.ki))
@@ -41,6 +46,7 @@ func init() {
 			}
 
 		case http.MethodPut:
+      BOB.Report("KEY.PUT")
 			if n := SubPath(KEY, r); len(n) == 0 {
 				http.Error(w, "missing nonce", 500)
 			} else if s := sessions[n]; s == nil {
@@ -49,18 +55,17 @@ func init() {
 				http.Error(w, "missing symmetric key", 500)
 			} else {
 				c := &AES_channel{ko: s.DecryptMessage(m), ki: AES_MakeKey(32)}
-				BOB.Report("c.ko:", EncodeToBase64(c.ko))
-				BOB.Report("c.ki:", EncodeToBase64(c.ki))
-
-				if ke := s.EncryptMessage(c.ki); ke != c.DecryptMessage(ke) {
-					BOB.Report("I CAN'T DECRYPT MY OWN KEY")
-				}
+        if len(c.ko) % 16 != 0 {
+          BOB.Report("key stored too short:", len(c.ko), "bytes")
+        }
+				BOB.ShowCurrentKeys(c)
 				fmt.Fprint(w, s.EncryptMessage(c.ki))
 				sessions[n] = c
 				BOB.ShowCurrentKeys(sessions[n])
 			}
 
 		case http.MethodDelete:
+      BOB.Report("KEY.DELETE")
 			n := SubPath(KEY, r)
 			BOB.Report("is forgotting all about:", n)
 			delete(sessions, n)

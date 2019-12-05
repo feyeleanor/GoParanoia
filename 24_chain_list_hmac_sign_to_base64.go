@@ -9,8 +9,8 @@ func main() {
 	var s *SignedList
 
 	k := os.Getenv("HMAC_KEY")
-	for i := len(os.Args) - 1; i > 0; i-- {
-		s = s.Push(k, os.Args[i])
+	for v := os.Args[1:]; len(v) > 0; v = v[1:] {
+		s = s.Push(k, v[0])
 	}
 	s.Each(
 		func(h, v string) {

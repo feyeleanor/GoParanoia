@@ -8,16 +8,16 @@ func main() {
 	var h string
   var ok bool
 
-  a := os.Args[1:]
-	if len(a)%2 != 0 {
-		os.Exit(UNEVEN_PARAMETERS)
-	}
+  defer func() {
+	  if recover() != nil {
+  		os.Exit(UNEVEN_PARAMETERS)
+    }
+	}()
 
 	k := os.Getenv("HMAC_KEY")
-  for i := len(a) - 1; i > 0; i-- {
-    h = a[i]
-    i--
-    if s, ok = s.PushAndCheck(k, h, a[i]); !ok {
+  for a := os.Args[1:]; len(a) > 0; a = a[2:] {
+    h = a[1]
+    if s, ok = s.PushAndCheck(k, h, a[0]); !ok {
   		fmt.Println("Signature Verification Failed")
 			fmt.Printf("%v != %v\n", h, s.H)
 			os.Exit(VERIFICATION_FAILED)
