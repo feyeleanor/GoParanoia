@@ -7,7 +7,7 @@ import "os"
 func main() {
 	s := os.Args[2]
 	hs := read_base64(s[0:88])
-	ms, e := AES_Decrypt(
+	ms, e := AES_DecryptAndTrim(
 		os.Getenv("AES_KEY"),
 		read_base64(s[88:]))
 	ExitOnError(e, AES_DECRYPTION_FAILED)

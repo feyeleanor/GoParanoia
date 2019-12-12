@@ -7,7 +7,7 @@ import "os"
 func main() {
 	k := os.Getenv("AES_KEY")
 	s := ReadBase64(os.Args[1])
-	if m, e := AES_Decrypt(k, s); e == nil {
+	if m, e := AES_DecryptAndTrim(k, s); e == nil {
 		fmt.Println(m)
 	} else {
 		fmt.Printf("error: %v\n", m)
