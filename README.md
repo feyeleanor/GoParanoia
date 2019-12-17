@@ -24,7 +24,7 @@ $ AES_KEY=0123456789012345 go run 03_encrypt_aes_to_base64.go aes.go errors.go h
 4dlr5z3SkGP4jykKekFYs6J3IabHjecnz3leLbeM0DI=
 
 $ AES_KEY=0123456789012345 go run 04_decrypt_aes_from_base64.go aes.go errors.go helpers.go 3Q9B81dbetzrdptKdv0TBgbanOZX9wgSViRGoF6YxUs=
-Hello World
+Hello World!
 
 $ AES_KEY=0123456789012345 go run 04_decrypt_aes_from_base64.go aes.go errors.go helpers.go 4dlr5z3SkGP4jykKekFYs6J3IabHjecnz3leLbeM0DI=
 Hello World
