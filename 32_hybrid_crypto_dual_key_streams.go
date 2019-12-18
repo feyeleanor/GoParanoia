@@ -17,9 +17,9 @@ func main() {
     ki, ko := ServerHandshake(priv, p, in, out)
 
     Transmitter(ki, os.Args[4:], func(k, v string) {
-  	  fmt.Println("01. Bob wants to say:", v)
+  	  fmt.Println("Bob wants to say:", v)
       out <- EncryptMessage(ko, v)
-			fmt.Println("02. Bob heard:", DecryptMessage(k, <-in))
+			fmt.Println("Bob heard:", DecryptMessage(k, <-in))
 		})
 		close(out)
   })
@@ -27,12 +27,12 @@ func main() {
   n := os.Args[2]
   ki := os.Args[3]
   ko := ClientHandshake(ki, n, BtoA, AtoB)
-  fmt.Println("03. Alice received symmetric key:", EncodeToBase64(ko))
+  fmt.Println("Alice received symmetric key:", EncodeToBase64(ko))
 
   Receiver(ki, BtoA, func(v string) {
-		fmt.Println("04. Alice heard:", v)
+		fmt.Println("Alice heard:", v)
 		v = fmt.Sprintf("%v received", v)
-	  fmt.Println("05. Alice wants to say:", v)
+	  fmt.Println("Alice wants to say:", v)
     AtoB <- EncryptMessage(ko, v)
   })
 }
@@ -41,26 +41,23 @@ func ClientHandshake(ki, n string, in, out chan string) string {
 	SendSymmetricKey(
     RequestPublicKey(in, out, n), out, ki, n)
 
-  fmt.Println("06. Alice sent symmetric key:", EncodeToBase64(ki))
-x := <- in
-  fmt.Println("07. Alice received message:", x)
-  return DecryptMessage(ki, x)
+  fmt.Println("Alice sent symmetric key:", EncodeToBase64(ki))
+  return DecryptMessage(ki, <- in)
 }
 
 func ServerHandshake(kp *rsa.PrivateKey, p *pem.Block, in, out chan string) (ki, ko string) {
 	n := <-in
-	fmt.Println("08. Server received nonce:", n)
+	fmt.Println("Server received nonce:", n)
 
 	out <- EncodeToString(pem.EncodeToMemory(p))
   ko = ReceiveSymmetricKey(kp, in, n)
-	fmt.Println("09. Bob received symmetric key:", EncodeToBase64(ko))
+	fmt.Println("Bob received symmetric key:", EncodeToBase64(ko))
 
   b := make([]byte, 32)
   _, e := rand.Read(b)
   ExitOnError(e, NOT_ENOUGH_RANDOMNESS)
   ki = string(b)
-
-  fmt.Println("10. Bob sends symmetric key:", EncodeToBase64(ki))
+  fmt.Println("Bob sends symmetric key:", EncodeToBase64(ki))
 	out <- EncryptMessage(ko, ki)
   return
 }
@@ -105,18 +102,13 @@ func Receiver(k string, in chan string, f func(string)) {
 }
 
 func DecryptMessage(k, v string) string {
-fmt.Println("11. v:", v)
-	v = read_base64(v)
-	r, e := AES_Decrypt(k, v)
+	r, e := AES_Decrypt(k, read_base64(v))
 	ExitOnError(e, AES_DECRYPTION_FAILED)
-fmt.Println("12. r:", EncodeToBase64(r))
   return r
 }
 
 func EncryptMessage(k, v string) string {
-fmt.Println("13. v:", EncodeToBase64(v))
 	b, e := AES_Encrypt(k, v)
-fmt.Println("14. b:", EncodeToString(b))
 	ExitOnError(e, AES_ENCRYPTION_FAILED)
   return EncodeToString(b)
 }

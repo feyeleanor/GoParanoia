@@ -27,8 +27,11 @@ func Encrypt(k, m string) (o []byte, e error) {
 }
 
 func PaddedBuffer(m []byte) (b []byte, e error) {
-  p := len(m) % aes.BlockSize
-  b = make([]byte, len(m) + aes.BlockSize - p)
+	if p := len(m) % aes.BlockSize; p > 0 {
+  	b = make([]byte, len(m)+aes.BlockSize-p)
+  } else {
+    b = make([]byte, len(m))
+  }
   copy(b, m)
   return
 }
