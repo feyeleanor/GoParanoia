@@ -58,6 +58,8 @@ func AES_Decrypt(k, s string) (r string, e error) {
 	var b cipher.Block
 	if b, e = aes.NewCipher([]byte(k)); e == nil {
 		iv, m := Unpack(s)
+fmt.Println("len(iv):", len(iv))
+fmt.Println("len(m):", len(m))
 		x := make([]byte, len(m))
 		cipher.
 			NewCBCDecrypter(b, iv).
@@ -76,7 +78,9 @@ func AES_DecryptAndTrim(k, s string) (r string, e error) {
 
 func PaddedBuffer(m []byte) (b []byte, e error) {
 	p := len(m) % aes.BlockSize
+fmt.Println("p:", p)
 	b = make([]byte, len(m)+aes.BlockSize-p)
+fmt.Println("len(b):", len(b))
 	copy(b, m)
 	return
 }
